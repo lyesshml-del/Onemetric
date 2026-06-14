@@ -286,15 +286,20 @@ checkout + webhook deferred to last.
 - [x] _(user)_ signup-confirmation email confirmed working (after SMTP `username=resend` fix)
 - [x] Branded auth email templates saved in `apps/web/emails/` (paste into Supabase dashboard)
 
-### Phase 2 — WAF rate limit on `/api/collect` (IN PROGRESS)
-- [ ] **(user)** create Vercel Firewall rule: path `=/api/collect` → Rate Limit 100/10s per IP
-      → Deny(429). Agent can't via MCP.
-- [ ] **(agent)** verify with the burst command in HANDOFF (expect `429`s). Last test before
-      rule: `165×204, 13×500, 0×429` (not active yet).
-- [ ] _(later, not now)_ harden `/api/collect` to return `204` on DB errors (saw ~7% `500`
-      under a 40-way concurrent burst).
+### Phase 2 — WAF rate limit on `/api/collect` ✅ (complete)
+- [x] **(user)** created Vercel Firewall rule: path `=/api/collect` → Rate Limit (Fixed
+      Window) 100 req / 10s per IP → Deny (429). Published/live.
+- [x] **(agent)** verified with the burst command in HANDOFF. Post-rule test (2026-06-14):
+      `143×204, 33×429, 4×500` → `429`s appear (were `0` before) → rule **active**.
+- [ ] _(later, not now)_ harden `/api/collect` to return `204` on DB errors (still ~2% `500`
+      under a 40-way concurrent burst; `4/180` this run).
 
-### Phase 3 — Custom domain → `NEXT_PUBLIC_APP_URL` (pending; `onemetric.sbs` already resolves)
+### Phase 3 — Custom domain → `NEXT_PUBLIC_APP_URL` ✅ (complete, 2026-06-14)
+- [x] `onemetric.sbs` attached to Vercel (apex serves the app; `www` 307→apex)
+- [x] **(user)** `NEXT_PUBLIC_APP_URL=https://onemetric.sbs` (Prod) + redeploy
+- [x] **(user)** Supabase Auth Site URL + Redirect URL (`/auth/confirm`) set to apex (vercel kept as fallback)
+- [x] **(agent)** verified: `sitemap.xml`/`robots.txt`/install snippet now use `onemetric.sbs`;
+      apex `/`, `/login`, `/onemetric.js` all `200`
 
 ## Cleanup before first real client
 - [ ] Remove test data from the live DB: test `ReportSubscription` (supradz14@gmail.com),

@@ -9,8 +9,8 @@ continue. The **Supabase and Vercel MCP connections carry over** across chats (u
 query the DB / logs / deployments).
 
 **Live facts**
-- App: `https://onemetric-web.vercel.app` (custom domain `onemetric.sbs` also resolves;
-  pointing it as the canonical URL is the user's **Phase 3**, not done).
+- App: canonical URL is **`https://onemetric.sbs`** (apex; Phase 3 done). The
+  `https://onemetric-web.vercel.app` host still works as a fallback (old installs use it).
 - GitHub: `lyesshml-del/Onemetric` (auto-deploys on push to `main`). Set repo **Private**.
 - Supabase project ref: `ladsqshpcdyjruzohkvb` (eu-central-1).
 - Vercel project: `onemetric-web`, team `team_mgBu3PTBSTUAfy4tql0wgxDw`.
@@ -23,22 +23,34 @@ to go. Keep `TODO.md` + `HANDOFF.md` updated; new ideas → `ROADMAP.md` (don't 
 I/the agent **cannot** set Vercel env vars / Firewall rules or Supabase Auth-SMTP via MCP —
 those are the user's dashboard clicks; the agent guides + verifies.
 
-**▶ Next action — finish Phase 2 (WAF), which is IN PROGRESS:**
-1. User must create the rule in **Vercel → onemetric-web → Firewall → Custom Rules**:
-   path `=/api/collect`, action **Rate Limit** 100 req / 10s per IP → **Deny (429)**.
-2. Verify (agent can run): burst the live endpoint with a dummy key and expect `429`s:
-   ```
-   seq 1 180 | xargs -P 40 -I{} curl -s -o /dev/null -w "%{http_code}\n" -m 12 \
-     -X POST https://onemetric-web.vercel.app/api/collect -H "Content-Type: text/plain" \
-     --data '{"publicKey":"om_ratelimit_probe","type":"pageview","name":"/rl"}' | sort | uniq -c
-   ```
-   Last test (before the rule): `165×204, 13×500, 0×429` → rule **not active yet**.
-- **Known issue found during that test:** `/api/collect` returned `500` on ~7% of a 40-way
-  concurrent burst (DB-pool pressure). Hardening idea (not yet done): make `ingest`/the route
-  catch DB errors and still return `204` so floods never 500. Do this in a later phase.
+**✅ Phase 2 (WAF) — DONE (2026-06-14).** Vercel Firewall rule (path `=/api/collect` → Rate
+Limit Fixed Window 100 req / 10s per IP → Deny 429), published. Verified by burst:
+`143×204, 33×429, 4×500` — `429`s appear (were `0` pre-rule). Re-runnable:
+```
+seq 1 180 | xargs -P 40 -I{} curl -s -o /dev/null -w "%{http_code}\n" -m 12 \
+  -X POST https://onemetric-web.vercel.app/api/collect -H "Content-Type: text/plain" \
+  --data '{"publicKey":"om_ratelimit_probe","type":"pageview","name":"/rl"}' | sort | uniq -c
+```
 
-Then: **Phase 3** (custom domain → `NEXT_PUBLIC_APP_URL` + Supabase Auth URLs), and the
-**MoR billing** wiring (2Checkout vs Paddle — see plan/TODO).
+**✅ Phase 3 (custom domain) — DONE (2026-06-14).** Canonical URL is the **apex
+`https://onemetric.sbs`** (chosen over a subdomain — single Next.js app serves marketing +
+app). Domain attached to Vercel (apex serves app, `www` 307→apex). User set
+`NEXT_PUBLIC_APP_URL=https://onemetric.sbs` (Prod) + redeployed, and updated Supabase Auth
+Site URL + Redirect URL (`/auth/confirm`) to apex (vercel kept as fallback). Verified:
+`sitemap.xml`/`robots.txt`/install snippet now use `onemetric.sbs`; apex `/`, `/login`,
+`/onemetric.js` all `200`. Existing installs on the old `*.vercel.app` host keep working.
+
+**▶ Next action — MoR billing wiring** (the last build item before first paying client):
+**2Checkout vs Paddle is still UNDECIDED** and gated on **Algeria-payout approval** — apply +
+confirm first (external dependency). Groundwork already built (schema, `lib/plans.ts`, gating,
+billing page, `actions/billing.ts` seam); only the provider hosted-checkout URL +
+`POST /api/webhooks/<mor>` remain. See `plan-what-need-to-prancy-wren.md` Workstream 1 / TODO
+Phase 13. Also pending: **set GitHub repo Private** + **clean test data** before onboarding
+(see Cleanup section in TODO).
+
+- **Known issue (not blocking, do later):** `/api/collect` returns `500` on ~2% of a 40-way
+  concurrent burst (DB-pool pressure; `4/180` post-rule). Hardening idea: make `ingest`/the
+  route catch DB errors and still return `204` so floods never 500. Deferred.
 
 ## Context notes (from chat — easy to miss otherwise)
 
@@ -102,8 +114,8 @@ needs to be created in the Vercel dashboard (agent can't via MCP), then verified
   in data + hardened `syncUser`). Also added `prisma generate` to the build.
 - **Repo visibility:** Vercel metadata shows the GitHub repo as `public` — set it back to
   **Private** (no secrets committed, but recommended).
-- `onemetric.sbs` is bought but **not yet pointed at the app** (`NEXT_PUBLIC_APP_URL` still
-  `onemetric-web.vercel.app`) — that's the user's Phase 3.
+- `onemetric.sbs` is **live as the canonical app URL** (`NEXT_PUBLIC_APP_URL=https://onemetric.sbs`,
+  Phase 3 done 2026-06-14).
 
 ## Completed (Phase 12 — deploy groundwork)
 
