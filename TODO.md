@@ -283,12 +283,26 @@ checkout + webhook deferred to last.
 - [x] Supabase Auth custom SMTP via Resend (`smtp.resend.com:465`, `noreply@onemetric.sbs`)
 - [x] **Verified weekly-report send in prod** (cron → `{ok:true, sent:1}`, `lastSentAt`
       stamped). A test `ReportSubscription` (supradz14@gmail.com) was added — removable in UI.
-- [ ] _(user)_ confirm signup-confirmation email via one test signup
+- [x] _(user)_ signup-confirmation email confirmed working (after SMTP `username=resend` fix)
+- [x] Branded auth email templates saved in `apps/web/emails/` (paste into Supabase dashboard)
 
-### Phase 2 — WAF rate limit on `/api/collect` (pending)
-### Phase 3 — Custom domain → `NEXT_PUBLIC_APP_URL` (pending; domain `onemetric.sbs` ready)
+### Phase 2 — WAF rate limit on `/api/collect` (IN PROGRESS)
+- [ ] **(user)** create Vercel Firewall rule: path `=/api/collect` → Rate Limit 100/10s per IP
+      → Deny(429). Agent can't via MCP.
+- [ ] **(agent)** verify with the burst command in HANDOFF (expect `429`s). Last test before
+      rule: `165×204, 13×500, 0×429` (not active yet).
+- [ ] _(later, not now)_ harden `/api/collect` to return `204` on DB errors (saw ~7% `500`
+      under a 40-way concurrent burst).
 
-## Phase 13 — MoR billing wiring + first client (planned — see plan file)
+### Phase 3 — Custom domain → `NEXT_PUBLIC_APP_URL` (pending; `onemetric.sbs` already resolves)
+
+## Cleanup before first real client
+- [ ] Remove test data from the live DB: test `ReportSubscription` (supradz14@gmail.com),
+      test analytics in DataFast (session + pageviews + `signup`), and unconfirmed auth users
+      for `adembensari7@gmail.com`.
+- [ ] Set the GitHub repo back to **Private**.
+
+## Phase 13 — MoR billing wiring (2Checkout vs Paddle, Algeria payout) + first client (see plan)
 
 ---
 

@@ -40,6 +40,39 @@ those are the user's dashboard clicks; the agent guides + verifies.
 Then: **Phase 3** (custom domain → `NEXT_PUBLIC_APP_URL` + Supabase Auth URLs), and the
 **MoR billing** wiring (2Checkout vs Paddle — see plan/TODO).
 
+## Context notes (from chat — easy to miss otherwise)
+
+**Two phase-numbering schemes (don't conflate):**
+- The build phases **0–8** = the V1 MVP; **9–13** in `plan-what-need-to-prancy-wren.md` =
+  billing / marketing / tests / deploy / hardening.
+- The user later said **"Phase 1 / 2 / 3"** to mean the *post-deploy hardening* items:
+  **1 = Email (done), 2 = WAF rate-limit (in progress), 3 = custom domain (not started)**.
+
+**Accounts / emails (these tripped us up — keep straight):**
+- Vercel account: **lyesshml@gmail.com** · GitHub account: **himranelyess@gmail.com**
+  (git commit author is set to this so deploys aren't blocked) · Supabase org owner:
+  **himranelyess@gmail.com**.
+- App login (the founder's own test account, owns the **DataFast** project):
+  **supradz14@gmail.com**. A friend tested signup with **adembensari7@gmail.com**.
+
+**Billing (important constraint):** founder is in **Algeria** → **Stripe is not available** →
+decision is a **Merchant-of-Record**; **2Checkout vs Paddle is still UNDECIDED** (needs
+Algeria-payout approval; 2CheckoutPayoneer vs Paddle-SWIFT). MoR-agnostic groundwork is
+already built (schema, `lib/plans.ts`, gating, billing page, action seam) — only the
+provider checkout + `POST /api/webhooks/<mor>` remain.
+
+**Test data currently in the LIVE database (clean up before onboarding a real client):**
+- A test `ReportSubscription` (`rsub_test_*`, `supradz14@gmail.com`) on DataFast.
+- Test analytics in **DataFast** (a session + pageviews + a `signup` event) from a prod
+  ingestion smoke test.
+- **Unconfirmed** auth users for `adembensari7@gmail.com` from signups that failed *before*
+  the SMTP username fix.
+
+**Secrets:** never commit. Production secrets live in **Vercel env vars** (and locally in
+`apps/web/.env`, gitignored). To call the cron route you need `CRON_SECRET` from there.
+The dev DB password was leaked via `.claude/` earlier → history scrubbed, password rotated,
+`.claude/` now gitignored.
+
 ## Current Status
 
 **LIVE in production** on Vercel (`onemetric-web.vercel.app`). V1 MVP (0–8) + phases 9
