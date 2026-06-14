@@ -165,8 +165,9 @@ needs to be created in the Vercel dashboard (agent can't via MCP), then verified
   (lucide-react icons), privacy-first section, 3-step how-it-works, pricing teaser.
 - **Pricing** (`/pricing`): Free vs Pro cards driven by `lib/plans.ts`.
 - **Legal** (`/privacy`, `/terms`): cookieless / no-PII / EU-data emphasis.
-  **⚠️ These are templates — get professional legal review before relying on them, and
-  replace the placeholder contact `support@onemetric.app` with a real address.**
+  **⚠️ These are templates — get professional legal review before relying on them.**
+  (Contact placeholder now replaced with `support@onemetric.sbs`; a `/refund` page — 14-day
+  money-back — was added 2026-06-14 for Paddle's website verification.)
 - **SEO**: `app/robots.ts` (disallows `/dashboard`, `/api`), `app/sitemap.ts`,
   `app/opengraph-image.tsx` (next/og), and root `metadataBase` + OpenGraph/Twitter
   metadata. All driven by `NEXT_PUBLIC_APP_URL`.
@@ -196,7 +197,10 @@ is required** (esp. Algerian + EU counsel). What was verified:
      of Algeria, which under Law 18-07/11-25 requires **ANPDP authorization** — confirm the
      current process (authority operational status pending).
   2. Assess **DPO / processing-records / DPIA** obligations under Law 11-25.
-  3. Replace the placeholder contact `support@onemetric.app` with a real address.
+  3. ~~Replace the placeholder contact~~ DONE — now `support@onemetric.sbs` on privacy /
+     terms / refund. **Still needs a receiving inbox** (domain only *sends* via Resend);
+     set up free forwarding (ImprovMX MX records at Vercel DNS → personal Gmail) before
+     onboarding a real client, or refund/support emails will bounce.
   4. Confirm the **governing-law** clause (Terms now says Algeria) with counsel.
   5. Reconnect the Legal Data Hunter MCP for corpus-grounded, citable verification.
 
