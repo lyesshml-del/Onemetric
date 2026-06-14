@@ -2,11 +2,31 @@
 
 ## Current Status
 
-**Launch prep underway. Phase 12 (Deploy) — repo/config work complete; the actual deploy
-is pending your account actions** (GitHub push, Vercel, Supabase/Resend dashboards, domain).
-V1 MVP (0–8) + phases 9 (billing groundwork), 10 (marketing/legal), 11 (tests+CI) done; MoR
-checkout/webhook still pending a chosen provider. Launch plan:
-`~/.claude/plans/plan-what-need-to-prancy-wren.md`. Runbook: `DEPLOY.md`.
+**LIVE in production** on Vercel (`onemetric-web.vercel.app`), auto-deploying from GitHub
+(`lyesshml-del/Onemetric`). V1 MVP (0–8) + phases 9 (billing groundwork), 10
+(marketing/legal), 11 (tests+CI), 12 (deploy) done. Signup/login, dashboard, and **real
+analytics ingestion verified working in prod**. MoR billing checkout/webhook still pending a
+chosen provider. **Now configuring Email (user's "Phase 1").**
+
+## Completed (Email — Resend + Supabase SMTP)
+
+- **Domain `onemetric.sbs`** bought via Vercel; **verified in Resend** (eu-west-1, DNS
+  auto-configured through Vercel).
+- **Vercel env** (Production + Preview): `RESEND_API_KEY`,
+  `REPORT_FROM_EMAIL=OneMetric <reports@onemetric.sbs>`.
+- **Supabase Auth → custom SMTP** via Resend (`smtp.resend.com:465`, user `resend`, sender
+  `noreply@onemetric.sbs`) for reliable signup-confirmation emails.
+- Redeploy triggered so the new env vars take effect; **delivery verification in progress**.
+
+## Notes / follow-ups
+
+- Two prod bugs were fixed earlier: the git-author/Vercel block (git email → GitHub email),
+  and the dashboard `Application error` (auth account re-created → `User` id mismatch; fixed
+  in data + hardened `syncUser`). Also added `prisma generate` to the build.
+- **Repo visibility:** Vercel metadata shows the GitHub repo as `public` — set it back to
+  **Private** (no secrets committed, but recommended).
+- `onemetric.sbs` is bought but **not yet pointed at the app** (`NEXT_PUBLIC_APP_URL` still
+  `onemetric-web.vercel.app`) — that's the user's Phase 3.
 
 ## Completed (Phase 12 — deploy groundwork)
 
