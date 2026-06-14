@@ -40,13 +40,25 @@ Site URL + Redirect URL (`/auth/confirm`) to apex (vercel kept as fallback). Ver
 `sitemap.xml`/`robots.txt`/install snippet now use `onemetric.sbs`; apex `/`, `/login`,
 `/onemetric.js` all `200`. Existing installs on the old `*.vercel.app` host keep working.
 
-**▶ Next action — MoR billing wiring** (the last build item before first paying client):
-**2Checkout vs Paddle is still UNDECIDED** and gated on **Algeria-payout approval** — apply +
-confirm first (external dependency). Groundwork already built (schema, `lib/plans.ts`, gating,
-billing page, `actions/billing.ts` seam); only the provider hosted-checkout URL +
-`POST /api/webhooks/<mor>` remain. See `plan-what-need-to-prancy-wren.md` Workstream 1 / TODO
-Phase 13. Also pending: **set GitHub repo Private** + **clean test data** before onboarding
-(see Cleanup section in TODO).
+**▶ Billing — BLOCKED on Paddle verification (2026-06-14).** Provider chosen = **Paddle**.
+Vendor account created (`vendors.paddle.com`, owner Himrane Moha…), business details +
+products + website submitted. Website verification used the 4 policy URLs (incl. the new
+`/refund`). **Verification status = "In progress"** — Paddle is reviewing; the **Algeria
+seller-approval + payout-method** answer comes out of this review (and any identity/payout
+stage that follows). **User decision: WAIT for the Algeria verdict before writing any
+Paddle code** (avoid wasted work if rejected → would pivot to 2Checkout, ~90% same shape).
+When approved, build in **Sandbox** first: create Pro product/price (`pri_…`), client-side
+token (`NEXT_PUBLIC_PADDLE_CLIENT_TOKEN`), API key (`PADDLE_API_KEY`), webhook dest +
+secret (`PADDLE_WEBHOOK_SECRET`) → wire Paddle.js checkout in the billing page +
+`POST /api/webhooks/paddle` (verify `Paddle-Signature`, sync `User.plan`). Groundwork
+already built (schema, `lib/plans.ts`, gating, billing page, `actions/billing.ts` seam).
+See `plan-what-need-to-prancy-wren.md` Workstream 1 / TODO Phase 13.
+
+**▶ Meanwhile (not blocked by Paddle):** (1) free receiving inbox for `support@onemetric.sbs`
+(ImprovMX MX records at Vercel DNS → Gmail) — launch-blocker; (2) **set GitHub repo Private**;
+(3) clean test data from live DB (see Cleanup in TODO); (4) optional `/api/collect` 500
+hardening; (5) professional legal review of `/privacy` `/terms` `/refund` + Algeria ANPDP
+cross-border transfer.
 
 - **Known issue (not blocking, do later):** `/api/collect` returns `500` on ~2% of a 40-way
   concurrent burst (DB-pool pressure; `4/180` post-rule). Hardening idea: make `ingest`/the

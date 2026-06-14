@@ -221,7 +221,9 @@ checkout + webhook deferred to last.
 - [x] Verified: existing user defaulted to FREE; typecheck · lint · build pass
 
 **Remaining (needs chosen MoR + approved account)**
-- [ ] Pick 2Checkout vs Paddle; apply + confirm Algeria payout approval
+- [~] **Paddle chosen**; vendor account created + KYB/website submitted (2026-06-14).
+      **Verification "In progress"** — awaiting Algeria seller-approval + payout verdict.
+      Build paused until approved (would pivot to 2Checkout if rejected).
 - [ ] Wire `startCheckout`/`manageBilling` to the MoR hosted checkout + management link
 - [ ] `POST /api/webhooks/<mor>` — verify signature, sync subscription → `User`
 - [ ] MoR env vars (`MOR_API_KEY`, `MOR_WEBHOOK_SECRET`, `MOR_PRICE_PRO`)
