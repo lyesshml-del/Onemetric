@@ -1,12 +1,51 @@
 # Handoff
 
+## ▶ RESUME HERE (read this first if you're a fresh chat)
+
+**Product is LIVE in production.** This file + `TODO.md`, `PRD.md`, `ROADMAP.md`,
+`AGENT-RULES.md`, `DEPLOY.md`, `ENVIRONMENT.md`, and
+`~/.claude/plans/plan-what-need-to-prancy-wren.md` are the full context — read them, then
+continue. The **Supabase and Vercel MCP connections carry over** across chats (use them to
+query the DB / logs / deployments).
+
+**Live facts**
+- App: `https://onemetric-web.vercel.app` (custom domain `onemetric.sbs` also resolves;
+  pointing it as the canonical URL is the user's **Phase 3**, not done).
+- GitHub: `lyesshml-del/Onemetric` (auto-deploys on push to `main`). Set repo **Private**.
+- Supabase project ref: `ladsqshpcdyjruzohkvb` (eu-central-1).
+- Vercel project: `onemetric-web`, team `team_mgBu3PTBSTUAfy4tql0wgxDw`.
+- Email working: Resend (domain `onemetric.sbs` verified) + Supabase SMTP
+  (`username = resend`). Weekly report send verified in prod.
+- Git author is set to `himranelyess@gmail.com` (matches GitHub) so pushes don't get blocked.
+
+**Working agreement:** strict phase-by-phase; the user approves each phase and says how far
+to go. Keep `TODO.md` + `HANDOFF.md` updated; new ideas → `ROADMAP.md` (don't build them).
+I/the agent **cannot** set Vercel env vars / Firewall rules or Supabase Auth-SMTP via MCP —
+those are the user's dashboard clicks; the agent guides + verifies.
+
+**▶ Next action — finish Phase 2 (WAF), which is IN PROGRESS:**
+1. User must create the rule in **Vercel → onemetric-web → Firewall → Custom Rules**:
+   path `=/api/collect`, action **Rate Limit** 100 req / 10s per IP → **Deny (429)**.
+2. Verify (agent can run): burst the live endpoint with a dummy key and expect `429`s:
+   ```
+   seq 1 180 | xargs -P 40 -I{} curl -s -o /dev/null -w "%{http_code}\n" -m 12 \
+     -X POST https://onemetric-web.vercel.app/api/collect -H "Content-Type: text/plain" \
+     --data '{"publicKey":"om_ratelimit_probe","type":"pageview","name":"/rl"}' | sort | uniq -c
+   ```
+   Last test (before the rule): `165×204, 13×500, 0×429` → rule **not active yet**.
+- **Known issue found during that test:** `/api/collect` returned `500` on ~7% of a 40-way
+  concurrent burst (DB-pool pressure). Hardening idea (not yet done): make `ingest`/the route
+  catch DB errors and still return `204` so floods never 500. Do this in a later phase.
+
+Then: **Phase 3** (custom domain → `NEXT_PUBLIC_APP_URL` + Supabase Auth URLs), and the
+**MoR billing** wiring (2Checkout vs Paddle — see plan/TODO).
+
 ## Current Status
 
-**LIVE in production** on Vercel (`onemetric-web.vercel.app`), auto-deploying from GitHub
-(`lyesshml-del/Onemetric`). V1 MVP (0–8) + phases 9 (billing groundwork), 10
-(marketing/legal), 11 (tests+CI), 12 (deploy) done. Signup/login, dashboard, and **real
-analytics ingestion verified working in prod**. MoR billing checkout/webhook still pending a
-chosen provider. **Now configuring Email (user's "Phase 1").**
+**LIVE in production** on Vercel (`onemetric-web.vercel.app`). V1 MVP (0–8) + phases 9
+(billing groundwork), 10 (marketing/legal), 11 (tests+CI), 12 (deploy) done. Email (user's
+"Phase 1") **done**. **Phase 2 (WAF rate-limit) in progress** — the Firewall rule still
+needs to be created in the Vercel dashboard (agent can't via MCP), then verified.
 
 ## Completed (Email — Resend + Supabase SMTP)
 
