@@ -5,7 +5,7 @@ export const metadata: Metadata = {
 };
 
 const LAST_UPDATED = "June 14, 2026";
-const CONTACT = "support@onemetric.app";
+const CONTACT = "support@onemetric.sbs";
 
 export default function PrivacyPage() {
   return (

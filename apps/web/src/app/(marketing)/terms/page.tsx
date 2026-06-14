@@ -5,7 +5,7 @@ export const metadata: Metadata = {
 };
 
 const LAST_UPDATED = "June 14, 2026";
-const CONTACT = "support@onemetric.app";
+const CONTACT = "support@onemetric.sbs";
 
 export default function TermsPage() {
   return (
@@ -53,8 +53,9 @@ export default function TermsPage() {
           Paid plans are billed through our third-party payment provider (a
           merchant of record), which handles payment processing, invoicing and
           applicable taxes. Subscriptions renew until cancelled; you can cancel
-          at any time and retain access until the end of the paid period. Fees are
-          non-refundable except where required by law.
+          at any time and retain access until the end of the paid period. Refunds
+          are governed by our Refund Policy (a 14-day money-back guarantee on
+          initial purchases).
         </p>
 
         <h2>Your data</h2>

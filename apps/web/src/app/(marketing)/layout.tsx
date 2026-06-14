@@ -46,6 +46,9 @@ export default function MarketingLayout({
             <Link href="/terms" className="hover:text-foreground">
               Terms
             </Link>
+            <Link href="/refund" className="hover:text-foreground">
+              Refunds
+            </Link>
             <Link href="/login" className="hover:text-foreground">
               Sign in
             </Link>
