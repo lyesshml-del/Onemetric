@@ -16,7 +16,12 @@ chosen provider. **Now configuring Email (user's "Phase 1").**
   `REPORT_FROM_EMAIL=OneMetric <reports@onemetric.sbs>`.
 - **Supabase Auth → custom SMTP** via Resend (`smtp.resend.com:465`, user `resend`, sender
   `noreply@onemetric.sbs`) for reliable signup-confirmation emails.
-- Redeploy triggered so the new env vars take effect; **delivery verification in progress**.
+- **Verified:** triggered `GET /api/cron/weekly-reports` in prod → `{ok:true, sent:1}`,
+  `lastSentAt` stamped → **weekly-report email sends through Resend**. (A test
+  `ReportSubscription` for `supradz14@gmail.com` on DataFast was added for this — can be
+  removed in the Reports UI.)
+- **Still to confirm by the user:** the Supabase SMTP leg (signup-confirmation email) — do
+  one test signup with a fresh email to confirm it arrives from `noreply@onemetric.sbs`.
 
 ## Notes / follow-ups
 

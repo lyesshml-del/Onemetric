@@ -266,14 +266,29 @@ checkout + webhook deferred to last.
 - [x] `DEPLOY.md` runbook (GitHub push, Vercel settings, env table, DB password rotation,
       Supabase Auth/SMTP, Resend, WAF, smoke test)
 - [x] Generated fresh production secrets (handed over out-of-band, not committed)
-- [ ] **(you)** Create GitHub repo + `git push` (gh CLI not installed here)
-- [ ] **(you)** Vercel project: Root Directory `apps/web`, set env vars, deploy
-- [ ] **(you)** Rotate Supabase DB password; set Auth Site/Redirect URLs + custom SMTP
-- [ ] **(you)** Resend domain + API key; Vercel WAF rate-limit on `/api/collect`
-- [ ] **(you)** Custom domain → `NEXT_PUBLIC_APP_URL`; run the smoke-test checklist
+- [x] GitHub repo (`lyesshml-del/Onemetric`) + push; auto-deploy wired
+- [x] Vercel project (Root Directory `apps/web`) + env vars + **live deploy**
+- [x] Rotated Supabase DB password; set Auth Site/Redirect URLs
+- [x] **Verified in prod:** signup/login, dashboard, real analytics ingestion
+- [x] Fixed two prod issues: git-author deploy block (git email→GitHub email) and the
+      dashboard `Application error` (auth-id/`User` mismatch; data + `syncUser` hardened);
+      added `prisma generate` to the build
+- [ ] _(open)_ set GitHub repo back to **Private**
 
-## Phase 13 — Hardening + first client
-(planned — see plan file)
+## Post-deploy hardening (user's Phase 1–3)
+
+### Phase 1 — Email ✅ (complete)
+- [x] Domain `onemetric.sbs` bought (Vercel) + **verified in Resend** (eu-west-1)
+- [x] Vercel env (prod): `RESEND_API_KEY`, `REPORT_FROM_EMAIL=OneMetric <reports@onemetric.sbs>`
+- [x] Supabase Auth custom SMTP via Resend (`smtp.resend.com:465`, `noreply@onemetric.sbs`)
+- [x] **Verified weekly-report send in prod** (cron → `{ok:true, sent:1}`, `lastSentAt`
+      stamped). A test `ReportSubscription` (supradz14@gmail.com) was added — removable in UI.
+- [ ] _(user)_ confirm signup-confirmation email via one test signup
+
+### Phase 2 — WAF rate limit on `/api/collect` (pending)
+### Phase 3 — Custom domain → `NEXT_PUBLIC_APP_URL` (pending; domain `onemetric.sbs` ready)
+
+## Phase 13 — MoR billing wiring + first client (planned — see plan file)
 
 ---
 
