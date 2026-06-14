@@ -22,6 +22,21 @@ export async function getAuthUser(): Promise<AuthUser | null> {
  */
 export async function syncUser(authUser: AuthUser): Promise<User> {
   const email = authUser.email ?? "";
+
+  // If a row already exists for this email under a different id (e.g. the Supabase
+  // auth account was re-created with a new id), realign it to the current auth id
+  // instead of failing on the unique email constraint. Owned projects follow via
+  // the `onUpdate: Cascade` foreign key.
+  if (email) {
+    const existingByEmail = await prisma.user.findUnique({ where: { email } });
+    if (existingByEmail && existingByEmail.id !== authUser.id) {
+      return prisma.user.update({
+        where: { email },
+        data: { id: authUser.id },
+      });
+    }
+  }
+
   return prisma.user.upsert({
     where: { id: authUser.id },
     update: { email },
