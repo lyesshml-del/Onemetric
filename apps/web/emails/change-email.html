@@ -1,0 +1,47 @@
+<!doctype html>
+<!-- Supabase Auth → Emails → Templates → "Change Email Address"
+     Subject: Confirm your new email
+     Variables: {{ .ConfirmationURL }}, {{ .Email }} (current), {{ .NewEmail }} (new) -->
+<html>
+  <body style="margin:0;padding:0;background-color:#0a0a0a;font-family:Arial,Helvetica,sans-serif;">
+    <span style="display:none;max-height:0;overflow:hidden;opacity:0;">Confirm your new OneMetric email address.</span>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0a0a0a;padding:32px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="480" cellpadding="0" cellspacing="0" style="max-width:480px;width:100%;background-color:#141414;border:1px solid #262626;border-radius:12px;">
+            <tr>
+              <td style="padding:36px 36px 8px 36px;">
+                <p style="margin:0;color:#a1a1aa;font-size:12px;letter-spacing:2px;text-transform:uppercase;">OneMetric</p>
+                <h1 style="margin:14px 0 0 0;color:#fafafa;font-size:24px;font-weight:600;">Confirm your new email</h1>
+                <p style="margin:14px 0 0 0;color:#d4d4d8;font-size:15px;line-height:1.6;">
+                  You're changing your OneMetric email from <span style="color:#fafafa;">{{ .Email }}</span> to <span style="color:#fafafa;">{{ .NewEmail }}</span>. Click below to confirm the change.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:24px 36px 8px 36px;">
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td align="center" bgcolor="#fafafa" style="border-radius:8px;">
+                      <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:13px 28px;color:#0a0a0a;font-size:15px;font-weight:600;text-decoration:none;border-radius:8px;">Confirm new email</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:16px 36px 36px 36px;">
+                <p style="margin:0;color:#71717a;font-size:13px;line-height:1.6;">
+                  Or paste this link into your browser:<br/>
+                  <a href="{{ .ConfirmationURL }}" style="color:#a1a1aa;word-break:break-all;">{{ .ConfirmationURL }}</a>
+                </p>
+                <p style="margin:24px 0 0 0;color:#52525b;font-size:12px;">If you didn't request this change, you can safely ignore this email.</p>
+              </td>
+            </tr>
+          </table>
+          <p style="margin:20px 0 0 0;color:#52525b;font-size:12px;">© OneMetric · Cookieless analytics</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
