@@ -1,0 +1,28 @@
+import { Resend } from "resend";
+import type { WeeklyReport } from "./builder";
+import { WeeklyReportEmail } from "./weekly-email";
+
+/**
+ * Sends one weekly report email via Resend. Returns false (no-op) when
+ * RESEND_API_KEY is not configured, so callers can run safely without it.
+ */
+export async function sendWeeklyReport(
+  to: string,
+  report: WeeklyReport,
+): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return false;
+
+  const resend = new Resend(apiKey);
+  const from =
+    process.env.REPORT_FROM_EMAIL ?? "OneMetric <onboarding@resend.dev>";
+
+  const { error } = await resend.emails.send({
+    from,
+    to,
+    subject: `Your weekly OneMetric report — ${report.projectName}`,
+    react: WeeklyReportEmail({ report }),
+  });
+
+  return !error;
+}

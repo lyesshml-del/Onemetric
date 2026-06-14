@@ -1,0 +1,241 @@
+// OneMetric — database schema (Version 1 / MVP)
+//
+// Scope: core V1 entities only. No application logic, auth, ingestion or API here.
+// Future-version features (replay, heatmaps, A/B, flags, AI, SEO, alerts, Stripe)
+// are intentionally absent — see ROADMAP.md.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Pooled connection used by the app at runtime (e.g. Supabase pgbouncer).
+  url       = env("DATABASE_URL")
+  // Direct connection used for migrations.
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum DeviceType {
+  DESKTOP
+  MOBILE
+  TABLET
+  UNKNOWN
+}
+
+enum EventType {
+  PAGEVIEW
+  CUSTOM
+}
+
+enum FunnelMatchType {
+  PAGEVIEW_PATH
+  CUSTOM_EVENT
+}
+
+// Only PayPal in V1. The enum is kept extensible for future providers (ROADMAP).
+enum IntegrationProvider {
+  PAYPAL
+}
+
+enum IntegrationStatus {
+  CONNECTED
+  DISCONNECTED
+}
+
+// OneMetric's own subscription plan (billed via a Merchant-of-Record).
+enum Plan {
+  FREE
+  PRO
+}
+
+// ---------------------------------------------------------------------------
+// Account
+// ---------------------------------------------------------------------------
+
+/// Account owner. `id` mirrors the Supabase Auth user id (wired up in Phase 2).
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  // Subscription billing (provider = Merchant-of-Record, wired up in Phase 9).
+  plan                  Plan      @default(FREE)
+  subscriptionStatus    String?
+  currentPeriodEnd      DateTime?
+  billingCustomerId     String?   @unique
+  billingSubscriptionId String?
+
+  projects Project[]
+}
+
+/// A tracked website. `publicKey` is the id embedded in the install snippet.
+model Project {
+  id        String   @id @default(cuid())
+  name      String
+  domain    String
+  publicKey String   @unique
+  timezone  String   @default("UTC")
+  ownerId   String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  sessions            Session[]
+  events              Event[]
+  funnels             Funnel[]
+  integrations        Integration[]
+  revenueEvents       RevenueEvent[]
+  reportSubscriptions ReportSubscription[]
+
+  @@index([ownerId])
+}
+
+// ---------------------------------------------------------------------------
+// Analytics core
+// ---------------------------------------------------------------------------
+
+/// A single visit. Pre-aggregated metrics power duration / bounce / uniques
+/// without scanning the Event firehose. `visitorHash` is cookieless (Phase 3).
+model Session {
+  id             String     @id @default(cuid())
+  projectId      String
+  visitorHash    String
+  startedAt      DateTime   @default(now())
+  lastEventAt    DateTime   @default(now())
+  pageviewCount  Int        @default(0)
+  entryPath      String?
+  exitPath       String?
+  referrer       String?
+  referrerDomain String?
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+  country        String?    @db.Char(2)
+  device         DeviceType @default(UNKNOWN)
+  browser        String?
+  os             String?
+
+  project       Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  events        Event[]
+  revenueEvents RevenueEvent[]
+
+  @@index([projectId, startedAt])
+  @@index([projectId, visitorHash])
+  @@index([projectId, utmSource])
+  @@index([projectId, utmCampaign])
+}
+
+/// Unified firehose: pageviews and custom events. For a pageview, `name` is the
+/// path; for a custom event, `name` is the event name and props live in `metadata`.
+model Event {
+  id        String    @id @default(cuid())
+  projectId String
+  sessionId String
+  type      EventType
+  name      String
+  path      String?
+  referrer  String?
+  metadata  Json?
+  createdAt DateTime  @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, createdAt])
+  @@index([projectId, type, name, createdAt])
+  @@index([sessionId])
+}
+
+// ---------------------------------------------------------------------------
+// Funnels
+// ---------------------------------------------------------------------------
+
+model Funnel {
+  id        String   @id @default(cuid())
+  projectId String
+  name      String
+  createdAt DateTime @default(now())
+
+  project Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  steps   FunnelStep[]
+
+  @@index([projectId])
+}
+
+model FunnelStep {
+  id         String          @id @default(cuid())
+  funnelId   String
+  order      Int
+  matchType  FunnelMatchType
+  matchValue String
+
+  funnel Funnel @relation(fields: [funnelId], references: [id], onDelete: Cascade)
+
+  @@unique([funnelId, order])
+}
+
+// ---------------------------------------------------------------------------
+// Revenue attribution (PayPal in V1)
+// ---------------------------------------------------------------------------
+
+/// A revenue provider connection per project. Credentials are encrypted at the
+/// application layer (Phase 7); stored as opaque JSON here.
+model Integration {
+  id          String              @id @default(cuid())
+  projectId   String
+  provider    IntegrationProvider @default(PAYPAL)
+  status      IntegrationStatus   @default(DISCONNECTED)
+  credentials Json?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, provider])
+}
+
+/// A payment plus its attribution snapshot (revenue by source / by campaign).
+/// `sessionId` links to the originating visit when it can be resolved.
+model RevenueEvent {
+  id          String              @id @default(cuid())
+  projectId   String
+  provider    IntegrationProvider @default(PAYPAL)
+  externalId  String
+  amount      Decimal             @db.Decimal(12, 2)
+  currency    String              @db.Char(3)
+  occurredAt  DateTime
+  sessionId   String?
+  utmSource   String?
+  utmCampaign String?
+  createdAt   DateTime            @default(now())
+
+  project Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  session Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  @@unique([projectId, externalId])
+  @@index([projectId, occurredAt])
+  @@index([projectId, utmSource])
+  @@index([projectId, utmCampaign])
+}
+
+// ---------------------------------------------------------------------------
+// Weekly reports
+// ---------------------------------------------------------------------------
+
+model ReportSubscription {
+  id         String    @id @default(cuid())
+  projectId  String
+  email      String
+  enabled    Boolean   @default(true)
+  lastSentAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}

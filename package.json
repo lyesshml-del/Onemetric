@@ -1,0 +1,22 @@
+{
+  "name": "onemetric",
+  "version": "0.0.0",
+  "private": true,
+  "description": "OneMetric — simple, affordable analytics for indie hackers and SaaS founders.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @onemetric/web",
+    "build:tracker": "npm run build --workspace @onemetric/tracker",
+    "build": "npm run build:tracker && npm run build --workspace @onemetric/web",
+    "start": "npm run start --workspace @onemetric/web",
+    "lint": "npm run lint --workspace @onemetric/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspace @onemetric/web"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

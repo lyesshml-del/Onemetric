@@ -1,0 +1,12 @@
+# Normalize line endings to LF for all text files (keeps the tracker bundle and
+# Prisma migration checksums byte-stable across Windows/Linux).
+* text=auto eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
