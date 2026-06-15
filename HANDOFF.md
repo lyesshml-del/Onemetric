@@ -54,8 +54,9 @@ secret (`PADDLE_WEBHOOK_SECRET`) → wire Paddle.js checkout in the billing page
 already built (schema, `lib/plans.ts`, gating, billing page, `actions/billing.ts` seam).
 See `plan-what-need-to-prancy-wren.md` Workstream 1 / TODO Phase 13.
 
-**▶ Meanwhile (not blocked by Paddle):** (1) free receiving inbox for `support@onemetric.sbs`
-(ImprovMX MX records at Vercel DNS → Gmail) — launch-blocker; (2) **set GitHub repo Private**;
+**▶ Meanwhile (not blocked by Paddle):** (1) ~~free receiving inbox for `support@onemetric.sbs`~~
+DONE — ImprovMX catch-all `*@onemetric.sbs` → `lyesshml@gmail.com` (MX mx1/mx2.improvmx.com +
+SPF at Vercel DNS, verified, test email received 2026-06-15); (2) **set GitHub repo Private**;
 (3) clean test data from live DB (see Cleanup in TODO); (4) optional `/api/collect` 500
 hardening; (5) professional legal review of `/privacy` `/terms` `/refund` + Algeria ANPDP
 cross-border transfer.
@@ -210,9 +211,8 @@ is required** (esp. Algerian + EU counsel). What was verified:
      current process (authority operational status pending).
   2. Assess **DPO / processing-records / DPIA** obligations under Law 11-25.
   3. ~~Replace the placeholder contact~~ DONE — now `support@onemetric.sbs` on privacy /
-     terms / refund. **Still needs a receiving inbox** (domain only *sends* via Resend);
-     set up free forwarding (ImprovMX MX records at Vercel DNS → personal Gmail) before
-     onboarding a real client, or refund/support emails will bounce.
+     terms / refund, and it **receives** mail via ImprovMX forwarding → `lyesshml@gmail.com`
+     (verified 2026-06-15). (Sending *as* support@ from Gmail is still an optional later step.)
   4. Confirm the **governing-law** clause (Terms now says Algeria) with counsel.
   5. Reconnect the Legal Data Hunter MCP for corpus-grounded, citable verification.
 

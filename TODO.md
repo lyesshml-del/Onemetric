@@ -238,8 +238,8 @@ checkout + webhook deferred to last.
 - [x] Legal: `(marketing)/privacy/page.tsx` + `terms/page.tsx` + `refund/page.tsx`
       (cookieless / no-PII / EU data emphasis; refund = 14-day money-back, added 2026-06-14
       for Paddle website verification) — **still templates, need professional legal review.**
-      Contact replaced with real `support@onemetric.sbs` (needs a receiving inbox set up —
-      see HANDOFF).
+      Contact replaced with real `support@onemetric.sbs` — **receiving** via ImprovMX
+      forwarding → Gmail (verified 2026-06-15).
 - [x] SEO: `robots.ts` (disallow /dashboard,/api), `sitemap.ts`, `opengraph-image.tsx`
       (next/og), root `metadataBase` + OpenGraph/Twitter
 - [x] Verified on a running server: `/ /pricing /privacy /terms /login /signup` → 200;
