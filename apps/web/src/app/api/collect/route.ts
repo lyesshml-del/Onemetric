@@ -47,8 +47,14 @@ export async function POST(request: NextRequest) {
   const country =
     countryHeader && countryHeader.length === 2 ? countryHeader : null;
 
-  // Fire-and-forget semantics: always 204, never reveal whether the key exists.
-  await ingest(parsed.data, { ip, userAgent, country });
+  // Fire-and-forget semantics: always 204 — never reveal whether the key exists,
+  // and never surface DB/transient errors to the caller. A flood that exhausts the
+  // DB pool must degrade to a dropped event, not a 500.
+  try {
+    await ingest(parsed.data, { ip, userAgent, country });
+  } catch (err) {
+    console.error("[collect] ingest failed", err);
+  }
 
   return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
 }

@@ -61,9 +61,11 @@ SPF at Vercel DNS, verified, test email received 2026-06-15); (2) **set GitHub r
 hardening; (5) professional legal review of `/privacy` `/terms` `/refund` + Algeria ANPDP
 cross-border transfer.
 
-- **Known issue (not blocking, do later):** `/api/collect` returns `500` on ~2% of a 40-way
-  concurrent burst (DB-pool pressure; `4/180` post-rule). Hardening idea: make `ingest`/the
-  route catch DB errors and still return `204` so floods never 500. Deferred.
+- **Fixed (2026-06-15):** `/api/collect` used to return `500` on ~2% of a 40-way burst
+  (DB-pool pressure; `4/180`). The route now wraps `ingest` in try/catch → logs + returns
+  `204`, so floods degrade to dropped events, never 500. Regression test added
+  (`src/app/api/collect/route.test.ts`, 42 tests total). **Re-run the burst after deploy to
+  confirm `0×500`.**
 
 ## Context notes (from chat — easy to miss otherwise)
 

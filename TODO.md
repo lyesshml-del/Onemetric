@@ -295,8 +295,9 @@ checkout + webhook deferred to last.
       Window) 100 req / 10s per IP → Deny (429). Published/live.
 - [x] **(agent)** verified with the burst command in HANDOFF. Post-rule test (2026-06-14):
       `143×204, 33×429, 4×500` → `429`s appear (were `0` before) → rule **active**.
-- [ ] _(later, not now)_ harden `/api/collect` to return `204` on DB errors (still ~2% `500`
-      under a 40-way concurrent burst; `4/180` this run).
+- [x] harden `/api/collect` to return `204` on DB errors (route now wraps `ingest` in
+      try/catch → logs + 204, never 500; regression test in `route.test.ts`). 2026-06-15.
+      Re-verify in prod with the burst after deploy (expect `0×500`).
 
 ### Phase 3 — Custom domain → `NEXT_PUBLIC_APP_URL` ✅ (complete, 2026-06-14)
 - [x] `onemetric.sbs` attached to Vercel (apex serves the app; `www` 307→apex)
