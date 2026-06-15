@@ -277,7 +277,8 @@ checkout + webhook deferred to last.
 - [x] Fixed two prod issues: git-author deploy block (git email→GitHub email) and the
       dashboard `Application error` (auth-id/`User` mismatch; data + `syncUser` hardened);
       added `prisma generate` to the build
-- [ ] _(open)_ set GitHub repo back to **Private**
+- [ ] _(open)_ set GitHub repo back to **Private** — needs Vercel GitHub App private-repo
+      access first (else deploys go `BLOCKED`); kept public for now (see HANDOFF gotchas)
 
 ## Post-deploy hardening (user's Phase 1–3)
 
@@ -295,9 +296,9 @@ checkout + webhook deferred to last.
       Window) 100 req / 10s per IP → Deny (429). Published/live.
 - [x] **(agent)** verified with the burst command in HANDOFF. Post-rule test (2026-06-14):
       `143×204, 33×429, 4×500` → `429`s appear (were `0` before) → rule **active**.
-- [x] harden `/api/collect` to return `204` on DB errors (route now wraps `ingest` in
+- [x] harden `/api/collect` to return `204` on DB errors (route wraps `ingest` in
       try/catch → logs + 204, never 500; regression test in `route.test.ts`). 2026-06-15.
-      Re-verify in prod with the burst after deploy (expect `0×500`).
+      **Verified live**: two 40-way bursts → `0×500` (was `4/180`). Deployed in `3f63a3a`.
 
 ### Phase 3 — Custom domain → `NEXT_PUBLIC_APP_URL` ✅ (complete, 2026-06-14)
 - [x] `onemetric.sbs` attached to Vercel (apex serves the app; `www` 307→apex)
@@ -310,7 +311,9 @@ checkout + webhook deferred to last.
 - [ ] Remove test data from the live DB: test `ReportSubscription` (supradz14@gmail.com),
       test analytics in DataFast (session + pageviews + `signup`), and unconfirmed auth users
       for `adembensari7@gmail.com`.
-- [ ] Set the GitHub repo back to **Private**.
+- [ ] Set the GitHub repo back to **Private** — ⚠️ only after granting the **Vercel GitHub
+      App** access to the private repo, or all deploys go `BLOCKED` (learned 2026-06-15; repo
+      is **public** for now). See deploy gotchas in HANDOFF.
 
 ## Phase 13 — MoR billing wiring (2Checkout vs Paddle, Algeria payout) + first client (see plan)
 

@@ -56,16 +56,28 @@ See `plan-what-need-to-prancy-wren.md` Workstream 1 / TODO Phase 13.
 
 **▶ Meanwhile (not blocked by Paddle):** (1) ~~free receiving inbox for `support@onemetric.sbs`~~
 DONE — ImprovMX catch-all `*@onemetric.sbs` → `lyesshml@gmail.com` (MX mx1/mx2.improvmx.com +
-SPF at Vercel DNS, verified, test email received 2026-06-15); (2) **set GitHub repo Private**;
-(3) clean test data from live DB (see Cleanup in TODO); (4) optional `/api/collect` 500
-hardening; (5) professional legal review of `/privacy` `/terms` `/refund` + Algeria ANPDP
-cross-border transfer.
+SPF at Vercel DNS, verified, test email received 2026-06-15); (2) ~~set GitHub repo Private~~
+**REVERTED to PUBLIC** — see deploy gotchas below; (3) clean test data from live DB (see
+Cleanup in TODO); (4) ~~`/api/collect` 500 hardening~~ DONE (verified live); (5) professional
+legal review of `/privacy` `/terms` `/refund` + Algeria ANPDP cross-border transfer.
 
-- **Fixed (2026-06-15):** `/api/collect` used to return `500` on ~2% of a 40-way burst
-  (DB-pool pressure; `4/180`). The route now wraps `ingest` in try/catch → logs + returns
-  `204`, so floods degrade to dropped events, never 500. Regression test added
-  (`src/app/api/collect/route.test.ts`, 42 tests total). **Re-run the burst after deploy to
-  confirm `0×500`.**
+**⚠️ Vercel deploy gotchas (cost ~1h on 2026-06-15 — read before deploying):**
+- **Repo must stay PUBLIC.** Setting the GitHub repo **Private** makes every Vercel deploy
+  go to state **`BLOCKED`** (Vercel's GitHub app on this plan can't pull the private repo).
+  Repo is currently **public**. To go private later you must first grant the **Vercel GitHub
+  App** access to the private repo (GitHub → Settings → Applications → Vercel → Configure).
+- **Empty / non-`apps/web` commits are auto-skipped** → deploy state **`CANCELED`**, no build.
+  Root Directory is `apps/web`, so Vercel skips builds when a commit changes no files there
+  (empty commits, root-only doc commits). To force a real deploy, change a file **under
+  `apps/web`** (or use dashboard Deployments → ⋯ → Redeploy — but note a `BLOCKED` deploy
+  shows "cannot be redeployed, push a fresh commit").
+- Toggling repo visibility can drop the Git connection → **Settings → Git → reconnect**.
+
+- **Fixed + verified live (2026-06-15):** `/api/collect` used to return `500` on ~2% of a
+  40-way burst (DB-pool pressure; `4/180`). The route now wraps `ingest` in try/catch → logs
+  + returns `204`, so floods degrade to dropped events, never 500. Regression test added
+  (`src/app/api/collect/route.test.ts`, 42 tests total). Deployed in `3f63a3a`; two prod
+  bursts → **`0×500`**.
 
 ## Context notes (from chat — easy to miss otherwise)
 
