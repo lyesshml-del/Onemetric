@@ -15,9 +15,12 @@ export async function manageBilling(): Promise<BillingActionState> {
   if (!user.billingCustomerId) {
     return { error: "No active subscription to manage yet." };
   }
-  const url = await createPortalSession(user.billingCustomerId);
-  if (!url) {
-    return { error: "Couldn’t open the billing portal. Please try again." };
+  const result = await createPortalSession(user.billingCustomerId);
+  if (!result.url) {
+    // Temporary: surface the precise reason in the UI to debug the portal setup.
+    return {
+      error: `Couldn’t open the billing portal — ${result.error ?? "unknown"}`,
+    };
   }
-  return { url };
+  return { url: result.url };
 }

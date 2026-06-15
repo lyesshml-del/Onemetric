@@ -121,16 +121,16 @@ export async function handlePaddleEvent(event: PaddleEvent): Promise<void> {
 }
 
 /**
- * Creates a Paddle customer-portal session and returns its overview URL, or null
- * when billing isn't configured or the call fails. Server-only (uses the API key).
+ * Creates a Paddle customer-portal session. Returns `{ url }` on success or
+ * `{ error }` with the reason. Server-only (uses the API key).
  */
 export async function createPortalSession(
   customerId: string,
-): Promise<string | null> {
+): Promise<{ url?: string; error?: string }> {
   const apiKey = process.env.PADDLE_API_KEY;
   if (!apiKey) {
     console.error("[paddle] PADDLE_API_KEY is not set");
-    return null;
+    return { error: "PADDLE_API_KEY not set" };
   }
 
   try {
@@ -146,20 +146,21 @@ export async function createPortalSession(
       },
     );
     if (!res.ok) {
-      console.error(
-        `[paddle] portal-session failed (${res.status}):`,
-        await res.text().catch(() => ""),
-      );
-      return null;
+      const body = await res.text().catch(() => "");
+      console.error(`[paddle] portal-session failed (${res.status}):`, body);
+      return { error: `Paddle ${res.status} (${PADDLE_API_BASE}): ${body.slice(0, 160)}` };
     }
     const json = (await res.json()) as {
       data?: { urls?: { general?: { overview?: string } } };
     };
-    const url = json.data?.urls?.general?.overview ?? null;
-    if (!url) console.error("[paddle] portal-session: no overview url in response");
-    return url;
+    const url = json.data?.urls?.general?.overview;
+    if (!url) {
+      console.error("[paddle] portal-session: no overview url in response");
+      return { error: "Paddle response had no portal URL" };
+    }
+    return { url };
   } catch (err) {
     console.error("[paddle] portal-session error", err);
-    return null;
+    return { error: `fetch error: ${String(err)}` };
   }
 }
