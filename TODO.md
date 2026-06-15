@@ -240,15 +240,19 @@ checkout + webhook deferred to last.
       `plan=PRO, subscriptionStatus=trialing, currentPeriodEnd=2026-06-22`; then cancel →
       `plan=FREE, subscriptionStatus=canceled, currentPeriodEnd=null`. Required adding
       `onemetric.sbs` as an approved domain in Paddle Checkout settings.
-- [ ] **Manage-billing portal button** returned "Couldn't open the billing portal" —
-      likely `PADDLE_API_KEY` not set in Vercel (or missing Customers scope / no redeploy).
-      Added logging (`createPortalSession`) to diagnose. Verify before go-live.
+- [x] **Manage-billing portal VERIFIED (2026-06-15):** opens the Paddle customer portal.
+      Root cause of initial 403 "not authorized to create customer-portal-session" = the
+      API key was missing the **Customer portal sessions: Write** scope (plus Customers
+      R/W). ⚠️ The **production** API key needs those same scopes. Portal cancel = graceful
+      (cancel at period end → stays PRO until `currentPeriodEnd`, then `subscription.canceled`
+      → FREE); dashboard "cancel immediately" → FREE now. Both confirmed.
 - [ ] **GO LIVE:** in **production** Paddle (`vendors.paddle.com`) recreate the Pro product +
-      $19/mo price (prod `pri_…`), create a production client token + API key + webhook
-      destination (→ `https://onemetric.sbs/api/webhooks/paddle`), add `onemetric.sbs` to
-      production Checkout approved domains, then set the 5 Vercel env vars to the production
-      values (`NEXT_PUBLIC_PADDLE_ENV=production`) and redeploy. Confirm Paddle **payout
-      details** added first.
+      $19/mo price w/ 7-day trial (prod `pri_…`), create a production **client token** +
+      **API key** (scopes: **Customer portal sessions: Write** + **Customers: R/W**) +
+      **webhook destination** (→ `https://onemetric.sbs/api/webhooks/paddle`, usage Both, all
+      subscription events), add `onemetric.sbs` to production **Checkout approved domains**,
+      then set the 5 Vercel env vars to production values (`NEXT_PUBLIC_PADDLE_ENV=production`)
+      and redeploy. Confirm Paddle **payout details** added first.
 
 ## Phase 10 — Public site + legal ✅ (complete)
 

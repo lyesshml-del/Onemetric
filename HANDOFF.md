@@ -55,16 +55,19 @@ Code in `server/ingest/paddle.ts` (+ `paddle.test.ts`), `api/webhooks/paddle/rou
 API key, `pri_01kv625awpdgwezwk0b2xttgbc`, webhook secret), webhook destination created
 (usage type **Both**, all subscription events), `onemetric.sbs` added as a Paddle Checkout
 **approved domain** (this was needed — overlay errors "Something went wrong" without it).
-Test-card checkout → webhook → DB confirmed: `supradz14@gmail.com` → `plan=PRO,
-subscriptionStatus=trialing, currentPeriodEnd=2026-06-22`, `ctm_…`/`sub_…` set.
+Full lifecycle confirmed: checkout → `plan=PRO, trialing`; **Manage-billing portal opens**
+(needed the API key scope **Customer portal sessions: Write** + Customers R/W — initial 403
+without it); cancel-immediately → FREE; cancel-at-period-end (portal) → stays PRO until
+`currentPeriodEnd` then FREE.
 
 **Remaining to actually charge real customers:**
 1. **Add Paddle payout details** (Business Account → Payouts) — SWIFT to USD/EUR or PayPal.
 2. **GO LIVE:** in **production** Paddle (`vendors.paddle.com`) recreate the Pro product +
-   $19/mo price (prod `pri_…`), create prod client token + API key + webhook destination
-   (→ `https://onemetric.sbs/api/webhooks/paddle`), add `onemetric.sbs` to prod Checkout
-   approved domains, then set the 5 Vercel env vars to **production** values
-   (`NEXT_PUBLIC_PADDLE_ENV=production`) and redeploy.
+   $19/mo price w/ 7-day trial (prod `pri_…`), create a prod **client token** + **API key**
+   (scopes: **Customer portal sessions: Write** + **Customers: R/W**) + **webhook destination**
+   (→ `https://onemetric.sbs/api/webhooks/paddle`, usage Both, all subscription events), add
+   `onemetric.sbs` to prod Checkout **approved domains**, then set the 5 Vercel env vars to
+   **production** values (`NEXT_PUBLIC_PADDLE_ENV=production`) and redeploy.
 3. **Cleanup:** reset `supradz14@gmail.com` to FREE (the sandbox sub left it PRO/trialing
    with sandbox-only ids) — see Cleanup in TODO.
 See `plan-what-need-to-prancy-wren.md` Workstream 1 / TODO Phase 9 remaining.

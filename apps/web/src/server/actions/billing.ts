@@ -17,10 +17,9 @@ export async function manageBilling(): Promise<BillingActionState> {
   }
   const result = await createPortalSession(user.billingCustomerId);
   if (!result.url) {
-    // Temporary: surface the precise reason in the UI to debug the portal setup.
-    return {
-      error: `Couldn’t open the billing portal — ${result.error ?? "unknown"}`,
-    };
+    // Reason is logged server-side in createPortalSession; keep the UI generic.
+    console.error("[billing] manageBilling failed:", result.error);
+    return { error: "Couldn’t open the billing portal. Please try again." };
   }
   return { url: result.url };
 }
