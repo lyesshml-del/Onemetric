@@ -236,10 +236,13 @@ checkout + webhook deferred to last.
       (copy its signing secret).
 - [ ] **(user)** set Vercel env: `NEXT_PUBLIC_PADDLE_ENV=sandbox`, `NEXT_PUBLIC_PADDLE_CLIENT_TOKEN`,
       `NEXT_PUBLIC_PADDLE_PRICE_PRO`, `PADDLE_API_KEY`, `PADDLE_WEBHOOK_SECRET` → redeploy.
-- [x] **Sandbox end-to-end VERIFIED (2026-06-15):** test-card checkout → signed webhook →
-      `User` synced: `plan=PRO`, `subscriptionStatus=trialing`, `currentPeriodEnd=2026-06-22`,
-      `billingCustomerId`/`billingSubscriptionId` set. Required adding `onemetric.sbs` as an
-      approved domain in Paddle Checkout settings.
+- [x] **Sandbox end-to-end VERIFIED (2026-06-15) — both directions:** test-card checkout →
+      `plan=PRO, subscriptionStatus=trialing, currentPeriodEnd=2026-06-22`; then cancel →
+      `plan=FREE, subscriptionStatus=canceled, currentPeriodEnd=null`. Required adding
+      `onemetric.sbs` as an approved domain in Paddle Checkout settings.
+- [ ] **Manage-billing portal button** returned "Couldn't open the billing portal" —
+      likely `PADDLE_API_KEY` not set in Vercel (or missing Customers scope / no redeploy).
+      Added logging (`createPortalSession`) to diagnose. Verify before go-live.
 - [ ] **GO LIVE:** in **production** Paddle (`vendors.paddle.com`) recreate the Pro product +
       $19/mo price (prod `pri_…`), create a production client token + API key + webhook
       destination (→ `https://onemetric.sbs/api/webhooks/paddle`), add `onemetric.sbs` to
