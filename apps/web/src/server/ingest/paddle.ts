@@ -128,7 +128,10 @@ export async function createPortalSession(
   customerId: string,
 ): Promise<string | null> {
   const apiKey = process.env.PADDLE_API_KEY;
-  if (!apiKey) return null;
+  if (!apiKey) {
+    console.error("[paddle] PADDLE_API_KEY is not set");
+    return null;
+  }
 
   try {
     const res = await fetch(
@@ -142,12 +145,21 @@ export async function createPortalSession(
         body: JSON.stringify({}),
       },
     );
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.error(
+        `[paddle] portal-session failed (${res.status}):`,
+        await res.text().catch(() => ""),
+      );
+      return null;
+    }
     const json = (await res.json()) as {
       data?: { urls?: { general?: { overview?: string } } };
     };
-    return json.data?.urls?.general?.overview ?? null;
-  } catch {
+    const url = json.data?.urls?.general?.overview ?? null;
+    if (!url) console.error("[paddle] portal-session: no overview url in response");
+    return url;
+  } catch (err) {
+    console.error("[paddle] portal-session error", err);
     return null;
   }
 }
