@@ -236,8 +236,16 @@ checkout + webhook deferred to last.
       (copy its signing secret).
 - [ ] **(user)** set Vercel env: `NEXT_PUBLIC_PADDLE_ENV=sandbox`, `NEXT_PUBLIC_PADDLE_CLIENT_TOKEN`,
       `NEXT_PUBLIC_PADDLE_PRICE_PRO`, `PADDLE_API_KEY`, `PADDLE_WEBHOOK_SECRET` → redeploy.
-- [ ] Sandbox end-to-end (checkout with Paddle test card → webhook → `User.plan` flips to PRO;
-      verify via Supabase MCP). Then swap to **production** Paddle values to go live.
+- [x] **Sandbox end-to-end VERIFIED (2026-06-15):** test-card checkout → signed webhook →
+      `User` synced: `plan=PRO`, `subscriptionStatus=trialing`, `currentPeriodEnd=2026-06-22`,
+      `billingCustomerId`/`billingSubscriptionId` set. Required adding `onemetric.sbs` as an
+      approved domain in Paddle Checkout settings.
+- [ ] **GO LIVE:** in **production** Paddle (`vendors.paddle.com`) recreate the Pro product +
+      $19/mo price (prod `pri_…`), create a production client token + API key + webhook
+      destination (→ `https://onemetric.sbs/api/webhooks/paddle`), add `onemetric.sbs` to
+      production Checkout approved domains, then set the 5 Vercel env vars to the production
+      values (`NEXT_PUBLIC_PADDLE_ENV=production`) and redeploy. Confirm Paddle **payout
+      details** added first.
 
 ## Phase 10 — Public site + legal ✅ (complete)
 
@@ -321,6 +329,10 @@ checkout + webhook deferred to last.
 - [ ] Remove test data from the live DB: test `ReportSubscription` (supradz14@gmail.com),
       test analytics in DataFast (session + pageviews + `signup`), and unconfirmed auth users
       for `adembensari7@gmail.com`.
+- [ ] **Reset `supradz14@gmail.com` billing** — sandbox checkout left it `plan=PRO,
+      trialing` with **sandbox** customer/subscription ids (`ctm_…`/`sub_…`) that don't exist
+      in production Paddle. Reset to FREE (clear plan/subscriptionStatus/currentPeriodEnd/
+      billingCustomerId/billingSubscriptionId) before launch, unless comping the founder.
 - [ ] Set the GitHub repo back to **Private** — ⚠️ only after granting the **Vercel GitHub
       App** access to the private repo, or all deploys go `BLOCKED` (learned 2026-06-15; repo
       is **public** for now). See deploy gotchas in HANDOFF.

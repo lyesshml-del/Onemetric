@@ -51,21 +51,22 @@ free trial**, Sandbox price `pri_01kv625awpdgwezwk0b2xttgbc`. New deps: `@paddle
 Code in `server/ingest/paddle.ts` (+ `paddle.test.ts`), `api/webhooks/paddle/route.ts`,
 `actions/billing.ts`, `components/dashboard/{upgrade-button,manage-billing-button}.tsx`.
 
-**To finish (user actions, then test):**
-1. Paddle **Sandbox** → Developer Tools → Authentication: create a **client-side token** +
-   an **API key**. Notifications: create a **webhook destination** →
-   `https://onemetric.sbs/api/webhooks/paddle` → copy its **signing secret**.
-2. Set Vercel env (**sandbox values** for testing): `NEXT_PUBLIC_PADDLE_ENV=sandbox`,
-   `NEXT_PUBLIC_PADDLE_CLIENT_TOKEN`, `NEXT_PUBLIC_PADDLE_PRICE_PRO=pri_01kv625awpdgwezwk0b2xttgbc`,
-   `PADDLE_API_KEY`, `PADDLE_WEBHOOK_SECRET` → **redeploy** (NEXT_PUBLIC needs rebuild).
-3. Test on prod URL (no real customers yet): log in → /dashboard/billing → Upgrade → Paddle
-   **test card** → checkout completes → webhook → verify `User.plan=PRO` via Supabase MCP.
-4. **Go live:** swap the 5 env vars to **production** Paddle values (env=production, prod
-   client token, prod `pri_…`, prod API key, prod webhook dest+secret), redeploy.
-- **Still pending (user):** add Paddle **payout details** (Business Account → Payouts) — the
-  "can funds actually reach Algeria" check (SWIFT to USD/EUR, or PayPal).
-- Until env is set, the billing UI gracefully shows "Upgrades aren’t configured yet" and the
-  webhook returns 500 `not_configured` (nothing calls it). Safe to deploy now.
+**✅ SANDBOX END-TO-END VERIFIED (2026-06-15):** sandbox env set in Vercel (client token,
+API key, `pri_01kv625awpdgwezwk0b2xttgbc`, webhook secret), webhook destination created
+(usage type **Both**, all subscription events), `onemetric.sbs` added as a Paddle Checkout
+**approved domain** (this was needed — overlay errors "Something went wrong" without it).
+Test-card checkout → webhook → DB confirmed: `supradz14@gmail.com` → `plan=PRO,
+subscriptionStatus=trialing, currentPeriodEnd=2026-06-22`, `ctm_…`/`sub_…` set.
+
+**Remaining to actually charge real customers:**
+1. **Add Paddle payout details** (Business Account → Payouts) — SWIFT to USD/EUR or PayPal.
+2. **GO LIVE:** in **production** Paddle (`vendors.paddle.com`) recreate the Pro product +
+   $19/mo price (prod `pri_…`), create prod client token + API key + webhook destination
+   (→ `https://onemetric.sbs/api/webhooks/paddle`), add `onemetric.sbs` to prod Checkout
+   approved domains, then set the 5 Vercel env vars to **production** values
+   (`NEXT_PUBLIC_PADDLE_ENV=production`) and redeploy.
+3. **Cleanup:** reset `supradz14@gmail.com` to FREE (the sandbox sub left it PRO/trialing
+   with sandbox-only ids) — see Cleanup in TODO.
 See `plan-what-need-to-prancy-wren.md` Workstream 1 / TODO Phase 9 remaining.
 
 **▶ Meanwhile (not blocked by Paddle):** (1) ~~free receiving inbox for `support@onemetric.sbs`~~
