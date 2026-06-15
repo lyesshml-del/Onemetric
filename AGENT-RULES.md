@@ -1,10 +1,11 @@
 # Current Phase
 
-Version 1 MVP.
+**Launch.** The Version 1 MVP is complete and LIVE in production, plus accepted launch-prep
+scope: Paddle subscription billing, public marketing site + legal pages, tests + CI, deploy,
+and post-deploy hardening. See `plan-what-need-to-prancy-wren.md`, `TODO.md`, `HANDOFF.md`.
 
-Implement only Version 1.
-
-Never implement Version 2 or later.
+Still **never implement Version 2 or later** ROADMAP items (session replay, heatmaps, A/B,
+feature flags, AI reports, SEO tracking, alerts, Stripe customer-revenue integration).
 
 ---
 

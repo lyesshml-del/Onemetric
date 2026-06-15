@@ -11,7 +11,9 @@ query the DB / logs / deployments).
 **Live facts**
 - App: canonical URL is **`https://onemetric.sbs`** (apex; Phase 3 done). The
   `https://onemetric-web.vercel.app` host still works as a fallback (old installs use it).
-- GitHub: `lyesshml-del/Onemetric` (auto-deploys on push to `main`). Set repo **Private**.
+- GitHub: `lyesshml-del/Onemetric` (auto-deploys on push to `main`). **Keep PUBLIC** —
+  making it private breaks Vercel deploys unless the Vercel GitHub App is granted private-repo
+  access first (see deploy gotchas below).
 - Supabase project ref: `ladsqshpcdyjruzohkvb` (eu-central-1).
 - Vercel project: `onemetric-web`, team `team_mgBu3PTBSTUAfy4tql0wgxDw`.
 - Email working: Resend (domain `onemetric.sbs` verified) + Supabase SMTP
@@ -103,7 +105,7 @@ legal review of `/privacy` `/terms` `/refund` + Algeria ANPDP cross-border trans
 - The build phases **0–8** = the V1 MVP; **9–13** in `plan-what-need-to-prancy-wren.md` =
   billing / marketing / tests / deploy / hardening.
 - The user later said **"Phase 1 / 2 / 3"** to mean the *post-deploy hardening* items:
-  **1 = Email (done), 2 = WAF rate-limit (in progress), 3 = custom domain (not started)**.
+  **1 = Email ✅, 2 = WAF rate-limit ✅, 3 = custom domain ✅** (all done 2026-06-14/15).
 
 **Accounts / emails (these tripped us up — keep straight):**
 - Vercel account: **lyesshml@gmail.com** · GitHub account: **himranelyess@gmail.com**
@@ -112,11 +114,10 @@ legal review of `/privacy` `/terms` `/refund` + Algeria ANPDP cross-border trans
 - App login (the founder's own test account, owns the **DataFast** project):
   **supradz14@gmail.com**. A friend tested signup with **adembensari7@gmail.com**.
 
-**Billing (important constraint):** founder is in **Algeria** → **Stripe is not available** →
-decision is a **Merchant-of-Record**; **2Checkout vs Paddle is still UNDECIDED** (needs
-Algeria-payout approval; 2CheckoutPayoneer vs Paddle-SWIFT). MoR-agnostic groundwork is
-already built (schema, `lib/plans.ts`, gating, billing page, action seam) — only the
-provider checkout + `POST /api/webhooks/<mor>` remain.
+**Billing (resolved):** founder is in **Algeria** → **Stripe unavailable** → Merchant-of-Record
+= **Paddle** (chosen 2026-06-15; verification PASSED, Algeria seller approved). Full integration
+**built + sandbox-verified** (checkout, webhook, portal, cancel). Remaining = production keys +
+**payout details** + go-live + cleanup (see the billing block in the RESUME section above).
 
 **Test data currently in the LIVE database (clean up before onboarding a real client):**
 - A test `ReportSubscription` (`rsub_test_*`, `supradz14@gmail.com`) on DataFast.
@@ -132,10 +133,12 @@ The dev DB password was leaked via `.claude/` earlier → history scrubbed, pass
 
 ## Current Status
 
-**LIVE in production** on Vercel (`onemetric-web.vercel.app`). V1 MVP (0–8) + phases 9
-(billing groundwork), 10 (marketing/legal), 11 (tests+CI), 12 (deploy) done. Email (user's
-"Phase 1") **done**. **Phase 2 (WAF rate-limit) in progress** — the Firewall rule still
-needs to be created in the Vercel dashboard (agent can't via MCP), then verified.
+**LIVE in production** at **`https://onemetric.sbs`**. V1 MVP (0–8) + phases 9 (billing),
+10 (marketing/legal), 11 (tests+CI), 12 (deploy) done. Post-deploy hardening **all done**:
+Email ✅, WAF rate-limit ✅, custom domain ✅, `/api/collect` 500-hardening ✅. **Paddle
+billing built + sandbox-verified end-to-end** (2026-06-15). **Only config remains to charge
+real customers:** Paddle payout details + production keys/go-live + test-data cleanup (all in
+the RESUME section above). 48 tests green.
 
 ## Completed (Email — Resend + Supabase SMTP)
 

@@ -108,10 +108,43 @@ After the first deploy, verify:
 - [ ] Cron: `curl -H "Authorization: Bearer $CRON_SECRET" https://<APP_URL>/api/cron/weekly-reports`
       returns `{ok:true,...}`; without the header → `401`.
 
-## 9. Still pending (tracked elsewhere)
+## 9. Billing — Paddle (built + sandbox-verified; go-live = config only)
 
-- **Billing (MoR)**: choose 2Checkout vs Paddle, get Algeria-payout approval, then wire
-  checkout + `POST /api/webhooks/<mor>` (launch plan, phase 9 final).
-- **PayPal**: test the webhook against a real PayPal app/sandbox.
-- **Legal review**: have counsel review `/privacy` + `/terms`; complete the **ANPDP
-  cross-border transfer** authorization (Algeria) — see HANDOFF.md.
+Provider = **Paddle** (Algeria seller approved). Checkout (Paddle.js overlay, 7-day trial),
+`POST /api/webhooks/paddle` (signature verify → syncs `User.plan`), and the customer portal
+are all built and verified in sandbox. To go live:
+
+1. In **production** Paddle (`vendors.paddle.com`): create the **OneMetric Pro** product +
+   **$19/mo recurring price w/ 7-day free trial** (note the prod `pri_…`).
+2. **Developer Tools → Authentication:** create a **client-side token** and an **API key**
+   (API key scopes: **Customer portal sessions: Write** + **Customers: Read+Write**).
+3. **Developer Tools → Notifications:** create a webhook destination → `<APP_URL>/api/webhooks/paddle`,
+   usage **Both**, all **subscription.\*** events; copy its **signing secret**.
+4. **Checkout → Checkout settings:** add your domain to **approved domains** (else the overlay
+   errors "Something went wrong").
+5. Set the Vercel env vars (production values) and redeploy:
+
+| Variable | Value |
+| --- | --- |
+| `NEXT_PUBLIC_PADDLE_ENV` | `production` |
+| `NEXT_PUBLIC_PADDLE_CLIENT_TOKEN` | production client-side token |
+| `NEXT_PUBLIC_PADDLE_PRICE_PRO` | production `pri_…` |
+| `PADDLE_API_KEY` | production API key (scopes above) |
+| `PADDLE_WEBHOOK_SECRET` | production webhook signing secret |
+
+6. **Add payout details** (Business Account → Payouts) — SWIFT to USD/EUR or PayPal.
+
+## 10. Deploy gotchas (learned the hard way — 2026-06-15)
+
+- **Keep the GitHub repo PUBLIC.** Private → every deploy goes **`BLOCKED`** (no build) unless
+  the Vercel GitHub App has private-repo access (GitHub → Settings → Applications → Vercel).
+- **Root Directory is `apps/web`** → commits that change no files there (empty / root-only doc
+  commits) are **auto-skipped** (`CANCELED`, no build). Change a file under `apps/web` to force
+  a deploy. A `BLOCKED` deploy can't be redeployed — push a fresh commit.
+- `NEXT_PUBLIC_*` env vars are build-time inlined — **redeploy after changing them**.
+
+## 11. Still pending (tracked elsewhere)
+
+- **PayPal** (customer revenue): test the webhook against a real PayPal app/sandbox.
+- **Legal review**: have counsel review `/privacy` + `/terms` + `/refund`; complete the
+  **ANPDP cross-border transfer** authorization (Algeria) — see HANDOFF.md.
