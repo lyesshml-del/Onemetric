@@ -225,10 +225,19 @@ checkout + webhook deferred to last.
       **✅ Verification PASSED (2026-06-15)** — Algeria seller approved → billing build unblocked.
 - [ ] **(user)** add Paddle **payout details** (Business Account → Payouts) — final "can funds
       reach Algeria" check (SWIFT to USD/EUR, or PayPal). Doesn't block sandbox build.
-- [ ] Wire `startCheckout`/`manageBilling` to the MoR hosted checkout + management link
-- [ ] `POST /api/webhooks/<mor>` — verify signature, sync subscription → `User`
-- [ ] MoR env vars (`MOR_API_KEY`, `MOR_WEBHOOK_SECRET`, `MOR_PRICE_PRO`)
-- [ ] Sandbox end-to-end (checkout → webhook → plan flips to PRO)
+- [x] **Code built (2026-06-15):** Paddle.js overlay checkout (`UpgradeButton`, passes
+      `custom_data.user_id`), `manageBilling` → Paddle customer-portal session,
+      `POST /api/webhooks/paddle` (HMAC `Paddle-Signature` verify → syncs `User.plan/
+      subscriptionStatus/currentPeriodEnd/billingCustomerId/billingSubscriptionId`).
+      `trialing`/`active`/`past_due` → PRO; `paused`/`canceled` → FREE. 6 unit tests.
+      Pro product/price created in **Sandbox** (`pri_01kv625awpdgwezwk0b2xttgbc`), 7-day trial.
+- [ ] **(user)** Paddle Sandbox: get **client token** + **API key** (Dev Tools → Authentication)
+      and create a **webhook destination** → `https://onemetric.sbs/api/webhooks/paddle`
+      (copy its signing secret).
+- [ ] **(user)** set Vercel env: `NEXT_PUBLIC_PADDLE_ENV=sandbox`, `NEXT_PUBLIC_PADDLE_CLIENT_TOKEN`,
+      `NEXT_PUBLIC_PADDLE_PRICE_PRO`, `PADDLE_API_KEY`, `PADDLE_WEBHOOK_SECRET` → redeploy.
+- [ ] Sandbox end-to-end (checkout with Paddle test card → webhook → `User.plan` flips to PRO;
+      verify via Supabase MCP). Then swap to **production** Paddle values to go live.
 
 ## Phase 10 — Public site + legal ✅ (complete)
 

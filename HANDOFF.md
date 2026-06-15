@@ -40,19 +40,33 @@ Site URL + Redirect URL (`/auth/confirm`) to apex (vercel kept as fallback). Ver
 `sitemap.xml`/`robots.txt`/install snippet now use `onemetric.sbs`; apex `/`, `/login`,
 `/onemetric.js` all `200`. Existing installs on the old `*.vercel.app` host keep working.
 
-**▶ Billing — BLOCKED on Paddle verification (2026-06-14).** Provider chosen = **Paddle**.
-Vendor account created (`vendors.paddle.com`, owner Himrane Moha…), business details +
-products + website submitted. Website verification used the 4 policy URLs (incl. the new
-`/refund`). **✅ Verification PASSED (2026-06-15)** — Paddle approved the Algeria-based
-seller; billing build is now **UNBLOCKED**. **Still pending (user):** add **payout details**
-(Business Account → Payouts) — the separate confirmation that funds can reach Algeria (SWIFT
-to USD/EUR account, or PayPal). Doesn't block the sandbox build but is the last "can we get
-paid" check. Build in **Sandbox** first: create Pro product/price (`pri_…`), client-side
-token (`NEXT_PUBLIC_PADDLE_CLIENT_TOKEN`), API key (`PADDLE_API_KEY`), webhook dest +
-secret (`PADDLE_WEBHOOK_SECRET`) → wire Paddle.js checkout in the billing page +
-`POST /api/webhooks/paddle` (verify `Paddle-Signature`, sync `User.plan`). Groundwork
-already built (schema, `lib/plans.ts`, gating, billing page, `actions/billing.ts` seam).
-See `plan-what-need-to-prancy-wren.md` Workstream 1 / TODO Phase 13.
+**▶ Billing — Paddle CODE BUILT; needs sandbox keys + test (2026-06-15).** Provider =
+**Paddle**, vendor account on `vendors.paddle.com`. **✅ Verification PASSED** — Algeria
+seller approved. **Code shipped** (commit pending push): Paddle.js overlay checkout
+(`UpgradeButton`, passes `custom_data.user_id`), `manageBilling` → customer-portal session,
+`POST /api/webhooks/paddle` (HMAC `Paddle-Signature` verify → syncs
+`User.plan/subscriptionStatus/currentPeriodEnd/billingCustomerId/billingSubscriptionId`;
+`trialing`/`active`/`past_due`→PRO, `paused`/`canceled`→FREE). Pro product = **$19/mo, 7-day
+free trial**, Sandbox price `pri_01kv625awpdgwezwk0b2xttgbc`. New deps: `@paddle/paddle-js`.
+Code in `server/ingest/paddle.ts` (+ `paddle.test.ts`), `api/webhooks/paddle/route.ts`,
+`actions/billing.ts`, `components/dashboard/{upgrade-button,manage-billing-button}.tsx`.
+
+**To finish (user actions, then test):**
+1. Paddle **Sandbox** → Developer Tools → Authentication: create a **client-side token** +
+   an **API key**. Notifications: create a **webhook destination** →
+   `https://onemetric.sbs/api/webhooks/paddle` → copy its **signing secret**.
+2. Set Vercel env (**sandbox values** for testing): `NEXT_PUBLIC_PADDLE_ENV=sandbox`,
+   `NEXT_PUBLIC_PADDLE_CLIENT_TOKEN`, `NEXT_PUBLIC_PADDLE_PRICE_PRO=pri_01kv625awpdgwezwk0b2xttgbc`,
+   `PADDLE_API_KEY`, `PADDLE_WEBHOOK_SECRET` → **redeploy** (NEXT_PUBLIC needs rebuild).
+3. Test on prod URL (no real customers yet): log in → /dashboard/billing → Upgrade → Paddle
+   **test card** → checkout completes → webhook → verify `User.plan=PRO` via Supabase MCP.
+4. **Go live:** swap the 5 env vars to **production** Paddle values (env=production, prod
+   client token, prod `pri_…`, prod API key, prod webhook dest+secret), redeploy.
+- **Still pending (user):** add Paddle **payout details** (Business Account → Payouts) — the
+  "can funds actually reach Algeria" check (SWIFT to USD/EUR, or PayPal).
+- Until env is set, the billing UI gracefully shows "Upgrades aren’t configured yet" and the
+  webhook returns 500 `not_configured` (nothing calls it). Safe to deploy now.
+See `plan-what-need-to-prancy-wren.md` Workstream 1 / TODO Phase 9 remaining.
 
 **▶ Meanwhile (not blocked by Paddle):** (1) ~~free receiving inbox for `support@onemetric.sbs`~~
 DONE — ImprovMX catch-all `*@onemetric.sbs` → `lyesshml@gmail.com` (MX mx1/mx2.improvmx.com +

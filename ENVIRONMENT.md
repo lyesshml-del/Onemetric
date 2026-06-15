@@ -29,6 +29,11 @@ needs it — nothing here implies a feature is built yet.
 | `RESEND_API_KEY` | 8 | **yes** | Resend API key for weekly report emails. Without it, sends are skipped. |
 | `REPORT_FROM_EMAIL` | 8 | no | From address for report emails (Resend-verified domain in prod). |
 | `CRON_SECRET` | 8 | **yes** | Shared secret protecting the weekly-report cron route (`Authorization: Bearer …`). |
+| `NEXT_PUBLIC_PADDLE_ENV` | 13 | no | `sandbox` or `production`; drives Paddle.js + the API host. |
+| `NEXT_PUBLIC_PADDLE_CLIENT_TOKEN` | 13 | no | Paddle client-side token (browser checkout). Dev Tools → Authentication. |
+| `NEXT_PUBLIC_PADDLE_PRICE_PRO` | 13 | no | Pro recurring price id (`pri_…`). Differs sandbox vs prod. |
+| `PADDLE_API_KEY` | 13 | **yes** | Server Paddle API key (customer-portal sessions). Dev Tools → Authentication. |
+| `PADDLE_WEBHOOK_SECRET` | 13 | **yes** | Verifies the `Paddle-Signature` webhook header. Dev Tools → Notifications. |
 
 ## Database connection strings
 

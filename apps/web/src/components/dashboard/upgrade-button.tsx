@@ -1,33 +1,60 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
-import {
-  startCheckout,
-  type BillingActionState,
-} from "@/server/actions/billing";
+import { useEffect, useState } from "react";
+import { initializePaddle, type Paddle } from "@paddle/paddle-js";
 import { Button } from "@/components/ui/button";
 
-const initialState: BillingActionState = {};
+const token = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
+const environment = (process.env.NEXT_PUBLIC_PADDLE_ENV ?? "sandbox") as
+  | "sandbox"
+  | "production";
+const priceId = process.env.NEXT_PUBLIC_PADDLE_PRICE_PRO;
 
-export function UpgradeButton({ label = "Upgrade to Pro" }: { label?: string }) {
-  const [state, formAction, pending] = useActionState(
-    startCheckout,
-    initialState,
-  );
+/**
+ * Opens the Paddle overlay checkout for the Pro price. `user_id` is passed as
+ * customData so the webhook can map the resulting subscription back to the user.
+ */
+export function UpgradeButton({
+  userId,
+  email,
+  label = "Upgrade to Pro",
+}: {
+  userId: string;
+  email: string;
+  label?: string;
+}) {
+  const [paddle, setPaddle] = useState<Paddle>();
 
-  // When the provider is wired, the action returns a hosted-checkout URL.
   useEffect(() => {
-    if (state.url) window.location.href = state.url;
-  }, [state.url]);
+    if (!token) return;
+    initializePaddle({ environment, token }).then((p) => {
+      if (p) setPaddle(p);
+    });
+  }, []);
+
+  if (!token || !priceId) {
+    return (
+      <p className="text-muted-foreground text-sm">
+        Upgrades aren’t configured yet.
+      </p>
+    );
+  }
+
+  function openCheckout() {
+    paddle?.Checkout.open({
+      items: [{ priceId: priceId!, quantity: 1 }],
+      customData: { user_id: userId },
+      customer: { email },
+      settings: {
+        displayMode: "overlay",
+        successUrl: `${window.location.origin}/dashboard/billing?upgraded=1`,
+      },
+    });
+  }
 
   return (
-    <form action={formAction} className="space-y-2">
-      <Button type="submit" disabled={pending}>
-        {pending ? "Starting…" : label}
-      </Button>
-      {state.error ? (
-        <p className="text-muted-foreground text-sm">{state.error}</p>
-      ) : null}
-    </form>
+    <Button onClick={openCheckout} disabled={!paddle}>
+      {paddle ? label : "Loading…"}
+    </Button>
   );
 }

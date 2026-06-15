@@ -6,6 +6,7 @@ import { getBillingOverview } from "@/server/queries/billing";
 import { PLAN_LIMITS } from "@/lib/plans";
 import { formatNumber } from "@/lib/format";
 import { UpgradeButton } from "@/components/dashboard/upgrade-button";
+import { ManageBillingButton } from "@/components/dashboard/manage-billing-button";
 import {
   Card,
   CardContent,
@@ -67,11 +68,12 @@ export default async function BillingPage() {
             <CardDescription>
               {PLAN_LIMITS.PRO.maxProjects} projects,{" "}
               {formatNumber(PLAN_LIMITS.PRO.monthlyEvents)} events/mo,{" "}
-              {PLAN_LIMITS.PRO.retentionDays}-day retention.
+              {PLAN_LIMITS.PRO.retentionDays}-day retention. Starts with a 7-day
+              free trial.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <UpgradeButton />
+            <UpgradeButton userId={user.id} email={user.email} />
           </CardContent>
         </Card>
       ) : (
@@ -82,11 +84,12 @@ export default async function BillingPage() {
               {user.subscriptionStatus ? `Status: ${user.subscriptionStatus}` : null}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
             <p className="text-muted-foreground text-sm">
-              Manage payment and cancellation from your billing provider (link
-              coming soon).
+              Update your payment method or cancel anytime through our billing
+              provider.
             </p>
+            <ManageBillingButton />
           </CardContent>
         </Card>
       )}

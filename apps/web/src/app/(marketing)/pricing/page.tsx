@@ -36,6 +36,7 @@ const plans = [
     cta: "Start free",
     highlight: true,
     features: [
+      "7-day free trial",
       `${pro.maxProjects} projects`,
       `${formatNumber(pro.monthlyEvents)} events / month`,
       `${pro.retentionDays}-day data retention`,
