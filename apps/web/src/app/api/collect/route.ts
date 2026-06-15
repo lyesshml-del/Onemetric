@@ -3,6 +3,7 @@ import { collectSchema } from "@/lib/validation/collect";
 import { ingest } from "@/server/ingest/collect";
 
 // Prisma requires the Node.js runtime (not Edge). Always run dynamically.
+// Ingestion is hardened to never 500: DB/transient errors degrade to a 204 (see POST).
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
