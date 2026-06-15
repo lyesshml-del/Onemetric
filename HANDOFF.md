@@ -43,11 +43,11 @@ Site URL + Redirect URL (`/auth/confirm`) to apex (vercel kept as fallback). Ver
 **▶ Billing — BLOCKED on Paddle verification (2026-06-14).** Provider chosen = **Paddle**.
 Vendor account created (`vendors.paddle.com`, owner Himrane Moha…), business details +
 products + website submitted. Website verification used the 4 policy URLs (incl. the new
-`/refund`). **Verification status = "In progress"** — Paddle is reviewing; the **Algeria
-seller-approval + payout-method** answer comes out of this review (and any identity/payout
-stage that follows). **User decision: WAIT for the Algeria verdict before writing any
-Paddle code** (avoid wasted work if rejected → would pivot to 2Checkout, ~90% same shape).
-When approved, build in **Sandbox** first: create Pro product/price (`pri_…`), client-side
+`/refund`). **✅ Verification PASSED (2026-06-15)** — Paddle approved the Algeria-based
+seller; billing build is now **UNBLOCKED**. **Still pending (user):** add **payout details**
+(Business Account → Payouts) — the separate confirmation that funds can reach Algeria (SWIFT
+to USD/EUR account, or PayPal). Doesn't block the sandbox build but is the last "can we get
+paid" check. Build in **Sandbox** first: create Pro product/price (`pri_…`), client-side
 token (`NEXT_PUBLIC_PADDLE_CLIENT_TOKEN`), API key (`PADDLE_API_KEY`), webhook dest +
 secret (`PADDLE_WEBHOOK_SECRET`) → wire Paddle.js checkout in the billing page +
 `POST /api/webhooks/paddle` (verify `Paddle-Signature`, sync `User.plan`). Groundwork
