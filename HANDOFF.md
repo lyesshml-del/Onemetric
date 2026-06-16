@@ -356,6 +356,40 @@ triad (slot 2), fills the conversion KPI, and extends the Lede.
   (flags + glyphs, reuse `<SourceRow>`); **Phase H** demotes Top pages (reuse `<SourceRow>`);
   **Phase I** mobile pass; **Phase J** cleanup. Accent = Move #3.
 
+**✅ Phase G — Audience card (2026-06-16). Overview only.** The 3 breakdown cards (Countries,
+Devices, Browsers) are merged into **one Audience card** with a segmented control.
+
+- **Files created:**
+  - `apps/web/src/components/dashboard/audience-card.tsx` — `<AudienceCard>` (**client**, the
+    Overview's 2nd client component after `TrendChart`): a `useState` segmented control toggling
+    Countries / Devices / Browsers. **All three datasets are already fetched server-side**, so
+    switching just re-renders a different array — no new request, no animation beyond the existing
+    colour transition. Reuses `<SourceRow>`: **flags** (`flagEmoji` + `countryName`) for countries,
+    monochrome **lucide** icons (`Monitor`/`Smartphone`/`Tablet`, already a dependency) for devices,
+    **monogram** for browsers.
+- **Files modified (additive):**
+  - `apps/web/src/components/dashboard/source-row.tsx` — added an **optional `icon?: ReactNode`**
+    that overrides the monogram avatar. Backward-compatible: Sources/Revenue rows are unchanged.
+  - `apps/web/src/app/dashboard/[projectId]/page.tsx` — replaced the 3 breakdown cards with
+    `<AudienceCard countries/devices/browsers />`; **removed** the `mapCountries`/`mapDevices`
+    helpers and the now-unused `countryName` + `BreakdownRow` imports. **No query changed.**
+- **Decisions:** segmented control = a small **client** toggle (the spec's preferred interaction;
+  server query-param tabs would reload the page per switch — worse). Device glyphs use **lucide**
+  (already in `package.json`, monochrome) — not a new dependency. Browsers use monograms (no clean
+  per-browser icon). Countries use flag emoji per the spec.
+- **Risks (low):** first interactive Overview client component → route First Load `1.9 → 3.68 kB`
+  (AudienceCard + 3 lucide icons), still small. **Windows caveat:** Chrome/Edge on Windows render
+  flag emojis as letter-pairs ("DZ") not flags — a platform font limitation, degrades gracefully
+  (still shows the country). Mac/iOS/Android show flags.
+- **Verification:** 75 tests, typecheck · lint · build green. Live DataFast → Countries `DZ`→
+  "Algeria" 1, Devices `DESKTOP`→"Desktop" 1, Browsers "Chrome" 1 — identical to the old cards.
+- **Transitional states:** the detail row is now **Top pages (still old `BreakdownCard`) +
+  Audience**; Top pages restyle/demotion is **Phase H**. The "Overview" `<h2>` and the unused
+  `MetricCard` still remain (**Phase J**).
+- **Future phases must know:** **Phase H** restyles/keeps Top pages in the detail row (reuse
+  `<SourceRow>`) + finalizes the engagement diagnostics placement; **I** mobile pass; **J** cleanup
+  (retire `MetricCard`, remove the "Overview" h2, single focused empty state). Accent = Move #3.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

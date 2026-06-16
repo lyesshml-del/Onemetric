@@ -423,7 +423,18 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       build green; live DataFast (0 revenue, not connected) → CTA + pending KPI + no Lede clause
       (correct). One card system; monochrome (accent = Move #3). Files: +`revenue-mini.tsx`,
       `lib/lede.ts` (clause), `page.tsx`.
-- [ ] Phase G — Audience card (merge Countries/Devices/Browsers; flags + glyphs)
+- [x] **Phase G — Audience card ✅ (2026-06-16).** Merged the 3 breakdown cards (Countries,
+      Devices, Browsers) into **one Audience card** with a segmented control (small client
+      toggle; all 3 datasets already fetched → switching just re-renders, no new request/
+      animation). New `<AudienceCard>` reuses `<SourceRow>` (gained an additive optional `icon`):
+      **flags** for countries (`flagEmoji` + `countryName`), monochrome **lucide** device icons
+      (already a dep), **monogram** for browsers. Removed `mapCountries`/`mapDevices` + the now-
+      unused `countryName`/`BreakdownRow` page imports. No new query (reuses
+      `countries`/`devices`/`browsers`). Verified: 75 tests, typecheck · lint · build green;
+      live DataFast → DZ→Algeria 1 / Desktop 1 / Chrome 1 (matches old cards). One card system;
+      monochrome (accent = Move #3). Route `1.9→3.68 kB` (first Overview client component).
+      ⚠️ On **Windows**, flag emojis may render as letter-pairs ("DZ") — platform font limit,
+      degrades gracefully. Files: +`audience-card.tsx`, `source-row.tsx` (icon prop), `page.tsx`.
 - [ ] Phase H — Top pages + diagnostics (detail row)
 - [ ] Phase I — Mobile layout pass
 - [ ] Phase J — Cleanup + hierarchy polish (retire `MetricCard`, focused empty state)

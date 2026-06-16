@@ -8,7 +8,6 @@ import {
   getOverviewMetrics,
   getTimeseries,
   getActiveNow,
-  type BreakdownRow,
 } from "@/server/queries/analytics";
 import { getPrimaryFunnel, getFunnelResults } from "@/server/queries/funnels";
 import {
@@ -19,7 +18,6 @@ import { getPayPalConnection } from "@/server/queries/integrations";
 import { resolveRange, previousRange, rangePeriodWord } from "@/lib/range";
 import { buildLede } from "@/lib/lede";
 import {
-  countryName,
   formatDuration,
   formatMoney,
   formatNumber,
@@ -32,6 +30,7 @@ import { BreakdownCard } from "@/components/dashboard/breakdown-card";
 import { SourcesCard } from "@/components/dashboard/sources-card";
 import { FunnelMini } from "@/components/dashboard/funnel-mini";
 import { RevenueMini } from "@/components/dashboard/revenue-mini";
+import { AudienceCard } from "@/components/dashboard/audience-card";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
 import { Lede } from "@/components/dashboard/lede";
@@ -324,33 +323,18 @@ export default async function ProjectOverviewPage({
             )}
           </div>
 
-          {/* Detail row (transitional — referrers moved to the triad above).
-              Audience merge + Top pages demotion are Phases G/H. */}
+          {/* Detail row — Top pages (demotion is Phase H) + the merged Audience
+              card (Move #1 / Phase G: Countries / Devices / Browsers in one card). */}
           <div className="grid gap-4 md:grid-cols-2">
             <BreakdownCard title="Top pages" items={analytics.topPages} />
-            <BreakdownCard
-              title="Countries"
-              items={mapCountries(analytics.countries)}
+            <AudienceCard
+              countries={analytics.countries}
+              devices={analytics.devices}
+              browsers={analytics.browsers}
             />
-            <BreakdownCard
-              title="Devices"
-              items={mapDevices(analytics.devices)}
-            />
-            <BreakdownCard title="Browsers" items={analytics.browsers} />
           </div>
         </>
       )}
     </div>
   );
-}
-
-function mapCountries(rows: BreakdownRow[]): BreakdownRow[] {
-  return rows.map((r) => ({ ...r, label: countryName(r.label) }));
-}
-
-function mapDevices(rows: BreakdownRow[]): BreakdownRow[] {
-  return rows.map((r) => ({
-    ...r,
-    label: r.label.charAt(0) + r.label.slice(1).toLowerCase(),
-  }));
 }
