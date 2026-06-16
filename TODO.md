@@ -380,7 +380,17 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       (+10), typecheck · lint · build green; real DataFast data → "1 visitor this week, led by
       google.com." Monochrome (accent = Move #3). Files: +`lib/lede.ts` (impl),
       +`components/dashboard/lede.tsx`, +`rangePeriodWord` (lib/range); edited `page.tsx`.
-- [ ] Phase C — KPI strip (StatCard + Sparkline + active-now; demote engagement)
+- [x] **Phase C — KPI strip ✅ (2026-06-16).** The 6 duplicate vanity tiles → a 4-KPI strip:
+      **Pageviews** (value + `<Delta>` + sparkline, all from existing timeseries — C1), **Signup
+      conversion** + **Revenue** (placed but *pending*, dimmed "—", light up in E/F), **Active
+      now** (live count + dot, new `getActiveNow` query). Bounce / pages-per-session / avg
+      duration **demoted** to one muted Engagement line. New `<StatCard>` (unified `rounded-xl`
+      card — same system as hero/breakdown) + `<Sparkline>` (server-safe). Volume KPI = Pageviews
+      (spec's "Sessions *or* Pageviews"; chose Pageviews for the existing sparkline series).
+      Additive, no schema/deps; `MetricCard` no longer used (file retained → retire in Phase J).
+      Verified: 69 tests, typecheck · lint · build green; live DB numbers match (pageviews 2,
+      active 0, bounce 0.0%). Monochrome (accent = Move #3). Files: +`stat-card.tsx`,
+      +`sparkline.tsx`, +`getActiveNow` (analytics); edited `page.tsx`.
 - [ ] Phase D — Sources card (triad slot 1; **decide D1 favicon-privacy → recommend monograms**)
 - [ ] Phase E — Funnel card (triad slot 2; **decide E1 primary-funnel = first/oldest**)
 - [ ] Phase F — Revenue card (triad slot 3; lights up Lede money clause + Revenue KPI)

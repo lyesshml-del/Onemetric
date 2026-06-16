@@ -213,6 +213,47 @@ briefing now sits at the **top of the Overview** (above the hero). **Traffic-onl
   `revenue` (appends "… <source> drove $N"); the sentence enriches itself with no rewrite.
   Drill `href`s light up when the Sources/Funnel/Revenue targets exist. Accent = Move #3.
 
+**✅ Phase C — KPI strip (2026-06-16). Overview only.** The 6 transitional duplicate tiles are
+replaced by a 4-KPI strip + a demoted Engagement line.
+
+- **Files created:**
+  - `apps/web/src/components/dashboard/stat-card.tsx` — `<StatCard>` (server): one **unified card
+    spec** (`rounded-xl border bg-card`, matching the hero + breakdown cards). label · value ·
+    optional `<Delta>` · optional `<Sparkline>` · optional live dot · `pending` (dimmed "—"
+    placeholder for KPIs whose data lands later).
+  - `apps/web/src/components/charts/sparkline.tsx` — `<Sparkline>` (server, dependency-free, tiny
+    area+line, `aria-hidden`).
+- **Files modified (additive):**
+  - `apps/web/src/server/queries/analytics.ts` — added `getActiveNow(projectId)` (distinct
+    visitors with `lastEventAt` in the last 5 min). Existing queries untouched.
+  - `apps/web/src/app/dashboard/[projectId]/page.tsx` — KPI strip: **Pageviews** (value + delta +
+    sparkline from existing `timeseries.pageviews`), **Signup conversion** + **Revenue** (`pending`
+    placeholders, light up in **E**/**F**), **Active now** (live count + dot). **Stopped using
+    `MetricCard`** (import removed). Added an inline **Engagement** line (bounce · pages/session ·
+    avg duration) — the demoted vanity metrics. Fetches `getActiveNow` in the existing `Promise.all`.
+- **Decisions (per plan + C1):** volume KPI = **Pageviews** (spec's "Sessions or Pageviews"),
+  chosen because its per-day series already exists in `timeseries` → sparkline with **no new
+  query**. Sessions is no longer a standalone tile (visitors is the hero). Conversion/Revenue
+  sparklines + values are **deferred to E/F** (need per-day funnel/revenue series — C1).
+- **Reasoning:** outcome-over-vanity — promote what matters (volume trend, conversion, revenue,
+  live), demote diagnostics to one quiet line. `<StatCard>` also begins unifying the card system
+  (the `rounded-lg` `MetricCard` is now unused on the Overview).
+- **Risks (low):** `getActiveNow` adds one cheap point-in-time count per Overview load (filtered
+  by `projectId` + `lastEventAt`). **"Active now" is a snapshot at page load, not a live stream** —
+  the dot implies real-time but the page is server-rendered (true realtime is out of scope). For
+  projects with no funnel/revenue (e.g. DataFast) 2 of 4 KPIs are dimmed "—" placeholders by design
+  until E/F.
+- **Transitional state (expected):** `MetricCard` (`components/dashboard/metric-card.tsx`) is now
+  **unused** but intentionally **kept** — its deletion is **Phase J**. The "Overview" `<h2>` also
+  still remains (Phase J).
+- **Future phases must know:** **Phase E** fills the "Signup conversion" `StatCard` (drop
+  `pending`; pass `value` % + `delta` with `mode="points"` from funnel data; a conversion sparkline
+  needs a new per-day series). **Phase F** fills "Revenue" similarly (value $ + delta; revenue
+  sparkline needs a per-day revenue series). `<StatCard>` already supports `mode="points"` and
+  `invert` (for rate KPIs like a future bounce/drop-off). To add a Sessions sparkline later, add
+  `count(*) AS sessions` to `getTimeseries` (one-line additive). Verified numbers: live DB
+  pageviews `2`, active `0`, bounce `0.0%`. Accent = Move #3.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

@@ -128,6 +128,21 @@ export async function getOverviewMetricsDelta(
   return { current, previous };
 }
 
+/**
+ * Move #1 / Phase C — unique visitors active in the last 5 minutes (the KPI-strip
+ * "Active now" live signal). Additive; cheap point-in-time count.
+ */
+export async function getActiveNow(projectId: string): Promise<number> {
+  const since = new Date(Date.now() - 5 * 60 * 1000);
+  const rows = await prisma.$queryRaw<Array<{ active: number }>>`
+    SELECT count(DISTINCT "visitorHash")::int AS active
+    FROM "Session"
+    WHERE "projectId" = ${projectId}
+      AND "lastEventAt" >= ${since}
+  `;
+  return rows[0]?.active ?? 0;
+}
+
 export async function getTimeseries(
   projectId: string,
   from: Date,

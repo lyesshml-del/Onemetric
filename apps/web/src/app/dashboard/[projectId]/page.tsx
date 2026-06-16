@@ -7,6 +7,7 @@ import {
   getProjectAnalytics,
   getOverviewMetrics,
   getTimeseries,
+  getActiveNow,
   type BreakdownRow,
 } from "@/server/queries/analytics";
 import { resolveRange, previousRange, rangePeriodWord } from "@/lib/range";
@@ -19,7 +20,7 @@ import {
 } from "@/lib/format";
 import { ProjectHeader } from "@/components/dashboard/project-header";
 import { RangeSelect } from "@/components/dashboard/range-select";
-import { MetricCard } from "@/components/dashboard/metric-card";
+import { StatCard } from "@/components/dashboard/stat-card";
 import { BreakdownCard } from "@/components/dashboard/breakdown-card";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
@@ -46,12 +47,14 @@ export default async function ProjectOverviewPage({
 
   const { key: range, from, to } = resolveRange(rangeParam);
   const prev = previousRange(from, to);
-  const [projects, analytics, prevMetrics, prevSeries] = await Promise.all([
-    listProjects(user.id),
-    getProjectAnalytics(project.id, from, to),
-    getOverviewMetrics(project.id, prev.from, prev.to),
-    getTimeseries(project.id, prev.from, prev.to),
-  ]);
+  const [projects, analytics, prevMetrics, prevSeries, activeNow] =
+    await Promise.all([
+      listProjects(user.id),
+      getProjectAnalytics(project.id, from, to),
+      getOverviewMetrics(project.id, prev.from, prev.to),
+      getTimeseries(project.id, prev.from, prev.to),
+      getActiveNow(project.id),
+    ]);
 
   const { metrics, timeseries } = analytics;
   const hasData = metrics.sessions > 0;
@@ -140,29 +143,33 @@ export default async function ProjectOverviewPage({
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-            <MetricCard
-              label="Unique visitors"
-              value={formatNumber(metrics.uniqueVisitors)}
-            />
-            <MetricCard label="Sessions" value={formatNumber(metrics.sessions)} />
-            <MetricCard
+          {/* KPI strip (Move #1 / Phase C) — outcome metrics with delta + sparkline.
+              Conversion + Revenue are placed but light up in Phases E + F. */}
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <StatCard
               label="Pageviews"
               value={formatNumber(metrics.pageviews)}
+              delta={{
+                current: metrics.pageviews,
+                previous: prevMetrics.pageviews,
+              }}
+              spark={timeseries.map((p) => p.pageviews)}
             />
-            <MetricCard
-              label="Pages / session"
-              value={metrics.pagesPerSession.toFixed(1)}
-            />
-            <MetricCard
-              label="Avg. session duration"
-              value={formatDuration(metrics.avgDurationSec)}
-            />
-            <MetricCard
-              label="Bounce rate"
-              value={formatPercent(metrics.bounceRate)}
+            <StatCard label="Signup conversion" pending />
+            <StatCard label="Revenue" pending />
+            <StatCard
+              label="Active now"
+              value={formatNumber(activeNow)}
+              live={activeNow > 0}
             />
           </div>
+
+          {/* Demoted engagement diagnostics (were standalone tiles). */}
+          <p className="text-muted-foreground text-xs">
+            Bounce {formatPercent(metrics.bounceRate)} ·{" "}
+            {metrics.pagesPerSession.toFixed(1)} pages/session ·{" "}
+            {formatDuration(metrics.avgDurationSec)} avg session
+          </p>
 
           <div className="grid gap-4 md:grid-cols-2">
             <BreakdownCard title="Top pages" items={analytics.topPages} />
