@@ -9,7 +9,12 @@
  * until then, so the sentence enriches itself automatically).
  */
 import type { OverviewMetrics } from "@/server/queries/analytics";
-import { computeDelta, formatDeltaPct, formatNumber } from "@/lib/format";
+import {
+  computeDelta,
+  formatDeltaPct,
+  formatNumber,
+  formatPercent,
+} from "@/lib/format";
 
 /** A single span of the Lede sentence. `href` makes it an inline drill link. */
 export type LedeToken = {
@@ -50,7 +55,7 @@ const FLAT_THRESHOLD = 0.005;
  * increasing, decreasing, flat/tiny, no baseline, and zero traffic.
  */
 export function buildLede(input: LedeInput): LedeToken[] {
-  const { current, previous, periodWord, topSource } = input;
+  const { current, previous, periodWord, topSource, funnel } = input;
   const visitors = current.uniqueVisitors;
 
   // Zero traffic (defensive — the Lede normally only renders when data exists).
@@ -78,28 +83,44 @@ export function buildLede(input: LedeInput): LedeToken[] {
 
   const { direction, pct } = computeDelta(visitors, previous.uniqueVisitors);
 
-  // No baseline period to compare against — state the current figure plainly.
+  // --- Traffic clause (Phase B). Byte-identical to before when no later clause. ---
+  let tokens: LedeToken[];
   if (pct === null) {
-    return [visitorsToken, { text: ` ${periodWord}` }, ...sourceTail, { text: "." }];
-  }
-
-  // Flat or a tiny change reads as "steady" (no noisy percentage).
-  if (direction === "flat" || Math.abs(pct) < FLAT_THRESHOLD) {
-    return [
+    // No baseline period to compare against — state the current figure plainly.
+    tokens = [visitorsToken, { text: ` ${periodWord}` }, ...sourceTail, { text: "." }];
+  } else if (direction === "flat" || Math.abs(pct) < FLAT_THRESHOLD) {
+    // Flat or a tiny change reads as "steady" (no noisy percentage).
+    tokens = [
       { text: `Traffic is steady ${periodWord} — ` },
+      visitorsToken,
+      ...sourceTail,
+      { text: "." },
+    ];
+  } else {
+    // Increasing or decreasing — sign carried by the verb, magnitude by the %.
+    tokens = [
+      { text: `Traffic is ${pct > 0 ? "up" : "down"} ` },
+      { text: formatDeltaPct(pct), emphasis: true },
+      { text: ` ${periodWord} — ` },
       visitorsToken,
       ...sourceTail,
       { text: "." },
     ];
   }
 
-  // Increasing or decreasing — sign carried by the verb, magnitude by the %.
-  return [
-    { text: `Traffic is ${pct > 0 ? "up" : "down"} ` },
-    { text: formatDeltaPct(pct), emphasis: true },
-    { text: ` ${periodWord} — ` },
-    visitorsToken,
-    ...sourceTail,
-    { text: "." },
-  ];
+  // --- Funnel clause (Phase E) — appended only when a primary funnel has data. ---
+  if (funnel) {
+    tokens.push(
+      { text: ` ${funnel.name} converts at ` },
+      {
+        text: formatPercent(funnel.conversion),
+        emphasis: true,
+        ...(funnel.href ? { href: funnel.href } : {}),
+      },
+      { text: "." },
+    );
+  }
+
+  // (Phase F will append a revenue clause here.)
+  return tokens;
 }

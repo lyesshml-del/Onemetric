@@ -95,4 +95,45 @@ describe("buildLede (Phase B — traffic-only)", () => {
     expect(emphasized).toContain("producthunt.com");
     expect(t.every((x) => x.href === undefined)).toBe(true);
   });
+
+  // --- Phase E: funnel clause ---
+
+  it("appends a funnel clause after the traffic clause", () => {
+    const t = buildLede({
+      ...base,
+      current: M(2430),
+      previous: M(2060),
+      topSource: { label: "producthunt.com" },
+      funnel: { name: "Signup", conversion: 0.042 },
+    });
+    expect(sentence(t)).toBe(
+      "Traffic is up 18% this week — 2.4k visitors, led by producthunt.com. Signup converts at 4.2%.",
+    );
+  });
+
+  it("appends the funnel clause after a no-baseline traffic clause", () => {
+    const t = buildLede({
+      ...base,
+      current: M(50),
+      previous: M(0),
+      funnel: { name: "Checkout", conversion: 0.1 },
+    });
+    expect(sentence(t)).toBe("50 visitors this week. Checkout converts at 10.0%.");
+  });
+
+  it("links the funnel conversion when an href is provided", () => {
+    const t = buildLede({
+      ...base,
+      current: M(900),
+      previous: M(600),
+      funnel: {
+        name: "Signup",
+        conversion: 0.042,
+        href: "/dashboard/p1/funnels/f1",
+      },
+    });
+    const conv = t.find((x) => x.text === "4.2%");
+    expect(conv?.href).toBe("/dashboard/p1/funnels/f1");
+    expect(conv?.emphasis).toBe(true);
+  });
 });

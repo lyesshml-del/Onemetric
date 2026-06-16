@@ -286,6 +286,42 @@ promotes top referrers into it as **"Top sources"**.
   `<RevenueMini>` (and the Lede money clause + the Revenue KPI). Reuse `<SourceRow>` for the
   Audience (G) and Top-pages (H) rows (it takes a `format` prop). Accent = Move #3.
 
+**✅ Phase E — Funnel card (2026-06-16). Overview only.** Surfaces the **primary funnel** in the
+triad (slot 2), fills the conversion KPI, and extends the Lede.
+
+- **Decision E1 — APPLIED: primary funnel = the project's first/oldest funnel.** No schema change,
+  no "pin to overview" field (a future decision).
+- **Files created:**
+  - `apps/web/src/components/dashboard/funnel-mini.tsx` — `<FunnelMini>` (server): compact step
+    bars (label + thin bar + per-step conversion) + emphasized **overall conversion**. Reuses the
+    existing `FunnelResults` type.
+- **Files modified (additive):**
+  - `apps/web/src/server/queries/funnels.ts` — added `getPrimaryFunnel(projectId)` (oldest funnel
+    + ordered steps). Existing funnel queries/`computeFunnel` untouched.
+  - `apps/web/src/lib/lede.ts` — refactored `buildLede` to **append** a funnel clause
+    ("… `<name>` converts at `X%`", linked to `/funnels/[id]`). The Phase B traffic output is
+    **byte-identical** when no funnel is passed (existing tests prove it). Imports `formatPercent`.
+  - `apps/web/src/lib/lede.test.ts` — +3 funnel-clause tests.
+  - `apps/web/src/app/dashboard/[projectId]/page.tsx` — fetch `getPrimaryFunnel` (in the
+    `Promise.all`) then `getFunnelResults` for the current **and** previous windows; replace the
+    funnel placeholder Card with `<FunnelMini>` (or a "Create a funnel" CTA when none); fill the
+    **Signup conversion** KPI (value % + `mode="points"` delta); pass the funnel to `buildLede`.
+- **Decisions/edge handling:** the **Lede funnel clause appears only when the funnel had entrants**
+  this period (`entered > 0`) — keeps the headline calm. The KPI/card still render the funnel even
+  with 0 entrants (honest "0.0%"). KPI label kept as **"Signup conversion"** per the spec/user
+  (the canonical SaaS goal); the funnel card is titled by the funnel's actual name.
+- **Reasoning:** "which funnels convert?" (Overview Q5) is now answerable on the Overview without a
+  tab hop, reusing the verified funnel engine.
+- **Risks (low):** reuses tested logic (`computeFunnel`); `getPrimaryFunnel` is a trivial
+  `findFirst orderBy asc`; one extra (parallel) pair of funnel queries only when a funnel exists;
+  no client JS (route 1.9 kB).
+- **Verification:** 72 tests (+3), typecheck · lint · build green. Live DataFast has **0 funnels**
+  → exercises the **CTA path** (Create-funnel CTA + pending conversion KPI + no Lede funnel clause)
+  — correct. Funnel-present path covered by `computeFunnel [5,2,1]` + the new Lede tests.
+- **Future phases must know:** **Phase F** replaces the "Revenue by source" placeholder with
+  `<RevenueMini>`, fills the **Revenue** KPI, and appends the Lede **revenue** clause (the
+  `buildLede` revenue hook is reserved with a comment). Accent = Move #3.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

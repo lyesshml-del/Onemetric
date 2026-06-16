@@ -10,6 +10,7 @@ import {
   getActiveNow,
   type BreakdownRow,
 } from "@/server/queries/analytics";
+import { getPrimaryFunnel, getFunnelResults } from "@/server/queries/funnels";
 import { resolveRange, previousRange, rangePeriodWord } from "@/lib/range";
 import { buildLede } from "@/lib/lede";
 import {
@@ -23,6 +24,7 @@ import { RangeSelect } from "@/components/dashboard/range-select";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { BreakdownCard } from "@/components/dashboard/breakdown-card";
 import { SourcesCard } from "@/components/dashboard/sources-card";
+import { FunnelMini } from "@/components/dashboard/funnel-mini";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
 import { Lede } from "@/components/dashboard/lede";
@@ -53,17 +55,27 @@ export default async function ProjectOverviewPage({
 
   const { key: range, from, to } = resolveRange(rangeParam);
   const prev = previousRange(from, to);
-  const [projects, analytics, prevMetrics, prevSeries, activeNow] =
+  const [projects, analytics, prevMetrics, prevSeries, activeNow, primaryFunnel] =
     await Promise.all([
       listProjects(user.id),
       getProjectAnalytics(project.id, from, to),
       getOverviewMetrics(project.id, prev.from, prev.to),
       getTimeseries(project.id, prev.from, prev.to),
       getActiveNow(project.id),
+      getPrimaryFunnel(project.id),
     ]);
 
   const { metrics, timeseries } = analytics;
   const hasData = metrics.sessions > 0;
+
+  // Primary funnel (Phase E, decision E1 = oldest funnel). Compute conversion for
+  // the current + previous windows so the KPI can show a delta. Reuses getFunnelResults.
+  const [funnelNow, funnelPrev] = primaryFunnel
+    ? await Promise.all([
+        getFunnelResults(project.id, primaryFunnel.steps, from, to),
+        getFunnelResults(project.id, primaryFunnel.steps, prev.from, prev.to),
+      ])
+    : [null, null];
 
   // Hero: current visitors trend with the previous period aligned per day slot.
   const heroPoints = timeseries.map((p, i) => ({
@@ -75,12 +87,22 @@ export default async function ProjectOverviewPage({
   // Lede (Phase B): traffic + top-source. The source uses the existing top
   // referrer; no drill link yet (the Sources view arrives in Phase D).
   const topSourceLabel = analytics.topReferrers[0]?.label ?? null;
+  // Funnel clause only when the primary funnel actually had entrants this period.
+  const funnelLede =
+    primaryFunnel && funnelNow && funnelNow.entered > 0
+      ? {
+          name: primaryFunnel.name,
+          conversion: funnelNow.overallConversion,
+          href: `/dashboard/${project.id}/funnels/${primaryFunnel.id}`,
+        }
+      : null;
   const ledeTokens = buildLede({
     current: metrics,
     previous: prevMetrics,
     periodWord: rangePeriodWord(range),
     projectId: project.id,
     topSource: topSourceLabel ? { label: topSourceLabel } : null,
+    funnel: funnelLede,
   });
 
   return (
@@ -161,7 +183,19 @@ export default async function ProjectOverviewPage({
               }}
               spark={timeseries.map((p) => p.pageviews)}
             />
-            <StatCard label="Signup conversion" pending />
+            {primaryFunnel && funnelNow && funnelPrev ? (
+              <StatCard
+                label="Signup conversion"
+                value={formatPercent(funnelNow.overallConversion)}
+                delta={{
+                  current: funnelNow.overallConversion,
+                  previous: funnelPrev.overallConversion,
+                  mode: "points",
+                }}
+              />
+            ) : (
+              <StatCard label="Signup conversion" pending />
+            )}
             <StatCard label="Revenue" pending />
             <StatCard
               label="Active now"
@@ -182,14 +216,33 @@ export default async function ProjectOverviewPage({
               + Revenue are placed but light up in Phases E + F. */}
           <div className="grid gap-4 md:grid-cols-3">
             <SourcesCard items={analytics.topReferrers} />
-            <Card className="opacity-60">
-              <CardHeader>
-                <CardTitle className="text-base">Signup funnel</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-sm">—</p>
-              </CardContent>
-            </Card>
+            {primaryFunnel && funnelNow ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="truncate text-base">
+                    {primaryFunnel.name}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <FunnelMini results={funnelNow} />
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Funnel</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground text-sm">No funnel yet.</p>
+                  <Link
+                    href={`/dashboard/${project.id}/funnels`}
+                    className="text-foreground mt-2 inline-block text-sm underline"
+                  >
+                    Create a funnel →
+                  </Link>
+                </CardContent>
+              </Card>
+            )}
             <Card className="opacity-60">
               <CardHeader>
                 <CardTitle className="text-base">Revenue by source</CardTitle>

@@ -401,7 +401,17 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       Verified: 69 tests, typecheck · lint · build green; Sources data matches `getTopReferrers`
       (live: google.com 1). One card system (`rounded-xl`); monochrome (accent = Move #3).
       Files: +`source-row.tsx`, +`sources-card.tsx`; edited `page.tsx`.
-- [ ] Phase E — Funnel card (triad slot 2; **decide E1 primary-funnel = first/oldest**)
+- [x] **Phase E — Funnel card ✅ (2026-06-16).** Replaced the "Signup funnel" triad placeholder
+      with the **primary funnel** (E1 = oldest funnel, no schema/pin field): new `<FunnelMini>`
+      (compact step bars + overall conversion) in a card titled by the funnel name; **no-funnel →
+      "Create a funnel" CTA**. Filled the **Signup conversion KPI** (value % + `mode="points"`
+      delta vs previous period). Extended the **Lede** with a funnel clause ("… <name> converts at
+      X%", linked to the funnel) — appended only when the funnel had entrants. Reused
+      `getFunnelResults`/`computeFunnel`; added additive `getPrimaryFunnel` (oldest + steps).
+      Verified: 72 tests (+3), typecheck · lint · build green; live DataFast (0 funnels) →
+      CTA + pending KPI + no Lede clause (correct); present-path covered by `computeFunnel [5,2,1]`
+      + new Lede tests. One card system; monochrome (accent = Move #3). Files:
+      +`funnel-mini.tsx`, +`getPrimaryFunnel` (queries/funnels), `lib/lede.ts` (clause), `page.tsx`.
 - [ ] Phase F — Revenue card (triad slot 3; lights up Lede money clause + Revenue KPI)
 - [ ] Phase G — Audience card (merge Countries/Devices/Browsers; flags + glyphs)
 - [ ] Phase H — Top pages + diagnostics (detail row)

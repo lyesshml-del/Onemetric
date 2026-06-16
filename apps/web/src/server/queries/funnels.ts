@@ -15,6 +15,20 @@ export function listFunnels(projectId: string) {
   });
 }
 
+/**
+ * Move #1 / Phase E — the project's "primary funnel": its first/oldest funnel with
+ * ordered steps (decision E1, no schema/pin field). Surfaced on the Overview.
+ * Additive; the existing queries are unchanged. Compute results via
+ * `getFunnelResults(projectId, funnel.steps, from, to)`.
+ */
+export function getPrimaryFunnel(projectId: string) {
+  return prisma.funnel.findFirst({
+    where: { projectId },
+    orderBy: { createdAt: "asc" },
+    include: { steps: { orderBy: { order: "asc" } } },
+  });
+}
+
 /** A funnel with its ordered steps + project, only if owned by the user. */
 export function getOwnedFunnel(ownerId: string, funnelId: string) {
   return prisma.funnel.findFirst({
