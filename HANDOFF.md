@@ -180,6 +180,39 @@ visitors bar-chart card is replaced by the **hero** (the page's visual anchor, p
   smaller chart). The hero currently hardcodes **Unique visitors**; a metric switcher is optional
   later. Accent still deferred to **Move #3** (hero is monochrome).
 
+**✅ Phase B — Lede system (2026-06-16). Overview only.** A calm one-sentence "what changed?"
+briefing now sits at the **top of the Overview** (above the hero). **Traffic-only** by scope.
+
+- **Files created:**
+  - `apps/web/src/lib/lede.ts` — implemented `buildLede(input): LedeToken[]` (the Phase 0 file
+    previously held types only). Pure, **templated** (no AI/LLM/external). Builds the visitors
+    trend clause + an optional ", led by <top source>" clause. Edge cases all grammatical:
+    increasing, decreasing, **steady** (a change under 0.5% reads as steady — no noisy
+    sub-1% %), **no baseline** (previous = 0 → states the figure plainly, no false delta),
+    **zero traffic**, and **singular** "1 visitor".
+  - `apps/web/src/components/dashboard/lede.tsx` — `<Lede>` (server component): muted prose with
+    bright `font-medium` data nouns; a token with `href` renders as a link (none in Phase B).
+- **Files modified (additive):**
+  - `apps/web/src/lib/lede.ts` — also **relaxed `topSource.href` (and funnel/revenue `href`) to
+    optional**, because no Sources page exists yet, so the source is emphasized text without a
+    drill link. Backward-compatible refinement of the Phase 0 contract.
+  - `apps/web/src/lib/range.ts` — added `rangePeriodWord(key)` → "this week/month/quarter".
+  - `apps/web/src/app/dashboard/[projectId]/page.tsx` — compute `ledeTokens` from `metrics` +
+    `prevMetrics` + `rangePeriodWord(range)` + the existing `analytics.topReferrers[0]`; render
+    `<Lede>` at the top of the data section. **No new queries** (reuses Phase A's fetch).
+  - tests: `lib/lede.test.ts` (+9 sentence/edge-case tests), `range.test.ts` (+1).
+- **Reasoning:** the Lede is what turns the Overview from "a grid of metrics" into "a briefing"
+  (the audit's core thesis). Kept it a pure function (fully unit-testable) + a thin presentational
+  component; the source clause uses data already fetched, so Phase B adds **zero** query cost.
+- **Risks (very low):** pure logic + one server component; no client JS added (route still 1.9 kB).
+  Sentence correctness is locked by 9 unit tests; real-data output verified against the live DB.
+- **Transitional state (expected):** the redundant "Overview" `<h2>` still sits just above the
+  Lede — its removal is **Phase J** (hierarchy cleanup), out of scope here.
+- **Future phases must know:** `buildLede` already accepts optional `funnel` and `revenue` inputs
+  — **Phase E** populates `funnel` (appends "… converts at X%") and **Phase F** populates
+  `revenue` (appends "… <source> drove $N"); the sentence enriches itself with no rewrite.
+  Drill `href`s light up when the Sources/Funnel/Revenue targets exist. Accent = Move #3.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

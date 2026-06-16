@@ -55,3 +55,12 @@ export function previousRange(
   const len = to.getTime() - from.getTime();
   return { from: new Date(from.getTime() - len), to: new Date(from.getTime()) };
 }
+
+/** Human period label for the Lede: "this week" | "this month" | "this quarter". */
+export function rangePeriodWord(key: RangeKey): string {
+  return key === "7d"
+    ? "this week"
+    : key === "30d"
+      ? "this month"
+      : "this quarter";
+}

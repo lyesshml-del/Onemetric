@@ -4,6 +4,7 @@ import {
   resolveRange,
   eachUtcDay,
   previousRange,
+  rangePeriodWord,
   DEFAULT_RANGE,
 } from "./range";
 
@@ -61,5 +62,13 @@ describe("previousRange", () => {
     );
     // same length as the current window
     expect(prev.to.getTime() - prev.from.getTime()).toBe(len);
+  });
+});
+
+describe("rangePeriodWord", () => {
+  it("maps range keys to natural period words", () => {
+    expect(rangePeriodWord("7d")).toBe("this week");
+    expect(rangePeriodWord("30d")).toBe("this month");
+    expect(rangePeriodWord("90d")).toBe("this quarter");
   });
 });

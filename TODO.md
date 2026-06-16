@@ -370,7 +370,16 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       prev-period window (DataFast cur 1/1, prev 0/0 → shows "—" no-baseline). Monochrome
       (accent = Move #3). Files: +`components/charts/trend-chart.tsx`; edited `page.tsx`,
       `queries/analytics.ts` (export only).
-- [ ] Phase B — Lede system (`buildLede`, progressive clauses)
+- [x] **Phase B — Lede system ✅ (2026-06-16).** Calm one-sentence "what changed?" briefing at
+      the top of the Overview (above the hero). **Traffic-only** (visitors trend + top-source
+      clause from existing referrer data); funnel/revenue clauses are **E/F**. Pure templated
+      `buildLede` (no AI) covering every edge case: up / down / steady (tiny <0.5% = steady) /
+      no-baseline / zero / singular. New `<Lede>` (server component, muted prose + bright nouns).
+      Reuses Phase 0 (`computeDelta`, `formatDeltaPct`, `LedeToken`/`LedeInput`); relaxed
+      `topSource.href` to optional (no Sources page yet → no drill link in B). Verified: 69 tests
+      (+10), typecheck · lint · build green; real DataFast data → "1 visitor this week, led by
+      google.com." Monochrome (accent = Move #3). Files: +`lib/lede.ts` (impl),
+      +`components/dashboard/lede.tsx`, +`rangePeriodWord` (lib/range); edited `page.tsx`.
 - [ ] Phase C — KPI strip (StatCard + Sparkline + active-now; demote engagement)
 - [ ] Phase D — Sources card (triad slot 1; **decide D1 favicon-privacy → recommend monograms**)
 - [ ] Phase E — Funnel card (triad slot 2; **decide E1 primary-funnel = first/oldest**)

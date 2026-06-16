@@ -9,7 +9,8 @@ import {
   getTimeseries,
   type BreakdownRow,
 } from "@/server/queries/analytics";
-import { resolveRange, previousRange } from "@/lib/range";
+import { resolveRange, previousRange, rangePeriodWord } from "@/lib/range";
+import { buildLede } from "@/lib/lede";
 import {
   countryName,
   formatDuration,
@@ -22,6 +23,7 @@ import { MetricCard } from "@/components/dashboard/metric-card";
 import { BreakdownCard } from "@/components/dashboard/breakdown-card";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
+import { Lede } from "@/components/dashboard/lede";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
@@ -61,6 +63,17 @@ export default async function ProjectOverviewPage({
     prev: prevSeries[i]?.visitors,
   }));
 
+  // Lede (Phase B): traffic + top-source. The source uses the existing top
+  // referrer; no drill link yet (the Sources view arrives in Phase D).
+  const topSourceLabel = analytics.topReferrers[0]?.label ?? null;
+  const ledeTokens = buildLede({
+    current: metrics,
+    previous: prevMetrics,
+    periodWord: rangePeriodWord(range),
+    projectId: project.id,
+    topSource: topSourceLabel ? { label: topSourceLabel } : null,
+  });
+
   return (
     <div className="space-y-8">
       <ProjectHeader
@@ -93,6 +106,9 @@ export default async function ProjectOverviewPage({
         </Card>
       ) : (
         <>
+          {/* Lede — the briefing sentence (Move #1 / Phase B). */}
+          <Lede tokens={ledeTokens} />
+
           {/* Hero — the protagonist (Move #1 / Phase A). The tiles + breakdowns
               below are intentionally unchanged; later phases replace them. */}
           <Card>
