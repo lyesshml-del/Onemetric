@@ -22,24 +22,29 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (email, WAF rate-limit, custom domain, `/api/collect` never-500 hardening).
 - **Revenue-ready, pending config only** — see `GO-LIVE.md`. Two blockers: (1) add Paddle
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
-- **Active work: Move #1 — the "Opinionated Overview" redesign.** Phases **0, A, B, C are
-  done**; **D–J remain.** See `MOVE-1-IMPLEMENTATION-PLAN.md`.
+- **Active work: Move #1 — the "Opinionated Overview" redesign.** Phases **0, A, B, C, D, E, F
+  are done**; **G, H, I, J remain.** See `MOVE-1-IMPLEMENTATION-PLAN.md`.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
   dashboard · 5 Events · 6 Funnels · 7 PayPal revenue · 8 Weekly reports.
 - **Launch prep:** 9 Billing (Paddle) · 10 Marketing+legal · 11 Tests+CI · 12 Deploy · email /
   WAF / custom-domain / 500-hardening.
-- **Move #1 Overview redesign:** Phase 0 (foundations) · A (Hero) · B (Lede) · C (KPI strip).
+- **Move #1 Overview redesign:** Phase 0 (foundations) · A (Hero) · B (Lede) · C (KPI strip) ·
+  D (Sources card) · E (Funnel card + conversion KPI) · F (Revenue card + Revenue KPI). The
+  outcomes triad (Sources/Funnel/Revenue) and the 4-KPI strip are complete.
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Next phase: Move #1 Phase D — Sources card** (promote top referrers into the outcomes triad
-  with avatars + share bars; introduce the triad container).
-- **Exact next step:** implement Phase D **exactly** as specified in
-  `MOVE-1-IMPLEMENTATION-PLAN.md` → "Phase D — Sources card", honoring decision **D1**
-  (**use monogram/letter avatars — NO third-party favicon service**, for privacy).
-- **Do not start Phase D (or anything) without the user's explicit approval for that phase.**
+- **Next phase: Move #1 Phase G — Audience card** (merge the Countries / Devices / Browsers
+  breakdown cards into one Audience card with a segmented control; flags for countries, glyphs
+  for devices/browsers; reuse `<SourceRow>`).
+- **Exact next step:** implement Phase G **exactly** as specified in
+  `MOVE-1-IMPLEMENTATION-PLAN.md` → "Phase G — Audience card" (and `OVERVIEW-SPEC.md` §4.5).
+  Use `flagEmoji` (already in `lib/format.ts` from Phase 0); reuse `<SourceRow>`.
+- **Do not start Phase G (or anything) without the user's explicit approval for that phase.**
+- After G: **H** (Top pages + diagnostics detail row) · **I** (mobile pass) · **J** (cleanup:
+  retire `MetricCard`, remove the redundant "Overview" `<h2>`, single focused empty state).
 
 ## 5. Source-of-truth documents (read before acting)
 | Document | What it governs |

@@ -412,7 +412,17 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       CTA + pending KPI + no Lede clause (correct); present-path covered by `computeFunnel [5,2,1]`
       + new Lede tests. One card system; monochrome (accent = Move #3). Files:
       +`funnel-mini.tsx`, +`getPrimaryFunnel` (queries/funnels), `lib/lede.ts` (clause), `page.tsx`.
-- [ ] Phase F — Revenue card (triad slot 3; lights up Lede money clause + Revenue KPI)
+- [x] **Phase F — Revenue card ✅ (2026-06-16).** Replaced the "Revenue by source" triad
+      placeholder with the real card (new `<RevenueMini>` — reuses `<SourceRow>` with money
+      formatting + monogram avatars + emphasized total; **not-connected/no-revenue → "Connect
+      revenue" CTA**). Filled the **Revenue KPI** (money value + % delta vs previous period).
+      Extended the **Lede** with a revenue clause ("`$total` in revenue, led by `<source>`",
+      linked) — only when revenue came from a **named/attributable** source. Reused
+      `getRevenueSummary`/`getRevenueBySource`/`getPayPalConnection` (no new queries). **Triad is
+      now fully real (Sources + Funnel + Revenue).** Verified: 75 tests (+3), typecheck · lint ·
+      build green; live DataFast (0 revenue, not connected) → CTA + pending KPI + no Lede clause
+      (correct). One card system; monochrome (accent = Move #3). Files: +`revenue-mini.tsx`,
+      `lib/lede.ts` (clause), `page.tsx`.
 - [ ] Phase G — Audience card (merge Countries/Devices/Browsers; flags + glyphs)
 - [ ] Phase H — Top pages + diagnostics (detail row)
 - [ ] Phase I — Mobile layout pass

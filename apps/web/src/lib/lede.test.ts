@@ -136,4 +136,49 @@ describe("buildLede (Phase B — traffic-only)", () => {
     expect(conv?.href).toBe("/dashboard/p1/funnels/f1");
     expect(conv?.emphasis).toBe(true);
   });
+
+  // --- Phase F: revenue clause ---
+
+  it("appends a revenue clause when a named source drove revenue", () => {
+    const t = buildLede({
+      ...base,
+      current: M(2430),
+      previous: M(2060),
+      revenue: { topSource: "newsletter", amount: 340, currency: "USD" },
+    });
+    expect(sentence(t)).toBe(
+      "Traffic is up 18% this week — 2.4k visitors. $340.00 in revenue, led by newsletter.",
+    );
+  });
+
+  it("combines the funnel and revenue clauses", () => {
+    const t = buildLede({
+      ...base,
+      current: M(2430),
+      previous: M(2060),
+      topSource: { label: "producthunt.com" },
+      funnel: { name: "Signup", conversion: 0.042 },
+      revenue: { topSource: "newsletter", amount: 340, currency: "USD" },
+    });
+    expect(sentence(t)).toBe(
+      "Traffic is up 18% this week — 2.4k visitors, led by producthunt.com. Signup converts at 4.2%. $340.00 in revenue, led by newsletter.",
+    );
+  });
+
+  it("links the revenue amount when an href is provided", () => {
+    const t = buildLede({
+      ...base,
+      current: M(900),
+      previous: M(600),
+      revenue: {
+        topSource: "newsletter",
+        amount: 100,
+        currency: "USD",
+        href: "/dashboard/p1/revenue",
+      },
+    });
+    const amount = t.find((x) => x.text === "$100.00");
+    expect(amount?.href).toBe("/dashboard/p1/revenue");
+    expect(amount?.emphasis).toBe(true);
+  });
 });

@@ -11,11 +11,17 @@ import {
   type BreakdownRow,
 } from "@/server/queries/analytics";
 import { getPrimaryFunnel, getFunnelResults } from "@/server/queries/funnels";
+import {
+  getRevenueSummary,
+  getRevenueBySource,
+} from "@/server/queries/revenue";
+import { getPayPalConnection } from "@/server/queries/integrations";
 import { resolveRange, previousRange, rangePeriodWord } from "@/lib/range";
 import { buildLede } from "@/lib/lede";
 import {
   countryName,
   formatDuration,
+  formatMoney,
   formatNumber,
   formatPercent,
 } from "@/lib/format";
@@ -25,6 +31,7 @@ import { StatCard } from "@/components/dashboard/stat-card";
 import { BreakdownCard } from "@/components/dashboard/breakdown-card";
 import { SourcesCard } from "@/components/dashboard/sources-card";
 import { FunnelMini } from "@/components/dashboard/funnel-mini";
+import { RevenueMini } from "@/components/dashboard/revenue-mini";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
 import { Lede } from "@/components/dashboard/lede";
@@ -55,15 +62,32 @@ export default async function ProjectOverviewPage({
 
   const { key: range, from, to } = resolveRange(rangeParam);
   const prev = previousRange(from, to);
-  const [projects, analytics, prevMetrics, prevSeries, activeNow, primaryFunnel] =
-    await Promise.all([
-      listProjects(user.id),
-      getProjectAnalytics(project.id, from, to),
-      getOverviewMetrics(project.id, prev.from, prev.to),
-      getTimeseries(project.id, prev.from, prev.to),
-      getActiveNow(project.id),
-      getPrimaryFunnel(project.id),
-    ]);
+  const [
+    projects,
+    analytics,
+    prevMetrics,
+    prevSeries,
+    activeNow,
+    primaryFunnel,
+    revenueConnection,
+    revenueSummary,
+    prevRevenueSummary,
+    revenueBySource,
+  ] = await Promise.all([
+    listProjects(user.id),
+    getProjectAnalytics(project.id, from, to),
+    getOverviewMetrics(project.id, prev.from, prev.to),
+    getTimeseries(project.id, prev.from, prev.to),
+    getActiveNow(project.id),
+    getPrimaryFunnel(project.id),
+    getPayPalConnection(project.id),
+    getRevenueSummary(project.id, from, to),
+    getRevenueSummary(project.id, prev.from, prev.to),
+    getRevenueBySource(project.id, from, to),
+  ]);
+
+  // Show the revenue card/KPI when connected or any revenue exists; else a CTA.
+  const showRevenue = revenueConnection.connected || revenueSummary.count > 0;
 
   const { metrics, timeseries } = analytics;
   const hasData = metrics.sessions > 0;
@@ -96,6 +120,18 @@ export default async function ProjectOverviewPage({
           href: `/dashboard/${project.id}/funnels/${primaryFunnel.id}`,
         }
       : null;
+  // Revenue clause only when there's revenue from a named (attributable) source.
+  const topRevenueSource =
+    revenueBySource.find((r) => r.label !== "Direct / unknown") ?? null;
+  const revenueLede =
+    revenueSummary.total > 0 && topRevenueSource
+      ? {
+          topSource: topRevenueSource.label,
+          amount: revenueSummary.total,
+          currency: revenueSummary.currency,
+          href: `/dashboard/${project.id}/revenue`,
+        }
+      : null;
   const ledeTokens = buildLede({
     current: metrics,
     previous: prevMetrics,
@@ -103,6 +139,7 @@ export default async function ProjectOverviewPage({
     projectId: project.id,
     topSource: topSourceLabel ? { label: topSourceLabel } : null,
     funnel: funnelLede,
+    revenue: revenueLede,
   });
 
   return (
@@ -196,7 +233,18 @@ export default async function ProjectOverviewPage({
             ) : (
               <StatCard label="Signup conversion" pending />
             )}
-            <StatCard label="Revenue" pending />
+            {showRevenue ? (
+              <StatCard
+                label="Revenue"
+                value={formatMoney(revenueSummary.total, revenueSummary.currency)}
+                delta={{
+                  current: revenueSummary.total,
+                  previous: prevRevenueSummary.total,
+                }}
+              />
+            ) : (
+              <StatCard label="Revenue" pending />
+            )}
             <StatCard
               label="Active now"
               value={formatNumber(activeNow)}
@@ -243,14 +291,37 @@ export default async function ProjectOverviewPage({
                 </CardContent>
               </Card>
             )}
-            <Card className="opacity-60">
-              <CardHeader>
-                <CardTitle className="text-base">Revenue by source</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-sm">—</p>
-              </CardContent>
-            </Card>
+            {showRevenue ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Revenue by source</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <RevenueMini
+                    sources={revenueBySource}
+                    total={revenueSummary.total}
+                    currency={revenueSummary.currency}
+                  />
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Revenue by source</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground text-sm">
+                    No revenue connected.
+                  </p>
+                  <Link
+                    href={`/dashboard/${project.id}/revenue`}
+                    className="text-foreground mt-2 inline-block text-sm underline"
+                  >
+                    Connect revenue →
+                  </Link>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Detail row (transitional — referrers moved to the triad above).

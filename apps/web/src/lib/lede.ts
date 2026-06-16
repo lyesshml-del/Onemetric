@@ -12,6 +12,7 @@ import type { OverviewMetrics } from "@/server/queries/analytics";
 import {
   computeDelta,
   formatDeltaPct,
+  formatMoney,
   formatNumber,
   formatPercent,
 } from "@/lib/format";
@@ -55,7 +56,7 @@ const FLAT_THRESHOLD = 0.005;
  * increasing, decreasing, flat/tiny, no baseline, and zero traffic.
  */
 export function buildLede(input: LedeInput): LedeToken[] {
-  const { current, previous, periodWord, topSource, funnel } = input;
+  const { current, previous, periodWord, topSource, funnel, revenue } = input;
   const visitors = current.uniqueVisitors;
 
   // Zero traffic (defensive — the Lede normally only renders when data exists).
@@ -121,6 +122,22 @@ export function buildLede(input: LedeInput): LedeToken[] {
     );
   }
 
-  // (Phase F will append a revenue clause here.)
+  // --- Revenue clause (Phase F) — appended only when a named source drove revenue.
+  // Parallels the traffic clause ("<total> in revenue, led by <source>"); the
+  // amount is the total (matching the Revenue KPI). ---
+  if (revenue) {
+    tokens.push(
+      { text: " " },
+      {
+        text: formatMoney(revenue.amount, revenue.currency),
+        emphasis: true,
+        ...(revenue.href ? { href: revenue.href } : {}),
+      },
+      { text: " in revenue, led by " },
+      { text: revenue.topSource, emphasis: true },
+      { text: "." },
+    );
+  }
+
   return tokens;
 }

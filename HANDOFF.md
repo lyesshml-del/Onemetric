@@ -322,6 +322,40 @@ triad (slot 2), fills the conversion KPI, and extends the Lede.
   `<RevenueMini>`, fills the **Revenue** KPI, and appends the Lede **revenue** clause (the
   `buildLede` revenue hook is reserved with a comment). Accent = Move #3.
 
+**✅ Phase F — Revenue card (2026-06-16). Overview only. The outcomes triad is now fully real.**
+
+- **Files created:**
+  - `apps/web/src/components/dashboard/revenue-mini.tsx` — `<RevenueMini>` (server): **reuses
+    `<SourceRow>`** with money formatting (monogram avatars per D1) + an emphasized **Total**,
+    matching `SourcesCard`/`FunnelMini`. Empty state "No revenue yet".
+- **Files modified (additive):**
+  - `apps/web/src/lib/lede.ts` — appended a **revenue clause** at the reserved hook:
+    "`<total>` in revenue, led by `<source>`" (parallels the traffic clause; amount = total to
+    match the KPI; linked to `/revenue`). Imports `formatMoney`. Traffic+funnel output unchanged
+    when no revenue. +3 tests in `lib/lede.test.ts`.
+  - `apps/web/src/app/dashboard/[projectId]/page.tsx` — fetch `getPayPalConnection` +
+    `getRevenueSummary` (current **and** previous) + `getRevenueBySource` in the `Promise.all`;
+    `showRevenue = connected || count > 0`; replace the placeholder with `<RevenueMini>` (or a
+    "Connect revenue" CTA); fill the **Revenue** KPI (money + % delta); pass the revenue clause to
+    `buildLede`. No revenue query was modified.
+- **Decisions:** **revenue clause only when meaningful** — there is revenue (`total > 0`) **and** a
+  **named** top source (skips "Direct / unknown"). The card/KPI use `showRevenue` (connected OR any
+  revenue): connected-but-zero shows the card with "No revenue yet" + `$0.00`; nothing → CTA +
+  pending KPI. KPI delta = **percent** (revenue is an amount, like pageviews).
+- **Risks (low):** four cheap revenue aggregates added to the parallel fetch (0 rows for projects
+  without revenue); reuses verified queries; no client JS (route 1.9 kB).
+- **Verification:** 75 tests (+3), typecheck · lint · build green. Live DataFast (0 revenue, no
+  PayPal integration) → **Connect-revenue CTA + pending Revenue KPI + no Lede revenue clause**
+  (correct). Revenue-present path covered by the 3 new Lede tests + the Phase 7 revenue-query
+  verification + the verified `SourceRow`/`formatMoney`.
+- **Transitional states:** **none new in the triad** — Sources + Funnel + Revenue are all real now.
+  Still pending overall: the breakdown grid (Top pages + Countries/Devices/Browsers) awaits
+  **G** (Audience merge) + **H** (Top pages) + **J** (retire `MetricCard`, remove "Overview" h2,
+  focused empty state). KPI strip is complete (all 4 KPIs wired).
+- **Future phases must know:** **Phase G** merges Countries/Devices/Browsers into one Audience card
+  (flags + glyphs, reuse `<SourceRow>`); **Phase H** demotes Top pages (reuse `<SourceRow>`);
+  **Phase I** mobile pass; **Phase J** cleanup. Accent = Move #3.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
