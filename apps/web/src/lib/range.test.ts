@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { isRangeKey, resolveRange, eachUtcDay, DEFAULT_RANGE } from "./range";
+import {
+  isRangeKey,
+  resolveRange,
+  eachUtcDay,
+  previousRange,
+  DEFAULT_RANGE,
+} from "./range";
 
 describe("isRangeKey", () => {
   it("accepts known keys and rejects others", () => {
@@ -37,5 +43,23 @@ describe("eachUtcDay", () => {
       new Date("2026-06-01T23:59:59Z"),
     );
     expect(days).toEqual(["2026-06-01"]);
+  });
+});
+
+describe("previousRange", () => {
+  it("returns the immediately-prior window of equal length", () => {
+    const from = new Date("2026-06-08T00:00:00Z");
+    const to = new Date("2026-06-15T00:00:00Z"); // 7-day window
+    const len = to.getTime() - from.getTime();
+    const prev = previousRange(from, to);
+
+    // ends exactly where the current window begins
+    expect(prev.to.toISOString()).toBe(from.toISOString());
+    // starts one window-length earlier
+    expect(prev.from.toISOString()).toBe(
+      new Date(from.getTime() - len).toISOString(),
+    );
+    // same length as the current window
+    expect(prev.to.getTime() - prev.from.getTime()).toBe(len);
   });
 });

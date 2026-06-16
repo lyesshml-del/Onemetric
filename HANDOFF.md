@@ -99,6 +99,51 @@ legal review of `/privacy` `/terms` `/refund` + Algeria ANPDP cross-border trans
   (`src/app/api/collect/route.test.ts`, 42 tests total). Deployed in `3f63a3a`; two prod
   bursts → **`0×500`**.
 
+## Move #1 — Opinionated Overview redesign (design-led, phased)
+
+Design source of truth: **`DESIGN-AUDIT.md`** (approved audit), **`OVERVIEW-SPEC.md`** (approved
+Overview spec), **`MOVE-1-IMPLEMENTATION-PLAN.md`** (approved phase plan A–J + Phase 0). Work is
+strictly incremental — one phase per PR, additive, `main` always shippable. Scope = the Overview
+at `app/dashboard/[projectId]/page.tsx` only.
+
+**✅ Phase 0 — Foundations (2026-06-16). Shared infra only — nothing wired into any page, so
+ZERO visual change.** Verified: `59 tests` (+11), typecheck · lint · build all green; a grep
+confirmed the new symbols are referenced only by their own defs + tests (no `app/` UI imports).
+
+- **Files created:**
+  - `apps/web/src/components/dashboard/delta.tsx` — `<Delta>` period-over-period badge (glyph =
+    raw direction, color = good/bad via `invert`; `mode="points"` for rate deltas; neutral "—"
+    when no baseline). Presentational, server-safe. **Unused in Phase 0.**
+  - `apps/web/src/lib/lede.ts` — **types only** (`LedeToken`, `LedeInput`) reserving the Lede
+    contract so Phases B/E/F plug clauses in without churn. `buildLede` is **Phase B**.
+- **Files modified (additive exports only — no existing behavior changed):**
+  - `apps/web/src/lib/range.ts` — `previousRange(from,to)` → equal-length prior window.
+  - `apps/web/src/lib/format.ts` — `computeDelta`, `formatDeltaPct`, `formatDeltaPoints`,
+    `flagEmoji`, `monogram` (+ `DeltaDirection` type). `formatMoney` already existed/shared.
+  - `apps/web/src/server/queries/analytics.ts` — `getOverviewMetricsDelta` +
+    `OverviewMetricsWithDelta`; **reuses** `getOverviewMetrics` for both windows (the SQL query
+    is untouched). Imports `previousRange`.
+  - `apps/web/src/lib/format.test.ts`, `range.test.ts` — unit tests for all new pure helpers.
+- **Reasoning:** three later phases (Hero, Lede, KPI strip) all need period-over-period deltas, a
+  `Delta` component, and flag/monogram helpers. Phase 0 builds them **once** so those phases don't
+  duplicate logic — the plan's core rationale. Kept it 100% additive so it's trivially reviewable
+  and reversible, and `main` stays shippable.
+- **Risks:** very low — pure utilities + an unused component + a types file. `<Delta>` was **not**
+  unit-tested as a React render (the suite is node-only; we deliberately did **not** add jsdom —
+  PRD "avoid unnecessary dependencies"); its underlying logic (`computeDelta`) is fully tested.
+- **What future phases MUST know:**
+  - **API surface ready to consume:** `getOverviewMetricsDelta(projectId, from, to)` →
+    `{ current, previous }`; `<Delta current previous mode? invert? />`; `previousRange`;
+    `computeDelta`/`formatDeltaPct`/`formatDeltaPoints`/`flagEmoji`/`monogram`; `LedeToken`/
+    `LedeInput`.
+  - **Delta semantics:** `invert` for metrics where *down is good* (bounce rate, drop-off);
+    `mode="points"` for rate deltas (conversion, bounce); neutral "—" when previous = 0.
+  - **Open decisions still to resolve before their phase:** D1 favicon privacy → **recommend
+    monograms (no third party)**, `monogram()` already built as the safe fallback; E1 primary
+    funnel = first/oldest (no schema change); C1 sparkline data (ship visitors/pageviews first).
+  - **Accent color is Move #3, not Move #1** — `<Delta>` uses semantic emerald/red only.
+  - **Nothing renders yet.** Phases A–J each need separate approval before implementation.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

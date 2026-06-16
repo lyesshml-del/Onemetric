@@ -41,3 +41,17 @@ export function resolveRange(value: unknown): {
   const from = new Date(to.getTime() - days * 24 * 60 * 60 * 1000);
   return { key, from, to, days };
 }
+
+/**
+ * Move #1 / Phase 0 — the immediately-prior window of equal length, for
+ * period-over-period comparison. For [from, to] returns [from - len, from],
+ * where len = to - from. The shared boundary instant `from` is immaterial for
+ * analytics windows. Additive; consumed by `getOverviewMetricsDelta`.
+ */
+export function previousRange(
+  from: Date,
+  to: Date,
+): { from: Date; to: Date } {
+  const len = to.getTime() - from.getTime();
+  return { from: new Date(from.getTime() - len), to: new Date(from.getTime()) };
+}

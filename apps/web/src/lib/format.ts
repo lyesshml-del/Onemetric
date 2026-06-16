@@ -49,3 +49,58 @@ export function countryName(code: string): string {
     return code;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Move #1 / Phase 0 — shared comparison + presentation primitives.
+// Pure, additive helpers reused by later phases (Hero, Lede, KPI strip,
+// Sources, Audience). Nothing here is wired into a page in Phase 0.
+// ---------------------------------------------------------------------------
+
+export type DeltaDirection = "up" | "down" | "flat";
+
+/**
+ * Period-over-period comparison of two raw values. `pct` is the relative change
+ * (null when there is no baseline, i.e. previous === 0); `abs` is the raw
+ * difference (used for percentage-point deltas of rates).
+ */
+export function computeDelta(
+  current: number,
+  previous: number,
+): { direction: DeltaDirection; pct: number | null; abs: number } {
+  const abs = current - previous;
+  const direction: DeltaDirection = abs > 0 ? "up" : abs < 0 ? "down" : "flat";
+  const pct = previous === 0 ? null : abs / previous;
+  return { direction, pct, abs };
+}
+
+/** Relative delta as a sign-less label: 0.18 → "18%", -0.124 → "12.4%", null → "—". */
+export function formatDeltaPct(pct: number | null): string {
+  if (pct === null) return "—";
+  const p = Math.abs(pct) * 100;
+  return `${p.toFixed(p < 10 ? 1 : 0)}%`;
+}
+
+/** Percentage-point delta for rates (fractions): 0.006 → "0.6pp". Sign-less. */
+export function formatDeltaPoints(absFraction: number): string {
+  return `${(Math.abs(absFraction) * 100).toFixed(1)}pp`;
+}
+
+/** ISO-3166 alpha-2 country code → flag emoji (e.g. "FR" → 🇫🇷). "" on bad input. */
+export function flagEmoji(code: string): string {
+  if (!/^[A-Za-z]{2}$/.test(code)) return "";
+  const BASE = 0x1f1e6; // regional indicator symbol "A"
+  const cc = code.toUpperCase();
+  return String.fromCodePoint(
+    BASE + cc.charCodeAt(0) - 65,
+    BASE + cc.charCodeAt(1) - 65,
+  );
+}
+
+/**
+ * First alphanumeric character of a label, uppercased — a privacy-safe avatar
+ * fallback that needs no third-party favicon request. "Product Hunt" → "P".
+ */
+export function monogram(label: string): string {
+  const m = label.match(/[a-z0-9]/i);
+  return m ? m[0].toUpperCase() : "•";
+}

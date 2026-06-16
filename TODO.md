@@ -348,6 +348,34 @@ checkout + webhook deferred to last.
 
 ---
 
+## Move #1 — Opinionated Overview (design-led redesign)
+
+Source of truth: `DESIGN-AUDIT.md`, `OVERVIEW-SPEC.md`, `MOVE-1-IMPLEMENTATION-PLAN.md`.
+Strictly incremental, one phase per PR, additive, `main` always shippable. Scope = the
+Overview at `app/dashboard/[projectId]/page.tsx` only.
+
+- [x] **Phase 0 — Foundations ✅ (2026-06-16).** Shared comparison + presentation primitives,
+      **all additive, nothing wired into any page → zero visual change.** Verified: 59 tests
+      (+11), typecheck · lint · build green; grep confirms no UI imports the new symbols.
+      Added: `previousRange` (lib/range), `getOverviewMetricsDelta`+`OverviewMetricsWithDelta`
+      (queries/analytics, reuses `getOverviewMetrics`), `computeDelta`/`formatDeltaPct`/
+      `formatDeltaPoints`/`flagEmoji`/`monogram` (lib/format), `<Delta>` badge
+      (components/dashboard/delta.tsx), Lede type contract (lib/lede.ts, types only).
+- [ ] Phase A — Hero (TrendChart + big number + Delta + prev-period comparison)
+- [ ] Phase B — Lede system (`buildLede`, progressive clauses)
+- [ ] Phase C — KPI strip (StatCard + Sparkline + active-now; demote engagement)
+- [ ] Phase D — Sources card (triad slot 1; **decide D1 favicon-privacy → recommend monograms**)
+- [ ] Phase E — Funnel card (triad slot 2; **decide E1 primary-funnel = first/oldest**)
+- [ ] Phase F — Revenue card (triad slot 3; lights up Lede money clause + Revenue KPI)
+- [ ] Phase G — Audience card (merge Countries/Devices/Browsers; flags + glyphs)
+- [ ] Phase H — Top pages + diagnostics (detail row)
+- [ ] Phase I — Mobile layout pass
+- [ ] Phase J — Cleanup + hierarchy polish (retire `MetricCard`, focused empty state)
+
+> **Not started: Phases A–J.** Each requires its own approval. Accent color is **Move #3**.
+
+---
+
 ## Excluded from V1 (ROADMAP only — never implement)
 
 Session replay · heatmaps · A/B testing · feature flags · AI reports ·

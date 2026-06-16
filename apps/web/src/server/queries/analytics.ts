@@ -1,5 +1,6 @@
 import { EventType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { previousRange } from "@/lib/range";
 
 export type OverviewMetrics = {
   uniqueVisitors: number;
@@ -101,6 +102,30 @@ export async function getOverviewMetrics(
     avgDurationSec: r?.avg_duration ?? 0,
     bounceRate: r?.bounce_rate ?? 0,
   };
+}
+
+export type OverviewMetricsWithDelta = {
+  current: OverviewMetrics;
+  previous: OverviewMetrics;
+};
+
+/**
+ * Move #1 / Phase 0 — current-window overview metrics plus the equal-length
+ * previous window, so the UI can show period-over-period deltas. Thin wrapper
+ * that REUSES `getOverviewMetrics` for both windows; the underlying query is
+ * unchanged. Additive — not yet consumed by any page in Phase 0.
+ */
+export async function getOverviewMetricsDelta(
+  projectId: string,
+  from: Date,
+  to: Date,
+): Promise<OverviewMetricsWithDelta> {
+  const prev = previousRange(from, to);
+  const [current, previous] = await Promise.all([
+    getOverviewMetrics(projectId, from, to),
+    getOverviewMetrics(projectId, prev.from, prev.to),
+  ]);
+  return { current, previous };
 }
 
 async function getTimeseries(
