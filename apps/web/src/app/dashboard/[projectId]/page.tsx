@@ -5,9 +5,11 @@ import { requireUser } from "@/lib/auth";
 import { getOwnedProject, listProjects } from "@/server/queries/projects";
 import {
   getProjectAnalytics,
+  getOverviewMetrics,
+  getTimeseries,
   type BreakdownRow,
 } from "@/server/queries/analytics";
-import { resolveRange } from "@/lib/range";
+import { resolveRange, previousRange } from "@/lib/range";
 import {
   countryName,
   formatDuration,
@@ -18,13 +20,9 @@ import { ProjectHeader } from "@/components/dashboard/project-header";
 import { RangeSelect } from "@/components/dashboard/range-select";
 import { MetricCard } from "@/components/dashboard/metric-card";
 import { BreakdownCard } from "@/components/dashboard/breakdown-card";
-import { BarChart } from "@/components/charts/bar-chart";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { TrendChart } from "@/components/charts/trend-chart";
+import { Delta } from "@/components/dashboard/delta";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Analytics — OneMetric",
@@ -45,13 +43,23 @@ export default async function ProjectOverviewPage({
   if (!project) notFound();
 
   const { key: range, from, to } = resolveRange(rangeParam);
-  const [projects, analytics] = await Promise.all([
+  const prev = previousRange(from, to);
+  const [projects, analytics, prevMetrics, prevSeries] = await Promise.all([
     listProjects(user.id),
     getProjectAnalytics(project.id, from, to),
+    getOverviewMetrics(project.id, prev.from, prev.to),
+    getTimeseries(project.id, prev.from, prev.to),
   ]);
 
   const { metrics, timeseries } = analytics;
   const hasData = metrics.sessions > 0;
+
+  // Hero: current visitors trend with the previous period aligned per day slot.
+  const heroPoints = timeseries.map((p, i) => ({
+    label: p.date,
+    value: p.visitors,
+    prev: prevSeries[i]?.visitors,
+  }));
 
   return (
     <div className="space-y-8">
@@ -85,6 +93,37 @@ export default async function ProjectOverviewPage({
         </Card>
       ) : (
         <>
+          {/* Hero — the protagonist (Move #1 / Phase A). The tiles + breakdowns
+              below are intentionally unchanged; later phases replace them. */}
+          <Card>
+            <CardContent>
+              <p className="text-muted-foreground text-sm">Unique visitors</p>
+              <div className="mt-1 flex items-baseline gap-3">
+                <span className="text-4xl font-semibold tracking-tight tabular-nums">
+                  {formatNumber(metrics.uniqueVisitors)}
+                </span>
+                <Delta
+                  current={metrics.uniqueVisitors}
+                  previous={prevMetrics.uniqueVisitors}
+                />
+              </div>
+              <p className="text-muted-foreground mt-1 text-xs tabular-nums">
+                vs {formatNumber(prevMetrics.uniqueVisitors)} last period
+              </p>
+              <div className="mt-5">
+                <TrendChart
+                  data={heroPoints}
+                  valueLabel="visitors"
+                  ariaLabel="Daily unique visitors, current vs previous period"
+                />
+              </div>
+              <div className="text-muted-foreground mt-2 flex justify-between text-xs tabular-nums">
+                <span>{heroPoints[0]?.label}</span>
+                <span>{heroPoints[heroPoints.length - 1]?.label}</span>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
             <MetricCard
               label="Unique visitors"
@@ -108,24 +147,6 @@ export default async function ProjectOverviewPage({
               value={formatPercent(metrics.bounceRate)}
             />
           </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Unique visitors</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BarChart
-                data={timeseries.map((p) => ({
-                  label: p.date,
-                  value: p.visitors,
-                }))}
-              />
-              <div className="text-muted-foreground mt-2 flex justify-between text-xs">
-                <span>{timeseries[0]?.date}</span>
-                <span>{timeseries[timeseries.length - 1]?.date}</span>
-              </div>
-            </CardContent>
-          </Card>
 
           <div className="grid gap-4 md:grid-cols-2">
             <BreakdownCard title="Top pages" items={analytics.topPages} />

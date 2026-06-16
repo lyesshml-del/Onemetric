@@ -361,7 +361,15 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       (queries/analytics, reuses `getOverviewMetrics`), `computeDelta`/`formatDeltaPct`/
       `formatDeltaPoints`/`flagEmoji`/`monogram` (lib/format), `<Delta>` badge
       (components/dashboard/delta.tsx), Lede type contract (lib/lede.ts, types only).
-- [ ] Phase A — Hero (TrendChart + big number + Delta + prev-period comparison)
+- [x] **Phase A — Hero ✅ (2026-06-16).** Overview's old bar-chart card → a hero: big tabular
+      unique-visitors number + `<Delta>` vs previous period + new `TrendChart` (area+line,
+      ghosted previous-period line, branded hover tooltip, crisp non-distorting scaling). Hero
+      placed **first** as the visual anchor. **Tiles + breakdowns + empty state unchanged**
+      (later phases). Reuses Phase 0 (`previousRange`, `<Delta>`); `getTimeseries` exported
+      (additive). Verified: 59 tests, typecheck · lint · build green; live DB cross-check of the
+      prev-period window (DataFast cur 1/1, prev 0/0 → shows "—" no-baseline). Monochrome
+      (accent = Move #3). Files: +`components/charts/trend-chart.tsx`; edited `page.tsx`,
+      `queries/analytics.ts` (export only).
 - [ ] Phase B — Lede system (`buildLede`, progressive clauses)
 - [ ] Phase C — KPI strip (StatCard + Sparkline + active-now; demote engagement)
 - [ ] Phase D — Sources card (triad slot 1; **decide D1 favicon-privacy → recommend monograms**)

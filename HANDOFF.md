@@ -144,6 +144,42 @@ confirmed the new symbols are referenced only by their own defs + tests (no `app
   - **Accent color is Move #3, not Move #1** — `<Delta>` uses semantic emerald/red only.
   - **Nothing renders yet.** Phases A–J each need separate approval before implementation.
 
+**✅ Phase A — Hero (2026-06-16). First VISIBLE change — Overview only.** The Overview's old
+visitors bar-chart card is replaced by the **hero** (the page's visual anchor, placed first).
+
+- **Files created:** `apps/web/src/components/charts/trend-chart.tsx` — `<TrendChart>` (client):
+  dependency-free area+line, **ghosted previous-period comparison line**, branded HTML hover
+  tooltip (date · value · prev), crosshair + dot. Lines/area in a stretch-to-fit SVG kept crisp
+  with `vector-effect="non-scaling-stroke"`; hover decorations are HTML overlays so non-uniform
+  scaling never distorts them (fixes the old `preserveAspectRatio="none"` bar distortion).
+- **Files modified:**
+  - `apps/web/src/app/dashboard/[projectId]/page.tsx` — hero block (big tabular uniques number +
+    `<Delta current previous />` + "vs N last period" + `<TrendChart>`), placed **above** the
+    tiles. Fetches previous-period data via `previousRange` + `getOverviewMetrics` +
+    `getTimeseries` (added to the existing `Promise.all`). **Stopped importing `BarChart`**
+    (and removed `CardHeader`/`CardTitle` imports that the old chart card used). The **6 metric
+    tiles, 5 breakdown cards, and empty state are byte-for-byte unchanged.**
+  - `apps/web/src/server/queries/analytics.ts` — `getTimeseries` is now **exported** (additive
+    visibility change only; behavior identical) so the page can fetch the previous-period series.
+- **Reasoning:** Hero first establishes the protagonist + visual language and exercises the
+  Phase 0 comparison pipeline end-to-end (the plan's "validate the foundations" goal). Kept it
+  additive and section-scoped; reused `<Delta>` and `previousRange` rather than re-deriving them.
+- **Risks (low):** new client component is the only new bundle (`/dashboard/[projectId]`
+  713 B → 1.9 kB First Load — expected). Current/previous timeseries are aligned **by index**;
+  if the two windows ever differ in day count (DST/boundary), trailing `prev` is `undefined` and
+  the comparison line simply stops — no crash. `TrendChart` is not unit-tested (client/visual;
+  node-only suite, no jsdom — same call as `<Delta>`); its inputs come from tested/trusted queries.
+- **Transitional state (expected):** the unique-visitors number now appears **twice** (big in the
+  hero + in the old tile). That's intentional — **Phase C** replaces the tiles with the KPI strip.
+- **Verification:** 59 tests, typecheck · lint · build green. Hero current ≡ tile value (same
+  query). Live DB cross-check: DataFast cur `1/1`, prev `0/0` → hero shows `1` vs neutral "—"
+  (no-baseline). Other pages/tabs untouched (`BarChart` still used by marketing + event-detail).
+  Visual desktop/mobile pass is best confirmed in the running app (only 1 real session in the DB).
+- **Future phases must know:** `<TrendChart data valueLabel? height? ariaLabel? />` takes
+  `{ label, value, prev? }[]`; reuse it for sessions/pageviews (Phase C sparkline is a *separate*
+  smaller chart). The hero currently hardcodes **Unique visitors**; a metric switcher is optional
+  later. Accent still deferred to **Move #3** (hero is monochrome).
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

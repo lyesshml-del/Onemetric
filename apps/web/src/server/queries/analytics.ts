@@ -128,7 +128,7 @@ export async function getOverviewMetricsDelta(
   return { current, previous };
 }
 
-async function getTimeseries(
+export async function getTimeseries(
   projectId: string,
   from: Date,
   to: Date,
