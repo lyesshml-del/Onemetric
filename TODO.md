@@ -391,7 +391,16 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       Verified: 69 tests, typecheck · lint · build green; live DB numbers match (pageviews 2,
       active 0, bounce 0.0%). Monochrome (accent = Move #3). Files: +`stat-card.tsx`,
       +`sparkline.tsx`, +`getActiveNow` (analytics); edited `page.tsx`.
-- [ ] Phase D — Sources card (triad slot 1; **decide D1 favicon-privacy → recommend monograms**)
+- [x] **Phase D — Sources card ✅ (2026-06-16).** Promoted top referrers into the **outcomes
+      triad** as "Top sources" with **monogram/letter avatars** (D1 approved — **no third-party
+      favicon service**, privacy-first), label + subtle share bar + tabular value. Introduced the
+      3-col triad container: **Sources (live)** + Signup-funnel + Revenue-by-source placed as
+      **pending** placeholders (light up in E/F). Referrers **moved out** of the old breakdown
+      grid (now 4 cards) — transitional until G/H/J. New `<SourceRow>` (reusable by G/H) +
+      `<SourcesCard>`; reuses existing `topReferrers` (no new query) + Phase 0 `monogram`.
+      Verified: 69 tests, typecheck · lint · build green; Sources data matches `getTopReferrers`
+      (live: google.com 1). One card system (`rounded-xl`); monochrome (accent = Move #3).
+      Files: +`source-row.tsx`, +`sources-card.tsx`; edited `page.tsx`.
 - [ ] Phase E — Funnel card (triad slot 2; **decide E1 primary-funnel = first/oldest**)
 - [ ] Phase F — Revenue card (triad slot 3; lights up Lede money clause + Revenue KPI)
 - [ ] Phase G — Audience card (merge Countries/Devices/Browsers; flags + glyphs)

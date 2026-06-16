@@ -22,10 +22,16 @@ import { ProjectHeader } from "@/components/dashboard/project-header";
 import { RangeSelect } from "@/components/dashboard/range-select";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { BreakdownCard } from "@/components/dashboard/breakdown-card";
+import { SourcesCard } from "@/components/dashboard/sources-card";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
 import { Lede } from "@/components/dashboard/lede";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Analytics — OneMetric",
@@ -171,9 +177,33 @@ export default async function ProjectOverviewPage({
             {formatDuration(metrics.avgDurationSec)} avg session
           </p>
 
+          {/* Outcomes triad (Move #1 / Phase D). Sources is live (top referrers
+              with monogram avatars — D1, no third-party favicons); Signup funnel
+              + Revenue are placed but light up in Phases E + F. */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <SourcesCard items={analytics.topReferrers} />
+            <Card className="opacity-60">
+              <CardHeader>
+                <CardTitle className="text-base">Signup funnel</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">—</p>
+              </CardContent>
+            </Card>
+            <Card className="opacity-60">
+              <CardHeader>
+                <CardTitle className="text-base">Revenue by source</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">—</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Detail row (transitional — referrers moved to the triad above).
+              Audience merge + Top pages demotion are Phases G/H. */}
           <div className="grid gap-4 md:grid-cols-2">
             <BreakdownCard title="Top pages" items={analytics.topPages} />
-            <BreakdownCard title="Top referrers" items={analytics.topReferrers} />
             <BreakdownCard
               title="Countries"
               items={mapCountries(analytics.countries)}

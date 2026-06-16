@@ -254,6 +254,38 @@ replaced by a 4-KPI strip + a demoted Engagement line.
   `count(*) AS sessions` to `getTimeseries` (one-line additive). Verified numbers: live DB
   pageviews `2`, active `0`, bounce `0.0%`. Accent = Move #3.
 
+**✅ Phase D — Sources card (2026-06-16). Overview only.** Introduces the **outcomes triad** and
+promotes top referrers into it as **"Top sources"**.
+
+- **Decision D1 — APPROVED: monogram/letter avatars, NO third-party favicon service** (would leak
+  customers' visited domains; off-brand for privacy-first). Avatars use the Phase 0 `monogram()`.
+- **Files created:**
+  - `apps/web/src/components/dashboard/source-row.tsx` — `<SourceRow>` (server): monogram avatar +
+    label + **subtle** share bar (`bg-foreground/5`) + tabular value. **Reusable by Phases G/H**
+    (Audience, Top pages). Has a default `format` (compact number).
+  - `apps/web/src/components/dashboard/sources-card.tsx` — `<SourcesCard>`: "Top sources" card,
+    top 6 referrers, empty state. Uses the existing `topReferrers` — **no new query**.
+- **Files modified:**
+  - `apps/web/src/app/dashboard/[projectId]/page.tsx` — added the **3-column triad grid** after
+    the engagement line: **Sources (live)** + **Signup funnel** + **Revenue by source** as
+    **dimmed `pending` placeholder Cards** ("—") that **light up in E/F**. **Moved referrers out**
+    of the old breakdown grid (now 4 cards: Top pages, Countries, Devices, Browsers). Re-added
+    `CardHeader`/`CardTitle` imports (needed for the placeholder cards; they had been removed in A).
+- **Reasoning:** "where does traffic come from?" (Overview Q2) becomes a promoted, premium card
+  with avatars instead of a plain text breakdown — the audit's "favicons/avatars are the biggest
+  premium tell," done the privacy-first way.
+- **Risks (very low):** presentational only; reuses a verified query; no client JS (route 1.9 kB).
+- **Transitional states (expected):** (1) the triad currently has **1 live + 2 dimmed placeholder**
+  cards, so heights are uneven until E/F fill them; (2) the breakdown grid temporarily lives below
+  the triad until **G** (Audience merge) + **H** (Top pages demotion) + **J** (cleanup). "Direct"
+  traffic is not a "source" here (the existing `getTopReferrers` excludes null referrers — unchanged).
+- **Verification:** 69 tests, typecheck · lint · build green; Sources data matches `getTopReferrers`
+  on the live DB (`google.com` 1 → avatar "G").
+- **Future phases must know:** **Phase E** replaces the "Signup funnel" placeholder Card with a
+  `<FunnelMini>` (and adds the Lede funnel clause); **Phase F** replaces "Revenue by source" with a
+  `<RevenueMini>` (and the Lede money clause + the Revenue KPI). Reuse `<SourceRow>` for the
+  Audience (G) and Top-pages (H) rows (it takes a `format` prop). Accent = Move #3.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
