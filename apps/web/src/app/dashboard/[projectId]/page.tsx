@@ -26,7 +26,7 @@ import {
 import { ProjectHeader } from "@/components/dashboard/project-header";
 import { RangeSelect } from "@/components/dashboard/range-select";
 import { StatCard } from "@/components/dashboard/stat-card";
-import { BreakdownCard } from "@/components/dashboard/breakdown-card";
+import { TopPagesCard } from "@/components/dashboard/top-pages-card";
 import { SourcesCard } from "@/components/dashboard/sources-card";
 import { FunnelMini } from "@/components/dashboard/funnel-mini";
 import { RevenueMini } from "@/components/dashboard/revenue-mini";
@@ -251,8 +251,9 @@ export default async function ProjectOverviewPage({
             />
           </div>
 
-          {/* Demoted engagement diagnostics (were standalone tiles). */}
-          <p className="text-muted-foreground text-xs">
+          {/* Demoted engagement diagnostics (were standalone tiles). Move #1 /
+              Phase H: tabular-nums so the figures never jitter (spec §6). */}
+          <p className="text-muted-foreground text-xs tabular-nums">
             Bounce {formatPercent(metrics.bounceRate)} ·{" "}
             {metrics.pagesPerSession.toFixed(1)} pages/session ·{" "}
             {formatDuration(metrics.avgDurationSec)} avg session
@@ -323,10 +324,11 @@ export default async function ProjectOverviewPage({
             )}
           </div>
 
-          {/* Detail row — Top pages (demotion is Phase H) + the merged Audience
-              card (Move #1 / Phase G: Countries / Devices / Browsers in one card). */}
+          {/* Detail row (Move #1 / Phase H) — Top pages demoted to <SourceRow>
+              styling + the merged Audience card (Phase G). The quiet "footnotes"
+              row, below the outcomes triad. */}
           <div className="grid gap-4 md:grid-cols-2">
-            <BreakdownCard title="Top pages" items={analytics.topPages} />
+            <TopPagesCard items={analytics.topPages} />
             <AudienceCard
               countries={analytics.countries}
               devices={analytics.devices}

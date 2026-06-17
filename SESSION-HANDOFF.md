@@ -14,7 +14,7 @@ SaaS founders: website analytics, custom events, conversion funnels, revenue att
 (PayPal), and templated weekly email reports — installed via a single `<script>` snippet.
 It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOPHY.md`.
 
-## 2. Current project state (2026-06-16)
+## 2. Current project state (2026-06-17)
 - **V1 MVP complete and live** (build phases 0–8): analytics, events, funnels, PayPal revenue
   attribution, weekly reports, cookieless tracker, Supabase auth.
 - **Launch-prep complete:** Paddle subscription billing (built + **sandbox-verified**, not yet
@@ -22,8 +22,8 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (email, WAF rate-limit, custom domain, `/api/collect` never-500 hardening).
 - **Revenue-ready, pending config only** — see `GO-LIVE.md`. Two blockers: (1) add Paddle
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
-- **Active work: Move #1 — the "Opinionated Overview" redesign.** Phases **0, A, B, C, D, E, F, G
-  are done**; **H, I, J remain.** See `MOVE-1-IMPLEMENTATION-PLAN.md`.
+- **Active work: Move #1 — the "Opinionated Overview" redesign.** Phases **0, A, B, C, D, E, F, G,
+  H are done**; **I, J remain.** See `MOVE-1-IMPLEMENTATION-PLAN.md`.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -32,19 +32,20 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   WAF / custom-domain / 500-hardening.
 - **Move #1 Overview redesign:** Phase 0 (foundations) · A (Hero) · B (Lede) · C (KPI strip) ·
   D (Sources card) · E (Funnel card + conversion KPI) · F (Revenue card + Revenue KPI) ·
-  G (Audience card — merged Countries/Devices/Browsers). The outcomes triad, the 4-KPI strip,
-  and the Audience card are complete.
+  G (Audience card — merged Countries/Devices/Browsers) · H (Top pages → `SourceRow` + finalized
+  engagement line). The outcomes triad, the 4-KPI strip, and the full detail row are complete.
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Next phase: Move #1 Phase H — Top pages + diagnostics** (finalize the detail row: Top pages
-  reusing `<SourceRow>` + the demoted engagement diagnostics line, per `OVERVIEW-SPEC.md` §4.5).
-- **Exact next step:** implement Phase H **exactly** as specified in
-  `MOVE-1-IMPLEMENTATION-PLAN.md` → "Phase H — Top pages and diagnostics". Reuse `<SourceRow>`
-  for Top pages (currently still the old `BreakdownCard`).
-- **Do not start Phase H (or anything) without the user's explicit approval for that phase.**
-- After H: **I** (mobile pass) · **J** (cleanup: retire the now-unused `MetricCard`, remove the
-  redundant "Overview" `<h2>`, single focused empty state).
+- **Next phase: Move #1 Phase I — Mobile layout pass** (the responsive spec §10: single column,
+  order Lede → Hero (shorter) → KPI 2×2 → Funnel → Sources → Revenue → Top pages → Audience;
+  correct chart heights; tap targets ≥40px; no horizontal overflow).
+- **Exact next step:** implement Phase I **exactly** as specified in
+  `MOVE-1-IMPLEMENTATION-PLAN.md` → "Phase I — Mobile layout" and `OVERVIEW-SPEC.md` §10. A
+  CSS-only responsive pass across the assembled sections; verify each width (375/390/768/1024/1440).
+- **Do not start Phase I (or anything) without the user's explicit approval for that phase.**
+- After I: **J** (cleanup: retire the now-unused `MetricCard`, remove the redundant "Overview"
+  `<h2>`, single focused empty state).
 
 ## 5. Source-of-truth documents (read before acting)
 | Document | What it governs |
@@ -120,7 +121,7 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - Branch **`main`**. Recent Move #1 work is committed as **one local commit per phase**, several
   **not yet pushed** (network was intermittent during the session). Pushing triggers a Vercel
   production deploy.
-- **Verification baseline:** `69 tests` pass; `typecheck`, `lint`, and production `build` green.
+- **Verification baseline:** `75 tests` pass; `typecheck`, `lint`, and production `build` green.
   Run all four before finishing any phase (`cd apps/web && npm run test && npm run typecheck &&
   npm run lint && npm run build`).
 

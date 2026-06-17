@@ -390,6 +390,40 @@ Devices, Browsers) are merged into **one Audience card** with a segmented contro
   `<SourceRow>`) + finalizes the engagement diagnostics placement; **I** mobile pass; **J** cleanup
   (retire `MetricCard`, remove the "Overview" h2, single focused empty state). Accent = Move #3.
 
+**✅ Phase H — Top pages + diagnostics (2026-06-17). Overview only.** The detail row's "footnotes"
+now read as one system: Top pages reuses `<SourceRow>`, and the demoted engagement line is finalized.
+
+- **Files created:**
+  - `apps/web/src/components/dashboard/top-pages-card.tsx` — `<TopPagesCard>` (**server** component,
+    zero client JS): a near-exact parallel of `<SourcesCard>` that maps `analytics.topPages` to
+    `<SourceRow>` (monogram avatar + share bar + tabular value). Pages have no favicon, so the
+    privacy-safe **monogram default** applies (decision D1) — no `icon` override (honors the Phase G
+    note "Top pages keeps monogram/none"). Honest empty state: "No pageviews yet". Renders all rows
+    the query returns (≤10) to balance the Audience card beside it.
+- **Files modified (additive):**
+  - `apps/web/src/app/dashboard/[projectId]/page.tsx` — swapped the detail-row card
+    `<BreakdownCard title="Top pages" …>` → `<TopPagesCard items={analytics.topPages} />` (and the
+    import); added `tabular-nums` to the demoted **Engagement** diagnostics line (Bounce ·
+    pages/session · avg session) per spec §6. **No query changed.**
+- **Decisions:** monogram (not a new glyph) for page rows — matches `<SourcesCard>` exactly and the
+  recorded Phase G intent; lowest-risk, zero new imports/deps. The engagement line **stays below the
+  KPI strip** (its correct home since Phase C, spec §4.3) — Phase H only finalized its styling
+  (tabular-nums), not its placement. Top pages renders ≤10 rows (prior `<BreakdownCard>` behavior;
+  balances Audience).
+- **Risks (very low):** presentation-only. `getTopPages`/`analytics.topPages` unchanged → numbers
+  identical to the prior verified rendering (no new data path to seed-verify). `<BreakdownCard>` is
+  **still used by the Revenue page** (`revenue/page.tsx`) — not orphaned, not a J deletion target.
+- **Verification:** 75 tests, typecheck · lint · build green. Overview route **3.68 kB First Load
+  (unchanged from Phase G)** — confirms `<TopPagesCard>` adds no client weight (server component).
+- **Transitional states remaining:** only the redundant "Overview" `<h2>` and the unused
+  `MetricCard` (both **Phase J**). The hero, Lede, KPI strip, triad, and detail row are all
+  final-styled now.
+- **Future phases must know:** **Phase I** = the responsive/mobile pass (single column; above-the-
+  fold = Lede → Hero → KPIs; triad stacks; KPIs 2×2; tap targets ≥40px; correct chart heights)
+  across the assembled sections — CSS-only, verify each width (375/390/768/1024/1440). **Phase J** =
+  cleanup (retire `MetricCard`, remove the "Overview" `<h2>`, single focused empty state, final
+  a11y/spacing). Accent = Move #3.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

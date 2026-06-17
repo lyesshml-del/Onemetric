@@ -435,7 +435,17 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       monochrome (accent = Move #3). Route `1.9→3.68 kB` (first Overview client component).
       ⚠️ On **Windows**, flag emojis may render as letter-pairs ("DZ") — platform font limit,
       degrades gracefully. Files: +`audience-card.tsx`, `source-row.tsx` (icon prop), `page.tsx`.
-- [ ] Phase H — Top pages + diagnostics (detail row)
+- [x] **Phase H — Top pages + diagnostics ✅ (2026-06-17).** Demoted **Top pages** from the legacy
+      `<BreakdownCard>` to a new `<TopPagesCard>` that reuses `<SourceRow>` — same monogram-avatar +
+      share-bar + tabular-value styling as Sources/Audience (one system). Pages have no favicon, so
+      the privacy-safe **monogram default** applies (D1) — no icon override, mirroring `<SourcesCard>`
+      (honors the recorded Phase G note). Finalized the demoted **Engagement** line (Bounce ·
+      pages/session · avg session) with `tabular-nums` (spec §6: numbers never jitter). **No
+      query/schema change** — reuses `analytics.topPages` (`getTopPages`), so numbers are identical
+      to the prior (verified) rendering. `<BreakdownCard>` stays (Revenue page still uses it).
+      Verified: 75 tests, typecheck · lint · build green; Overview route **3.68 kB (unchanged —
+      `<TopPagesCard>` is server-only, zero client JS)**. Monochrome (accent = Move #3). Files:
+      +`top-pages-card.tsx`, `page.tsx`.
 - [ ] Phase I — Mobile layout pass
 - [ ] Phase J — Cleanup + hierarchy polish (retire `MetricCard`, focused empty state)
 
