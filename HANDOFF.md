@@ -509,6 +509,31 @@ final coherence pass; no query/schema change, no other page touched.
   Linear project Done. **Next is Move #2 (Feel & Performance) — a planning task first** (spec +
   phased plan, approved) **before any phase**. Accent/identity is Move #3.
 
+**📋 Move #2 — Feel & Performance: PLANNING (2026-06-18). Planning-only session — no code.** Move #1
+was approved (`ONE-15` Done, Move #1 project Completed). Wrote the Move #2 planning artifacts and set
+up Linear; **nothing was implemented**.
+
+- **Docs created:** `MOVE-2-SPEC.md` (the "instant + alive" design spec — philosophy, the "feel
+  test", capabilities [optimistic switching · skeletons · view transitions · count-up · chart
+  draw-in · hover/press], the one motion system, a11y + `prefers-reduced-motion`, server-first
+  preservation, the explicit **no-animation-library** stance, success criteria) and
+  `MOVE-2-IMPLEMENTATION-PLAN.md` (phased, additive, approval-gated: **Phase 0 foundations + A–G**,
+  each with goal/scope/deps/risks/"must remain unchanged"/DoD).
+- **Linear:** `Move #1 — Opinionated Overview` → **Completed**; `ONE-15` → **Done**; `Move #2 — Feel
+  & Performance` → **Planned** with 8 phase issues — **`ONE-47` Phase 0 (Motion foundations) = Todo**,
+  `ONE-48`..`ONE-54` (A–G) = Backlog. Also filed `ONE-46` (Move #3 design-debt: unify `MetricCard`
+  onto the `rounded-xl` spec — discovered in Phase J).
+- **Key stance (from the spec):** Move #2 is **feel only** — server-first preserved (RSC + server
+  actions; **no client data/state lib**; "optimistic" = `useTransition`/Suspense, not client
+  mutation); **no animation library / no new dependency** (CSS + native View Transitions API + ~2
+  tiny pure hooks); monochrome (accent = Move #3); `prefers-reduced-motion` is a first-class,
+  per-phase DoD item.
+- **Must remain unchanged when Move #2 builds:** all Move #1 visuals + data; every query (no
+  schema/query change); the Events/Funnels/Revenue/Reports/Settings/Billing pages' content (they may
+  *inherit* global skeleton/transition feel only); the 75-test suite (extended, not weakened).
+- **Next:** on approval of the spec + plan, implement **Phase 0 (`ONE-47`) only**, then stop. Do not
+  start Move #3.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

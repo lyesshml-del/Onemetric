@@ -14,7 +14,7 @@ SaaS founders: website analytics, custom events, conversion funnels, revenue att
 (PayPal), and templated weekly email reports — installed via a single `<script>` snippet.
 It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOPHY.md`.
 
-## 2. Current project state (2026-06-17)
+## 2. Current project state (2026-06-18)
 - **V1 MVP complete and live** (build phases 0–8): analytics, events, funnels, PayPal revenue
   attribution, weekly reports, cookieless tracker, Supabase auth.
 - **Launch-prep complete:** Paddle subscription billing (built + **sandbox-verified**, not yet
@@ -22,9 +22,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (email, WAF rate-limit, custom domain, `/api/collect` never-500 hardening).
 - **Revenue-ready, pending config only** — see `GO-LIVE.md`. Two blockers: (1) add Paddle
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
-- **Move #1 — the "Opinionated Overview" redesign is COMPLETE.** Phases **0, A–J are done**
-  (Phase J in review, pending approval). Next is **Move #2 (Feel & Performance)**, which needs its
-  own approved plan before any phase. See `MOVE-1-IMPLEMENTATION-PLAN.md`.
+- **Move #1 — the "Opinionated Overview" redesign is COMPLETE & APPROVED.** Phases **0, A–J done**;
+  `ONE-15` Done, the **Move #1** Linear project **Completed** (2026-06-18). **Move #2 (Feel &
+  Performance) is now PLANNED** — `MOVE-2-SPEC.md` + `MOVE-2-IMPLEMENTATION-PLAN.md` written, 8 phase
+  issues filed (`ONE-47` Phase 0 Todo, A–G Backlog). **The Move #2 spec + plan await approval before
+  Phase 0 starts.**
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -40,14 +42,16 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Move #1 is COMPLETE** (Phase J implemented + verified + committed locally; in review pending
-  approval). On approval: mark `ONE-15` Done and the **Move #1** project Done in Linear.
-- **Next: Move #2 — Feel & Performance** (motion / perceived-speed: optimistic range/section
-  switching, skeletons, view transitions, count-up, chart draw-in). This is a **planning task
-  first**, not implementation: produce an approved Move #2 spec + phased plan (mirroring
-  `DESIGN-AUDIT` → `OVERVIEW-SPEC` → `MOVE-1-IMPLEMENTATION-PLAN`) **before any phase**.
-- **Do not write any Move #2 feature code (or Move #3) without an approved plan + explicit
-  approval.** Accent/identity stays **Move #3**.
+- **Move #1 is COMPLETE & APPROVED** — `ONE-15` Done, the Move #1 project Completed in Linear.
+- **Move #2 — Feel & Performance is PLANNED (awaiting approval).** Planning artifacts exist:
+  `MOVE-2-SPEC.md` (design) + `MOVE-2-IMPLEMENTATION-PLAN.md` (phased build, 0 + A–G). Linear: the
+  `Move #2 — Feel & Performance` project (Planned) holds 8 phase issues — **`ONE-47` Phase 0 (Motion
+  foundations) is Todo**, A–G Backlog.
+- **Next exact step:** get the user's approval of `MOVE-2-SPEC.md` + `MOVE-2-IMPLEMENTATION-PLAN.md`,
+  then implement **Phase 0 (ONE-47) only** — additive, server-first, no new dependency,
+  reduced-motion-safe — and stop for approval (one phase per turn).
+- **Do not implement any Move #2 phase (or Move #3) without approval.** No animation library / no new
+  dependency (CSS + native View Transitions API + tiny hooks). Accent/identity stays **Move #3**.
 
 ## 5. Source-of-truth documents (read before acting)
 | Document | What it governs |
@@ -58,7 +62,9 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 | `PRODUCT-PHILOSOPHY.md` | Why/for-whom/what-it-refuses-to-be |
 | `DESIGN-AUDIT.md` | Approved design critique (the "why premium") |
 | `OVERVIEW-SPEC.md` | Approved Overview redesign spec |
-| `MOVE-1-IMPLEMENTATION-PLAN.md` | Approved phased build plan (0 + A–J) |
+| `MOVE-1-IMPLEMENTATION-PLAN.md` | Approved phased build plan (0 + A–J) — **Move #1 done** |
+| `MOVE-2-SPEC.md` | Move #2 "instant + alive" design spec — **awaiting approval** |
+| `MOVE-2-IMPLEMENTATION-PLAN.md` | Move #2 phased build plan (0 + A–G) — **awaiting approval** |
 | `DESIGN-SYSTEM.md` | How it should feel + tokens/patterns |
 | `ENGINEERING-STANDARDS.md` | How we build |
 | `DECISIONS.md` | Why the big choices were made (ADRs) |
@@ -118,7 +124,8 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   deletable (grep: 3 importers on the Events-detail / Funnels-detail / Revenue pages) — it stays,
   and unifying it onto the `rounded-xl` spec is a **Move #3** item.
 - **Drill links** in the Lede / cards are absent until their target views exist (D/E/F).
-- **Accent + motion** deferred to **Move #2 (motion/speed)** and **Move #3 (accent/identity)**.
+- **Motion/perceived-speed** is now **Move #2 — planned** (`MOVE-2-SPEC.md` + plan written, awaiting
+  approval; `ONE-47` Phase 0 Todo). **Accent/identity** remains **Move #3** (separate future plan).
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status

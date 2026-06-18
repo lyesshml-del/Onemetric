@@ -475,10 +475,34 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       (emerald = existing "live" semantic). Files: `page.tsx`, `lede.tsx`, `audience-card.tsx`,
       `DESIGN-SYSTEM.md`.
 
-> **Move #1 — Opinionated Overview: COMPLETE** (Phases 0, A–J done; J in review, pending approval).
-> The Overview is a briefing: Lede → Hero → 4 KPIs → outcomes triad → detail row; deltas
-> everywhere; responsive; one card/number/bar spec. **Next: Move #2 (Feel & Performance) — needs
-> its own approved plan before any phase.** Accent/identity stays **Move #3**.
+> **Move #1 — Opinionated Overview: COMPLETE & APPROVED (2026-06-18).** Phases 0, A–J done;
+> `ONE-15` Done, the **Move #1** Linear project **Completed**. The Overview is a briefing: Lede →
+> Hero → 4 KPIs → outcomes triad → detail row; deltas everywhere; responsive; one card/number/bar
+> spec; focused empty state. Accent/identity stays **Move #3**.
+
+---
+
+## Move #2 — Feel & Performance (PLANNED — awaiting approval)
+
+> Planning artifacts written **2026-06-18** (planning-only session — **no code**): `MOVE-2-SPEC.md`
+> (the "instant + alive" design spec) + `MOVE-2-IMPLEMENTATION-PLAN.md` (phased build, 0 + A–G).
+> Goal: make the app *feel* instant and alive — optimistic switching, skeletons, count-up, chart
+> draw-in, view transitions, hover/press — **Apple-grade restraint**, `prefers-reduced-motion`
+> respected, **server-first preserved**, **no animation library / no new dependency**. Linear:
+> `Move #2 — Feel & Performance` (Planned) with 8 phase issues. **Do not implement any phase until
+> the spec + plan are approved.**
+
+- [ ] **Phase 0 — Motion foundations** (`ONE-47`, **Todo**) — tokens, reduced-motion gate,
+      `useCountUp` + tests, `<Skeleton>`, keyframes. No visible change.
+- [ ] Phase A — Skeletons / loading states (`ONE-48`) — `loading.tsx` mirroring the Overview.
+- [ ] Phase B — Optimistic range + section switching (`ONE-49`) — `useTransition`, scroll preserved.
+- [ ] Phase C — Number count-up (`ONE-50`) — hero + KPIs, once, reduced-motion instant.
+- [ ] Phase D — Chart draw-in (`ONE-51`) — TrendChart + Sparklines, once, CSS.
+- [ ] Phase E — Hover & press micro-interactions (`ONE-52`).
+- [ ] Phase F — Route / view transitions (`ONE-53`) — native View Transitions API, progressive.
+- [ ] Phase G — Polish, reduced-motion & a11y pass (`ONE-54`).
+
+> Accent color + visual identity remain **Move #3** (separate plan). Plan Move #3 only after Move #2.
 
 ---
 
