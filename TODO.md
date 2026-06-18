@@ -482,7 +482,7 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 
 ---
 
-## Move #2 — Feel & Performance (PLANNED — awaiting approval)
+## Move #2 — Feel & Performance ✅ (COMPLETE & APPROVED)
 
 > Planning artifacts written **2026-06-18** (planning-only session — **no code**): `MOVE-2-SPEC.md`
 > (the "instant + alive" design spec) + `MOVE-2-IMPLEMENTATION-PLAN.md` (phased build, 0 + A–G).
@@ -578,7 +578,29 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 > kill the flash) · 4 reduced-motion-whole ✅ · 5 nothing-regressed ✅. **Next: plan Move #3
 > (accent/identity) — still locked until its plan is approved.**
 
-> Accent color + visual identity remain **Move #3** (separate plan). Plan Move #3 only after Move #2.
+---
+
+## Move #3 — Identity & Craft (PLANNED — awaiting approval)
+
+> Design source of truth: **`MOVE-3-SPEC.md`** (the single signature accent + craft) +
+> **`MOVE-3-IMPLEMENTATION-PLAN.md`** (phases 0 + A–F). Planning-only session **2026-06-18** — no code.
+> The final design move: one restrained **violet accent** (lean into the ~285 hue already in the
+> neutral tokens) applied **sparingly** (primary action · active state · hero data series · Lede-link
+> hover) + craft (one card/number/chart spec end-to-end, a logomark, favicon/flag polish). **Moves #1
+> & #2 must not change behavior; the accent is introduced only here.**
+
+- [ ] **Phase 0 — Accent token foundations** (`ONE-56`, **Todo**) — define `--brand` tokens +
+      utilities (oklch ~285), AA-verify (dark + light), **apply to nothing yet** (zero visual change).
+- [ ] Phase A — Hero data series accent (`ONE-57`) — TrendChart line + gradient → accent.
+- [ ] Phase B — Active / selected states (`ONE-58`) — tab underline / range / segmented active → accent.
+- [ ] Phase C — Primary action + Lede link hover + focus ring (`ONE-59`) — Button `default` variant → accent.
+- [ ] Phase D — Card/number/chart spec unification (`ONE-60`) — retire `MetricCard` drift (folds in `ONE-46`).
+- [ ] Phase E — Logomark + favicon / identity marks (`ONE-61`).
+- [ ] Phase F — Coherence, contrast & a11y pass (`ONE-62`) — completes Move #3.
+
+> **Awaiting approval of `MOVE-3-SPEC.md` + `MOVE-3-IMPLEMENTATION-PLAN.md` before Phase 0.** Each phase
+> is its own approval-gated, additive PR. No new dependency; server-first; dark-first + WCAG-AA. Deltas
+> stay semantic green/red; the live dot stays emerald — never the accent.
 
 ---
 

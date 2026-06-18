@@ -24,13 +24,15 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
 - **Move #1 — the "Opinionated Overview" redesign is COMPLETE & APPROVED.** `ONE-15` Done, the
   **Move #1** Linear project **Completed**.
-- **Move #2 — Feel & Performance: FULLY COMPLETE** (Phases 0, A–G + B2). **`ONE-47…54` Done; `ONE-55`
-  (B2, optimistic section-tab switching) is implemented + committed locally (in review)** — `<TabNav>`
-  flips the active tab instantly + pending dim, native `<Link>` preserved; the 6 pages otherwise
-  unchanged. The app feels instant + alive end-to-end (skeleton, optimistic range **+ section**
+- **Move #2 — Feel & Performance: COMPLETE & APPROVED.** `ONE-47…55` Done; the **Move #2** Linear
+  project **Completed**. The whole app feels instant + alive (skeleton, optimistic range + section
   switching, count-up, chart draw-in, hover/press, view transitions), reduced-motion-first,
-  server-first, no new dependency. **Nothing else is open in Move #2.** **Next: plan Move #3 —
-  Identity & Craft (the signature accent) — needs its own approved spec + plan; still locked.**
+  server-first, no new dependency.
+- **Move #3 — Identity & Craft is now PLANNED** (the final design move). `MOVE-3-SPEC.md` +
+  `MOVE-3-IMPLEMENTATION-PLAN.md` written (the single restrained **violet accent** applied sparingly +
+  craft: one card/number/chart spec, a logomark, favicon/flag polish; phases 0 + A–F); 7 phase issues
+  filed (`ONE-56` Phase 0 **Todo**, A–F Backlog; `ONE-46` canceled → folded into Phase D). **The spec +
+  plan await approval before Phase 0.** The accent is introduced ONLY here.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -46,17 +48,16 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Move #1 is COMPLETE & APPROVED. Move #2 is COMPLETE** (Phases 0, A–G + B2; `ONE-47…54` Done,
-  `ONE-55` implemented + verified + committed locally, in review). The whole app feels instant + alive:
-  skeleton · optimistic range **+ section-tab** switching · count-up · chart draw-in · hover/press ·
-  view transitions — reduced-motion-first, server-first, no new dependency. §9 criteria all satisfied
-  (HANDOFF.md). **Nothing else is open in Move #2.**
-- **Next exact step:** await approval of `ONE-55`. On approval: mark it Done **and** mark the **Move #2
-  — Feel & Performance** Linear project **Done** (all issues complete). Then plan **Move #3 — Identity &
-  Craft** (the single signature accent + craft: unify `MetricCard`/specs — `ONE-46` — a logomark,
-  favicon/flag polish) — a **planning** task first (`MOVE-3-SPEC.md` + plan, approved) before any
-  phase. **Move #3 stays locked until its plan is approved; do not write Move #3 code or docs until the
-  user starts it.**
+- **Moves #1 & #2 are COMPLETE & APPROVED** (both Linear projects Completed). **Move #3 — Identity &
+  Craft is PLANNED** — `MOVE-3-SPEC.md` + `MOVE-3-IMPLEMENTATION-PLAN.md` written (the single restrained
+  violet accent, ~285 hue, applied sparingly + craft; phases 0 + A–F); 7 phase issues filed (`ONE-56`
+  Phase 0 **Todo**, A–F Backlog; `ONE-46` canceled → folded into Phase D). The accent is introduced
+  ONLY in Move #3.
+- **Next exact step:** await approval of `MOVE-3-SPEC.md` + `MOVE-3-IMPLEMENTATION-PLAN.md`. On
+  approval, implement **Phase 0 (`ONE-56`) only** — define the `--brand` token(s) + utilities in
+  `globals.css`, AA-verify (dark + light), **apply to nothing yet** (zero visual change) — then stop
+  for approval. One phase per turn; additive; no new dependency; server-first; **Moves #1 & #2
+  behaviour must not change**; deltas stay semantic, the live dot stays emerald.
 - **Do not implement more than one phase, or Move #3, without approval.** No animation library / no
   new dependency. Accent/identity stays **Move #3**.
 

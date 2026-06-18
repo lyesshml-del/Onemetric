@@ -814,6 +814,27 @@ also satisfies §9 criterion 1 ("range **+ section** changes acknowledge in <100
 follow-up spun off along the way is `ONE-46` (MetricCard unification → Move #3). **Next: plan Move #3 —
 Identity & Craft (the accent) — still locked until its plan is approved.**
 
+**📐 Move #3 — Identity & Craft: PLANNED (2026-06-18). Awaiting approval — no code yet.** Wrote the two
+design docs (planning only): `MOVE-3-SPEC.md` (the single signature **accent** + craft) +
+`MOVE-3-IMPLEMENTATION-PLAN.md` (additive, approval-gated phases **0 + A–F**).
+
+- **The accent:** one restrained violet leaning into the ~285 hue already in the neutral tokens,
+  applied **sparingly** — primary action, active/selected state, the hero data series, Lede drill-link
+  hover — and **nowhere else** (deltas stay semantic green/red; the live dot stays emerald). Exact
+  oklch + token names are a **Phase-0** deliverable (tuned + WCAG-AA-verified, dark + light).
+- **The craft:** one card/number/chart spec on *every* page — retire the last `MetricCard`/`rounded-lg`
+  drift on the Events/Funnels/Revenue detail pages (Phase D folds in the now-canceled `ONE-46`); a
+  hand-built SVG **logomark** + favicon/opengraph; flag/glyph polish.
+- **Linear:** the `Move #3 — Identity & Craft` project holds 7 phase issues — `ONE-56` Phase 0
+  (**Todo**), `ONE-57…62` Phases A–F (Backlog). `ONE-46` **Canceled** (folded into `ONE-60`/Phase D).
+- **Move #2 closed out:** `ONE-55` Done; the **Move #2 — Feel & Performance** Linear project
+  **Completed** (as is **Move #1**).
+- **Hard constraints:** no new dependency (CSS tokens + existing shadcn + hand-built SVG); server-first;
+  dark-first + AA; **Moves #1 & #2 behaviour unchanged**; the accent is introduced ONLY in Move #3;
+  additive; `main` shippable.
+- **Next:** await approval of the spec + plan, then implement **Phase 0 (`ONE-56`) only** (define the
+  `--brand` token(s), AA-verify, apply nothing — zero visual change) and stop.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
