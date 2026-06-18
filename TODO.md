@@ -446,7 +446,18 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       Verified: 75 tests, typecheck · lint · build green; Overview route **3.68 kB (unchanged —
       `<TopPagesCard>` is server-only, zero client JS)**. Monochrome (accent = Move #3). Files:
       +`top-pages-card.tsx`, `page.tsx`.
-- [ ] Phase I — Mobile layout pass
+- [x] **Phase I — Mobile layout pass ✅ (2026-06-18).** A CSS-only responsive pass over the
+      assembled Overview (no data/query/logic change). **Hero chart** shorter on phones via a new
+      `<TrendChart heightClassName>` (200px <640 / **260px ≥640 — desktop unchanged**). **Outcomes
+      triad** stacks on mobile in the spec §10 order **Funnel → Sources → Revenue** using `order-*`
+      utilities that reset at `md` (≥768 → natural Sources | Funnel | Revenue row); `<SourcesCard>`
+      gained an additive `className` passthrough for this. KPI strip (`grid-cols-2 lg:grid-cols-4` =
+      2×2 mobile → 4 desktop) + detail row (`md:grid-cols-2`, stacks) were already correct;
+      `<Sparkline>` already scales (`w-full`, 22px) — no variant needed. `ProjectHeader` tabs are
+      shared across all pages → out of scope (Overview only). Verified: 75 tests, typecheck · lint ·
+      build green; Overview route **3.72 kB** (was 3.68; +~40 B for `cn` + class strings). Desktop
+      provably unchanged. Monochrome (accent = Move #3). Files: `trend-chart.tsx`, `sources-card.tsx`,
+      `page.tsx`.
 - [ ] Phase J — Cleanup + hierarchy polish (retire `MetricCard`, focused empty state)
 
 > **Not started: Phases A–J.** Each requires its own approval. Accent color is **Move #3**.

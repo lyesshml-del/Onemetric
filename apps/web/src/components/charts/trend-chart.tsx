@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { formatNumber } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 export type TrendPoint = {
   label: string;
@@ -23,11 +24,18 @@ export function TrendChart({
   data,
   valueLabel = "",
   height = 260,
+  heightClassName,
   ariaLabel = "Trend",
 }: {
   data: TrendPoint[];
   valueLabel?: string;
   height?: number;
+  /**
+   * Responsive height utilities (e.g. "h-[200px] sm:h-[260px]"). When set it
+   * overrides the inline `height`, letting the hero be shorter on mobile and
+   * keep its desktop height (Move #1 / Phase I).
+   */
+  heightClassName?: string;
   ariaLabel?: string;
 }) {
   const [hover, setHover] = useState<number | null>(null);
@@ -74,8 +82,8 @@ export function TrendChart({
 
   return (
     <div
-      className="relative w-full"
-      style={{ height }}
+      className={cn("relative w-full", heightClassName)}
+      style={heightClassName ? undefined : { height }}
       onMouseMove={onMove}
       onMouseLeave={() => setHover(null)}
       role="img"

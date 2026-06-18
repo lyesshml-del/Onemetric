@@ -176,8 +176,8 @@ export default async function ProjectOverviewPage({
           {/* Lede — the briefing sentence (Move #1 / Phase B). */}
           <Lede tokens={ledeTokens} />
 
-          {/* Hero — the protagonist (Move #1 / Phase A). The tiles + breakdowns
-              below are intentionally unchanged; later phases replace them. */}
+          {/* Hero — the protagonist (Move #1 / Phase A; Phase I: shorter chart
+              on mobile, full height ≥640). */}
           <Card>
             <CardContent>
               <p className="text-muted-foreground text-sm">Unique visitors</p>
@@ -197,6 +197,7 @@ export default async function ProjectOverviewPage({
                 <TrendChart
                   data={heroPoints}
                   valueLabel="visitors"
+                  heightClassName="h-[200px] sm:h-[260px]"
                   ariaLabel="Daily unique visitors, current vs previous period"
                 />
               </div>
@@ -259,13 +260,17 @@ export default async function ProjectOverviewPage({
             {formatDuration(metrics.avgDurationSec)} avg session
           </p>
 
-          {/* Outcomes triad (Move #1 / Phase D). Sources is live (top referrers
-              with monogram avatars — D1, no third-party favicons); Signup funnel
-              + Revenue are placed but light up in Phases E + F. */}
+          {/* Outcomes triad (Move #1 / Phase D–F). Three equal cards: Sources /
+              Funnel / Revenue. Phase I: on mobile they stack in the spec's order
+              (Funnel → Sources → Revenue, §10) via order-*; at ≥768 the natural
+              Sources | Funnel | Revenue row returns (order-none). */}
           <div className="grid gap-4 md:grid-cols-3">
-            <SourcesCard items={analytics.topReferrers} />
+            <SourcesCard
+              items={analytics.topReferrers}
+              className="order-2 md:order-none"
+            />
             {primaryFunnel && funnelNow ? (
-              <Card>
+              <Card className="order-1 md:order-none">
                 <CardHeader>
                   <CardTitle className="truncate text-base">
                     {primaryFunnel.name}
@@ -276,7 +281,7 @@ export default async function ProjectOverviewPage({
                 </CardContent>
               </Card>
             ) : (
-              <Card>
+              <Card className="order-1 md:order-none">
                 <CardHeader>
                   <CardTitle className="text-base">Funnel</CardTitle>
                 </CardHeader>
@@ -292,7 +297,7 @@ export default async function ProjectOverviewPage({
               </Card>
             )}
             {showRevenue ? (
-              <Card>
+              <Card className="order-3 md:order-none">
                 <CardHeader>
                   <CardTitle className="text-base">Revenue by source</CardTitle>
                 </CardHeader>
@@ -305,7 +310,7 @@ export default async function ProjectOverviewPage({
                 </CardContent>
               </Card>
             ) : (
-              <Card>
+              <Card className="order-3 md:order-none">
                 <CardHeader>
                   <CardTitle className="text-base">Revenue by source</CardTitle>
                 </CardHeader>

@@ -424,6 +424,45 @@ now read as one system: Top pages reuses `<SourceRow>`, and the demoted engageme
   cleanup (retire `MetricCard`, remove the "Overview" `<h2>`, single focused empty state, final
   a11y/spacing). Accent = Move #3.
 
+**✅ Phase I — Mobile layout pass (2026-06-18). Overview only.** A CSS/responsive-only pass over the
+assembled Overview — no data, query, or logic change (the 75 pure-logic tests are untouched and green).
+
+- **Files modified (responsive classes / additive props only):**
+  - `apps/web/src/components/charts/trend-chart.tsx` — added an optional **`heightClassName`** prop
+    (+`cn` import). When set it replaces the inline `height` style so the hero chart can use
+    responsive Tailwind heights. The inline `height` (default 260) is untouched for any other caller
+    (there are none — `TrendChart` is Overview-only).
+  - `apps/web/src/components/dashboard/sources-card.tsx` — added an optional **`className`**
+    passthrough to its root `<Card>` (needed to put an `order-*` utility on the Sources grid item).
+  - `apps/web/src/app/dashboard/[projectId]/page.tsx` — hero `<TrendChart heightClassName="h-[200px]
+    sm:h-[260px]">` (200px <640 / 260px ≥640); the triad grid items get `order-{1,2,3} md:order-none`
+    (Sources=2, Funnel=1, Revenue=3) so mobile stacks **Funnel → Sources → Revenue** (spec §10) and
+    ≥768 returns to the natural **Sources | Funnel | Revenue** row. Refreshed two stale comments.
+- **Already-correct (no change):** KPI strip `grid-cols-2 lg:grid-cols-4` (2×2 mobile/tablet → 4
+  desktop); detail row `md:grid-cols-2` (stacks <768); `<Sparkline>` (`w-full`, 22px — legible on
+  mobile). The mobile above-the-fold is already Lede → Hero → KPIs (DOM order).
+- **Decisions / scope:** kept the **DOM = desktop order** and used `order-*` (reset at `md`) so
+  "stacked = mobile order, row = desktop order" — which also preserves the triad's equal-height
+  stretch (order utilities sit on the grid items, not wrapper divs). Desktop hero height kept at
+  **260px** (`sm:h-[260px]` == the prior inline default) to honor "desktop unchanged" rather than
+  bumping to the spec's ~300. **Left `ProjectHeader` (the 6 project tabs) alone** — shared by every
+  project page, so out of the Overview-only scope (its mobile behavior is pre-existing; a separate
+  ux-debt issue if the tabs overflow on small phones). **RangeSelect** stays `h-9` (36px, adequate
+  native control) to avoid changing desktop.
+- **Risks (low, CSS-only):** the regression-prone spot is the triad `order-*` — verified all three
+  children carry an explicit mobile order (default `order-0` would otherwise float Revenue to the
+  top) and that they reset at `md`. No browser in this env, so per-width visual QA is reasoned from
+  the deterministic breakpoints + the green build, not screenshots; a live pass at
+  375/390/768/1024/1440 on the next deploy preview is recommended.
+- **Verification:** 75 tests · typecheck · lint · production build all green. Overview route **3.72
+  kB** First Load (was 3.68; +~40 B for the `cn` import + class strings), 116 kB total unchanged.
+- **What remained unchanged:** desktop layout/behavior (provably — `sm:h-[260px]`, `md:order-none`);
+  all data + every query; other pages; `BarChart`; monochrome (accent = Move #3).
+- **Future phases must know:** only **Phase J** remains — cleanup/coherence: retire the unused
+  `MetricCard` (grep-confirm; Revenue still uses `BreakdownCard`, so that one stays), remove the
+  redundant "Overview" `<h2>`, single focused "Waiting for your first pageview" empty state (spec
+  §7), final tabular-nums/focus/contrast/spacing a11y. Accent stays Move #3.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

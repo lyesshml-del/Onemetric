@@ -22,8 +22,8 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (email, WAF rate-limit, custom domain, `/api/collect` never-500 hardening).
 - **Revenue-ready, pending config only** — see `GO-LIVE.md`. Two blockers: (1) add Paddle
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
-- **Active work: Move #1 — the "Opinionated Overview" redesign.** Phases **0, A, B, C, D, E, F, G,
-  H are done**; **I, J remain.** See `MOVE-1-IMPLEMENTATION-PLAN.md`.
+- **Active work: Move #1 — the "Opinionated Overview" redesign.** Phases **0, A–I are done**;
+  **only J remains** (cleanup). See `MOVE-1-IMPLEMENTATION-PLAN.md`.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -33,19 +33,20 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Move #1 Overview redesign:** Phase 0 (foundations) · A (Hero) · B (Lede) · C (KPI strip) ·
   D (Sources card) · E (Funnel card + conversion KPI) · F (Revenue card + Revenue KPI) ·
   G (Audience card — merged Countries/Devices/Browsers) · H (Top pages → `SourceRow` + finalized
-  engagement line). The outcomes triad, the 4-KPI strip, and the full detail row are complete.
+  engagement line) · I (mobile layout pass — responsive hero height + triad order). The outcomes
+  triad, the 4-KPI strip, the full detail row, and the mobile layout are complete.
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Next phase: Move #1 Phase I — Mobile layout pass** (the responsive spec §10: single column,
-  order Lede → Hero (shorter) → KPI 2×2 → Funnel → Sources → Revenue → Top pages → Audience;
-  correct chart heights; tap targets ≥40px; no horizontal overflow).
-- **Exact next step:** implement Phase I **exactly** as specified in
-  `MOVE-1-IMPLEMENTATION-PLAN.md` → "Phase I — Mobile layout" and `OVERVIEW-SPEC.md` §10. A
-  CSS-only responsive pass across the assembled sections; verify each width (375/390/768/1024/1440).
-- **Do not start Phase I (or anything) without the user's explicit approval for that phase.**
-- After I: **J** (cleanup: retire the now-unused `MetricCard`, remove the redundant "Overview"
-  `<h2>`, single focused empty state).
+- **Next phase: Move #1 Phase J — Cleanup & hierarchy polish** (the final coherence pass: retire the
+  now-unused `MetricCard`, remove the redundant "Overview" `<h2>`, single focused "Waiting for your
+  first pageview" empty state per spec §7, final tabular-nums/focus/contrast/spacing a11y).
+- **Exact next step:** implement Phase J **exactly** as specified in
+  `MOVE-1-IMPLEMENTATION-PLAN.md` → "Phase J — Cleanup and hierarchy polish" + `OVERVIEW-SPEC.md`
+  §7/§11/§13. **Grep before every deletion;** `BreakdownCard` **stays** (the Revenue page uses it).
+- **Do not start Phase J (or anything) without the user's explicit approval for that phase.**
+- Phase J is the **last** Move #1 phase. After it, **Move #2** (feel/speed) and **Move #3**
+  (accent/identity) each need their own approved plan — do not start either.
 
 ## 5. Source-of-truth documents (read before acting)
 | Document | What it governs |

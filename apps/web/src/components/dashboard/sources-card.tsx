@@ -13,12 +13,18 @@ import type { BreakdownRow } from "@/server/queries/analytics";
  * "where does traffic come from?" question. Reuses the existing `topReferrers`
  * data — no new query. Capped to the top few so the triad cards stay balanced.
  */
-export function SourcesCard({ items }: { items: BreakdownRow[] }) {
+export function SourcesCard({
+  items,
+  className,
+}: {
+  items: BreakdownRow[];
+  className?: string;
+}) {
   const top = items.slice(0, 6);
   const max = Math.max(1, ...top.map((i) => i.value));
 
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle className="text-base">Top sources</CardTitle>
       </CardHeader>
