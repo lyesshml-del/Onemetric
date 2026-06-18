@@ -24,12 +24,13 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
 - **Move #1 — the "Opinionated Overview" redesign is COMPLETE & APPROVED.** `ONE-15` Done, the
   **Move #1** Linear project **Completed**.
-- **Move #2 — Feel & Performance: CORE COMPLETE** (Phases 0, A–G). **Phases 0, A–F (`ONE-47…53`) Done;
-  Phase G (`ONE-54`, polish/reduced-motion/a11y) is implemented + committed locally (in review)** —
-  timings tokenized; the count-up hard-load flash + delta jiggle fixed (skip-initial; ghost width);
-  full reduced-motion + a11y sweep; §9 criteria reconciled (HANDOFF.md). **The only remaining Move #2
-  item is `ONE-55` (B2 optimistic section tabs, Backlog).** **Next: the user chooses (A) finish
-  `ONE-55`, or (B) plan Move #3 — Identity & Craft (still locked until chosen + Move #2 approved).**
+- **Move #2 — Feel & Performance: FULLY COMPLETE** (Phases 0, A–G + B2). **`ONE-47…54` Done; `ONE-55`
+  (B2, optimistic section-tab switching) is implemented + committed locally (in review)** — `<TabNav>`
+  flips the active tab instantly + pending dim, native `<Link>` preserved; the 6 pages otherwise
+  unchanged. The app feels instant + alive end-to-end (skeleton, optimistic range **+ section**
+  switching, count-up, chart draw-in, hover/press, view transitions), reduced-motion-first,
+  server-first, no new dependency. **Nothing else is open in Move #2.** **Next: plan Move #3 —
+  Identity & Craft (the signature accent) — needs its own approved spec + plan; still locked.**
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -45,16 +46,17 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Move #1 is COMPLETE & APPROVED. Move #2 CORE is COMPLETE** (Phases 0, A–G; Phase G `ONE-54`
-  implemented + verified + committed locally, in review). The Overview feels instant + alive (skeleton,
-  optimistic range, count-up, chart draw-in, hover/press, view transitions), reduced-motion-first,
-  server-first, no new dependency. §9 criteria reconciled (HANDOFF.md). **`ONE-55` (B2 optimistic
-  section tabs) is the only open Move #2 item.**
-- **Next exact step:** await approval of Phase G (`ONE-54`). On approval, mark it Done. Then the user
-  chooses: **(A)** implement **`ONE-55` (B2 — optimistic section tabs)** to finish Move #2 fully, or
-  **(B)** plan **Move #3 — Identity & Craft** (the single signature accent) — which needs its own
-  approved spec + phased plan before any phase. **Do not start Move #3, or create Move #3 docs, until
-  the user chooses it.**
+- **Move #1 is COMPLETE & APPROVED. Move #2 is COMPLETE** (Phases 0, A–G + B2; `ONE-47…54` Done,
+  `ONE-55` implemented + verified + committed locally, in review). The whole app feels instant + alive:
+  skeleton · optimistic range **+ section-tab** switching · count-up · chart draw-in · hover/press ·
+  view transitions — reduced-motion-first, server-first, no new dependency. §9 criteria all satisfied
+  (HANDOFF.md). **Nothing else is open in Move #2.**
+- **Next exact step:** await approval of `ONE-55`. On approval: mark it Done **and** mark the **Move #2
+  — Feel & Performance** Linear project **Done** (all issues complete). Then plan **Move #3 — Identity &
+  Craft** (the single signature accent + craft: unify `MetricCard`/specs — `ONE-46` — a logomark,
+  favicon/flag polish) — a **planning** task first (`MOVE-3-SPEC.md` + plan, approved) before any
+  phase. **Move #3 stays locked until its plan is approved; do not write Move #3 code or docs until the
+  user starts it.**
 - **Do not implement more than one phase, or Move #3, without approval.** No animation library / no
   new dependency. Accent/identity stays **Move #3**.
 

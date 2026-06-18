@@ -517,7 +517,15 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       left untouched; the shell has its own select. **B2 (section tabs) split to `ONE-55`.** 83 tests,
       typecheck · lint · build green; route 4.64 kB (+0.16). No new dependency. Files:
       +`overview-shell.tsx`, `page.tsx`.
-- [ ] Phase B2 — Optimistic section-tab switching (`ONE-55`, Backlog) — shared ProjectHeader (deferred).
+- [x] **Phase B2 — Optimistic section-tab switching ✅ (2026-06-18)** (`ONE-55`) — new client
+      `<TabNav>` (extracted from the shared `<ProjectHeader>`): clicking a tab flips the active
+      underline **immediately** (optimistic `pendingKey`) + a subtle pending dim while the destination
+      loads; cleared on commit (effect on `active`, incl. back/forward); native `<Link>` nav preserved
+      (prefetch, real hrefs, a11y; modifier-clicks guarded); `aria-current` added. Default (non-pending)
+      render identical to the old nav → the 6 pages unchanged. Reduced-motion-safe (color/opacity).
+      83 tests, typecheck · lint · build green; Overview First Load unchanged (119 kB); the other 5
+      pages gain the small `<TabNav>` client component. No new dependency, no client data lib. Files:
+      +`tab-nav.tsx`, `project-header.tsx`.
 - [x] **Phase C — Number count-up ✅ (2026-06-18)** (`ONE-50`) — new `<CountUp>` (client, wraps the
       Phase-0 `useCountUp`) animates the hero number + the 4 KPI values up once on arrival;
       `tabular-nums`; reduced-motion / no-JS / SSR → final value instantly. Format is a **serializable
@@ -562,12 +570,13 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       green; route 5.26 kB (+0.05, First Load unchanged). No new dependency. Files: `globals.css`,
       `use-count-up.ts`, `count-up.tsx`, `DESIGN-SYSTEM.md`.
 
-> **Move #2 — Feel & Performance: CORE COMPLETE** (Phases 0, A–G done; G in review). The Overview
-> feels instant + alive: skeleton · optimistic range switching · count-up · chart draw-in ·
-> hover/press · view transitions — all reduced-motion-first, no new dependency, server-first. **Only
-> `ONE-55` (B2 optimistic section tabs) remains in Move #2.** §9 criteria: 1 instant ✅ · 2 never-blank
-> ✅ · 3 alive/once (draw-in on arrival ✅; count-up on data change, by design, to kill the flash) ·
-> 4 reduced-motion-whole ✅ · 5 nothing-regressed ✅. **Move #3 (accent/identity) stays locked.**
+> **Move #2 — Feel & Performance: FULLY COMPLETE** (Phases 0, A–G + B2; all in review). The app feels
+> instant + alive: skeleton · optimistic range **+ section-tab** switching · count-up · chart draw-in ·
+> hover/press · view transitions — all reduced-motion-first, no new dependency, server-first.
+> **`ONE-55` (B2) is done — nothing else open in Move #2.** §9 criteria: 1 instant (range + sections)
+> ✅ · 2 never-blank ✅ · 3 alive/once (draw-in on arrival ✅; count-up on data change, by design, to
+> kill the flash) · 4 reduced-motion-whole ✅ · 5 nothing-regressed ✅. **Next: plan Move #3
+> (accent/identity) — still locked until its plan is approved.**
 
 > Accent color + visual identity remain **Move #3** (separate plan). Plan Move #3 only after Move #2.
 

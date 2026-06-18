@@ -782,6 +782,38 @@ THE MOVE #2 CORE.** Implemented `ONE-54`.
 **→ Move #2 core (Phases 0, A–G) is implemented + verified, in review. The ONLY remaining Move #2 item
 is `ONE-55` (B2 optimistic section tabs).** Move #3 (accent/identity) stays locked.
 
+**✅ Move #2 / Phase B2 — Optimistic section-tab switching (2026-06-18). — COMPLETES MOVE #2.**
+Implemented `ONE-55` (the deferred half of Phase B).
+
+- **New `components/dashboard/tab-nav.tsx`** (client) — extracted the section-tab nav from the shared
+  `<ProjectHeader>`. Clicking a tab flips the active underline **immediately** (optimistic `pendingKey`
+  state) + shows a subtle pending **dim** (`opacity-70`) while the destination loads. The state clears
+  when the destination commits (`useEffect` on the `active` prop — which also covers browser
+  back/forward), so the underline always re-syncs with the URL.
+- **Native `<Link>` preserved** — prefetch, real `href`s, a11y, middle/⌘-click (guarded so
+  modifier-clicks navigate without falsely flipping this page). No `router.push` / `useTransition` /
+  `useLinkStatus`; the only client state is `pendingKey`. Added `aria-current="page"` (a11y
+  improvement). Transition tuned to `--motion-micro` / `ease-soft`.
+- **`project-header.tsx`** stays a **server component**; it now renders `<TabNav projectId active />`
+  instead of the inline nav. Its **API + default render are unchanged**, and the **default (non-pending)
+  styling is byte-identical** to the old nav (active = `border-foreground text-foreground`) — so the 6
+  project pages that share it have **no regression**; the optimism only appears after a click.
+- **Reduced-motion-safe:** colour/opacity only; the global guard makes the transition instant; the
+  active flip + dim still apply (calm, functional).
+- **Verification:** 83 tests · typecheck · lint · production build green. Overview **First Load
+  unchanged (119 kB)**; the other 5 project pages each gain the small `<TabNav>` client component (the
+  expected cost of an interactive shared header — approved as B2). No new dependency, no client data
+  library. No browser in env → the optimistic flip / pending hint reasoned from the `pendingKey` logic
+  + green build.
+- **What remained unchanged:** every project page's content + data + queries + tab destinations; the
+  active underline styling; `focus-visible` (global outline); server-first (TabNav is a tiny client
+  leaf); monochrome; the 83-test suite.
+
+**→ MOVE #2 (Feel & Performance) IS FULLY COMPLETE** (Phases 0, A–G + B2). Section-tab switching now
+also satisfies §9 criterion 1 ("range **+ section** changes acknowledge in <100ms"). The only related
+follow-up spun off along the way is `ONE-46` (MetricCard unification → Move #3). **Next: plan Move #3 —
+Identity & Craft (the accent) — still locked until its plan is approved.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
