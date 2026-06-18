@@ -25,10 +25,10 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Move #1 — the "Opinionated Overview" redesign is COMPLETE & APPROVED.** `ONE-15` Done, the
   **Move #1** Linear project **Completed**.
 - **Move #2 — Feel & Performance is UNDERWAY.** The spec + plan are approved (`MOVE-2-SPEC.md` +
-  `MOVE-2-IMPLEMENTATION-PLAN.md`). **Phase 0 (Motion foundations, `ONE-47`) is implemented +
-  verified + committed locally (in review)** — motion tokens, the global reduced-motion guard,
-  `useCountUp`/`useReducedMotion`, `<Skeleton>`; nothing wired into a page yet (zero visible change).
-  **Next is Phase A — Skeletons (`ONE-48`).** Phases B–G Backlog.
+  `MOVE-2-IMPLEMENTATION-PLAN.md`). **Phase 0 (`ONE-47`, Motion foundations) is Done; Phase A
+  (`ONE-48`, Skeletons) is implemented + committed locally (in review)** — the Overview now streams a
+  layout-matching `<OverviewSkeleton>` via an in-page `<Suspense>` (scoped to the Overview; no blank
+  flash). **Next is Phase B — Optimistic range + section switching (`ONE-49`).** Phases C–G Backlog.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -44,16 +44,17 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Move #1 is COMPLETE & APPROVED.** **Move #2 — Feel & Performance is UNDERWAY** (spec + plan
-  approved). **Phase 0 (`ONE-47`, Motion foundations) is implemented + verified + committed locally
-  (in review)** — motion tokens + `ease-soft`, the global `prefers-reduced-motion` guard,
-  `useCountUp`/`useReducedMotion`, `<Skeleton>`, `shimmer`/`draw-in` keyframes; **nothing wired into
-  a page** (zero visible change; Overview route unchanged at 4.48 kB).
-- **Next exact step:** on approval of Phase 0, implement **Phase A — Skeletons / loading states
-  (`ONE-48`) only**: a `loading.tsx` for the Overview built from `<Skeleton>`, mirroring the final
-  layout (zero layout shift); static under reduced-motion. Then stop for approval.
+- **Move #1 is COMPLETE & APPROVED. Move #2 is UNDERWAY** (spec + plan approved). **Phase 0
+  (`ONE-47`) Done; Phase A (`ONE-48`, Skeletons) implemented + verified + committed locally (in
+  review)** — `<OverviewSkeleton>` + an in-page `<Suspense>` in the Overview `page.tsx` (split into a
+  sync wrapper + the unchanged async `OverviewContent`); scoped to the Overview, server-only, route
+  unchanged (4.48 kB).
+- **Next exact step:** on approval of Phase A, implement **Phase B — Optimistic range + section
+  switching (`ONE-49`) only**: wrap the range (and tab) navigation in `useTransition` → instant
+  active state + a pending visual (reuse `<OverviewSkeleton>` or a subtle dim, `aria-busy`) while the
+  server re-renders; **preserve scroll**. No client data library. Then stop for approval.
 - **Do not implement more than one phase, or Move #3, without approval.** No animation library / no
-  new dependency (CSS + native View Transitions API + tiny hooks). Accent/identity stays **Move #3**.
+  new dependency. Accent/identity stays **Move #3**.
 
 ## 5. Source-of-truth documents (read before acting)
 | Document | What it governs |

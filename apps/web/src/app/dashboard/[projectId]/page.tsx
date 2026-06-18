@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -35,6 +36,8 @@ import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
 import { Lede } from "@/components/dashboard/lede";
 import { InstallSnippet } from "@/components/dashboard/install-snippet";
+import { OverviewSkeleton } from "@/components/dashboard/overview-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
   CardContent,
@@ -46,13 +49,25 @@ export const metadata: Metadata = {
   title: "Analytics — OneMetric",
 };
 
-export default async function ProjectOverviewPage({
-  params,
-  searchParams,
-}: {
+type OverviewPageProps = {
   params: Promise<{ projectId: string }>;
   searchParams: Promise<{ range?: string }>;
-}) {
+};
+
+export default function ProjectOverviewPage(props: OverviewPageProps) {
+  // Move #2 / Phase A — stream a layout-matching skeleton while the server
+  // resolves analytics (no blank flash, no layout shift). Scoped to the Overview
+  // via an in-page Suspense boundary: a route-level loading.tsx here would also
+  // flash this skeleton on the sibling tabs (Events/Funnels/…), since there is no
+  // [projectId]/layout.tsx.
+  return (
+    <Suspense fallback={<OverviewLoading />}>
+      <OverviewContent {...props} />
+    </Suspense>
+  );
+}
+
+async function OverviewContent({ params, searchParams }: OverviewPageProps) {
   const { projectId } = await params;
   const { range: rangeParam } = await searchParams;
   const { user } = await requireUser();
@@ -354,6 +369,43 @@ export default async function ProjectOverviewPage({
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+/**
+ * Move #2 / Phase A — the Suspense fallback for the Overview: the project-header
+ * skeleton + the range-control placeholder + the shared <OverviewSkeleton>
+ * content, in the same `space-y-8` shell as the loaded page (no layout shift).
+ */
+function OverviewLoading() {
+  return (
+    <div
+      className="space-y-8"
+      role="status"
+      aria-busy="true"
+      aria-label="Loading analytics"
+    >
+      {/* Project header (the header lives in the page — no [projectId]/layout.tsx). */}
+      <div className="space-y-4">
+        <div>
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="mt-2 h-8 w-44" />
+          <Skeleton className="mt-2 h-4 w-28" />
+        </div>
+        <nav className="border-border flex gap-4 border-b">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="mb-2 h-4 w-14" />
+          ))}
+        </nav>
+      </div>
+
+      {/* Range control (right-aligned, like the loaded page). */}
+      <div className="flex justify-end">
+        <Skeleton className="h-9 w-28" />
+      </div>
+
+      <OverviewSkeleton />
     </div>
   );
 }

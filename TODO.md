@@ -500,7 +500,15 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       typecheck · lint · build green. No new dependency. Files: `globals.css`,
       `lib/motion.ts`(+test), `lib/hooks/use-reduced-motion.ts`, `lib/hooks/use-count-up.ts`,
       `components/ui/skeleton.tsx`, `DESIGN-SYSTEM.md`.
-- [ ] Phase A — Skeletons / loading states (`ONE-48`) — `loading.tsx` mirroring the Overview.
+- [x] **Phase A — Skeletons / loading states ✅ (2026-06-18)** (`ONE-48`) — the Overview now streams
+      a layout-matching skeleton (no blank flash, no layout shift). New `<OverviewSkeleton>` (content
+      skeleton, reused as Phase B's pending visual) + an in-page `<Suspense>` in `page.tsx` (split
+      into a sync wrapper + the unchanged async `OverviewContent`) with an `OverviewLoading` fallback
+      (header + range + `<OverviewSkeleton>`). **Scoped to the Overview** (no route-level
+      `loading.tsx`, since there's no `[projectId]/layout.tsx` → other tabs unaffected).
+      Reduced-motion → static (Phase-0 global guard). Server-only (route 4.48 kB, unchanged). 83
+      tests, typecheck · lint · build green. No new dependency. Files: +`overview-skeleton.tsx`,
+      `page.tsx`.
 - [ ] Phase B — Optimistic range + section switching (`ONE-49`) — `useTransition`, scroll preserved.
 - [ ] Phase C — Number count-up (`ONE-50`) — hero + KPIs, once, reduced-motion instant.
 - [ ] Phase D — Chart draw-in (`ONE-51`) — TrendChart + Sparklines, once, CSS.

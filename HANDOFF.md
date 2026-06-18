@@ -566,6 +566,36 @@ page, so ZERO visible change for default users.** Implemented `ONE-47`.
 - **Next:** **Phase A — Skeletons / loading states (`ONE-48`)** — a `loading.tsx` mirroring the
   Overview, built from `<Skeleton>`; Phase B then reuses that skeleton as its optimistic pending state.
 
+**✅ Move #2 / Phase A — Skeletons / loading states (2026-06-18). Overview only.** The Overview now
+streams a layout-matching skeleton instead of waiting blank — implemented `ONE-48`.
+
+- **New `components/dashboard/overview-skeleton.tsx`** — `<OverviewSkeleton>`: a **content** skeleton
+  (Lede → hero → 4 KPIs → engagement line → 3 triad cards → 2 detail cards) from the Phase-0
+  `<Skeleton>` + the real `<Card>` chrome, at the real dimensions (the hero chart block matches
+  `h-[200px] sm:h-[260px]` exactly). Server component, zero client JS. Header/range excluded so it's
+  **reusable as Phase B's in-page pending visual**.
+- **`app/dashboard/[projectId]/page.tsx`** — split the default export into a **sync wrapper** that
+  renders `<Suspense fallback={<OverviewLoading/>}><OverviewContent {...props}/></Suspense>`; the
+  former async body moved **verbatim** into `OverviewContent` (loaded output byte-identical).
+  `OverviewLoading` = header skeleton + range placeholder + `<OverviewSkeleton>` in the same
+  `space-y-8` shell.
+- **Why in-page Suspense, not `loading.tsx`:** there is **no `[projectId]/layout.tsx`**, so a
+  route-level `loading.tsx` would also be the Suspense fallback for the sibling tabs
+  (Events/Funnels/Revenue/…) and flash an Overview-shaped skeleton there — violating "other pages
+  unchanged." The in-page boundary scopes the skeleton to the Overview (ONE-48 allows "loading.tsx
+  **and/or Suspense boundaries**").
+- **Reduced-motion:** the shimmer is disabled by the Phase-0 global guard → a calm static skeleton.
+- **Verification:** 83 tests · typecheck · lint · production build green. Overview route **4.48 kB
+  First Load — unchanged** (server-only skeleton, no client weight). No new dependency. No browser in
+  env → the streamed skeleton / no-layout-shift / reduced-motion reasoned from the mirrored structure
+  (hero block matches exactly) + the green build, not screenshots.
+- **What remained unchanged:** the loaded Overview (content/layout/data — `OverviewContent` is the
+  same body); every query; **all other pages** (no `loading.tsx`); server-first (in-page Suspense, no
+  client loader); monochrome; the 83-test suite.
+- **Next:** **Phase B — Optimistic range + section switching (`ONE-49`)** — `useTransition` so range
+  (and tab) changes flip the active state instantly + show a pending visual (reuse
+  `<OverviewSkeleton>` or a subtle dim) while the server re-renders; preserve scroll.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
