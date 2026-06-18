@@ -551,7 +551,23 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       out of scope. Unsupported browsers / reduced-motion → instant nav. No component change, no JS, no
       dependency; Phase A/B/C/D untouched. 83 tests, typecheck · lint · build green; route 5.21 kB
       (unchanged). File: `globals.css`.
-- [ ] Phase G — Polish, reduced-motion & a11y pass (`ONE-54`).
+- [x] **Phase G — Polish, reduced-motion & a11y pass ✅ (2026-06-18)** (`ONE-54`) — the final Move #2
+      coherence pass. **Tokenized** stray timings (`--animate-draw-in` `0.6s → var(--motion-entrance)`;
+      view-transition `200ms → var(--motion-base)`). **Fixed the two Phase-C items:** `useCountUp` now
+      **skips the initial mount** (shows the final value — no hard-load flash) and counts on **data
+      change**; `<CountUp>` reserves the final width via an invisible **ghost** + overlay (no delta
+      jiggle). Final values exact. **Reduced-motion sweep:** every motion gated (count-up via
+      `useReducedMotion`; draw-in/dim/shimmer/pulse via the global guard; press via `motion-reduce`;
+      VT gated). **a11y:** `aria-busy`/focus/focus-visible verified. 83 tests, typecheck · lint · build
+      green; route 5.26 kB (+0.05, First Load unchanged). No new dependency. Files: `globals.css`,
+      `use-count-up.ts`, `count-up.tsx`, `DESIGN-SYSTEM.md`.
+
+> **Move #2 — Feel & Performance: CORE COMPLETE** (Phases 0, A–G done; G in review). The Overview
+> feels instant + alive: skeleton · optimistic range switching · count-up · chart draw-in ·
+> hover/press · view transitions — all reduced-motion-first, no new dependency, server-first. **Only
+> `ONE-55` (B2 optimistic section tabs) remains in Move #2.** §9 criteria: 1 instant ✅ · 2 never-blank
+> ✅ · 3 alive/once (draw-in on arrival ✅; count-up on data change, by design, to kill the flash) ·
+> 4 reduced-motion-whole ✅ · 5 nothing-regressed ✅. **Move #3 (accent/identity) stays locked.**
 
 > Accent color + visual identity remain **Move #3** (separate plan). Plan Move #3 only after Move #2.
 

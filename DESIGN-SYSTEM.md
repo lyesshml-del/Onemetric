@@ -88,9 +88,12 @@ converts / earns) are promoted above raw tables. The page answers six questions 
 (growing? where-from? what-changed? which-pages? which-funnel? which-source-earns?).
 
 ## Motion philosophy
-- **Move #2 is in progress — the motion *foundations* shipped (Phase 0).** A token system + a global
-  reduced-motion guard, consumed by the later phases (skeletons → optimistic switching → count-up →
-  chart draw-in → hover/press → view transitions). Full philosophy: `MOVE-2-SPEC.md`.
+- **Move #2 (Feel & Performance) — the motion system is in place (Phases 0/A–G; Phase G in review).**
+  A token system + a global reduced-motion guard drive every effect: a layout-mirroring **skeleton**
+  (Suspense), **optimistic** range switching (`useTransition` + dim, scroll preserved), **count-up**
+  on data change, **chart draw-in** on arrival, **hover/press** feedback, and a **view-transition**
+  cross-fade. Optimistic section *tabs* (B2 / `ONE-55`) remain deferred. Full philosophy:
+  `MOVE-2-SPEC.md`.
 - **Motion tokens** (`globals.css`, theme-agnostic): one easing `--motion-ease`
   (`cubic-bezier(0.22,1,0.36,1)`, exposed as the `ease-soft` utility) + a duration ladder —
   `--motion-micro 120ms` (hover/press) · `--motion-base 180ms` (pending · view-transition) ·
@@ -100,8 +103,9 @@ converts / earns) are promoted above raw tables. The page answers six questions 
   guard makes every animation/transition effectively instant; JS-driven motion (count-up) also
   branches via the `useReducedMotion()` hook → final value immediately. Never decorative, never
   blocking; Apple-grade restraint (enter gently, respond instantly).
-- **Primitives:** `useCountUp` (rAF; pure math in `lib/motion.ts`, unit-tested), `useReducedMotion`,
-  `<Skeleton>`. Built in Phase 0; wired into the UI by Phases A–G.
+- **Primitives:** `useCountUp` (rAF; pure math in `lib/motion.ts`, unit-tested; counts on data change,
+  ghost-reserved width so neighbours never shift), `useReducedMotion`, `<Skeleton>`, `<OverviewShell>`
+  (optimistic range + dim), `<CountUp>`. Built in Phase 0; wired into the UI across Phases A–G.
 
 ## Chart philosophy
 - **Dependency-free SVG only** (no charting library). Three components today:

@@ -735,6 +735,53 @@ Implemented `ONE-53`.
   hydration reset + delta intra-count jiggle), a11y (aria-busy/focus across motions), perf check, and
   reconcile the `MOVE-2-SPEC` success criteria.
 
+**✅ Move #2 / Phase G — Polish, reduced-motion & a11y pass (2026-06-18). Overview only. — COMPLETES
+THE MOVE #2 CORE.** Implemented `ONE-54`.
+
+- **Motion-token harmonization (`globals.css`):** `--animate-draw-in` `0.6s → var(--motion-entrance)`;
+  the view-transition cross-fade `200ms → var(--motion-base)`. (The skeleton `shimmer` keeps its 1.6s
+  continuous-loop rhythm — intentionally not a micro/base/entrance interaction.) Every other effect
+  already used the tokens (Phase B dim = `--motion-base`; Phase E hover/press = `--motion-micro` +
+  `ease-soft`).
+- **Phase-C item (a) — hard-load count-up flash, FIXED (`use-count-up.ts`):** `useCountUp` now **skips
+  the initial mount** (renders the final value immediately, no reset) and counts only on **`target`
+  change**. The server paints the final value; a mount animation would reset it to 0 and re-count (the
+  visible "final → 0 → count" flash). So the count-up now fires on **data change** (range switch); the
+  **chart draw-in** remains the arrival cue. (No clean React API distinguishes hydration from a client
+  mount, so skip-on-mount is the robust fix.)
+- **Phase-C item (b) — delta width jiggle, FIXED (`count-up.tsx`):** an invisible **ghost** of the
+  final value reserves the width; the live value is overlaid (`absolute`). Neighbours (the delta)
+  never shift while the number counts. `tabular-nums` kept; final value still exact (settles to ghost).
+- **Reduced-motion sweep — every path gated:** count-up (`useReducedMotion` → final value); chart
+  draw-in, optimistic dim, skeleton shimmer, live-dot pulse (global reduced-motion guard → instant);
+  hover-press scale (`motion-reduce:active:scale-100`); view transitions (gated inside
+  `@media (prefers-reduced-motion: no-preference)`). Reduced-motion → full info, zero animation.
+- **a11y sweep:** `aria-busy` on the loading skeleton (`role="status"`) + the optimistic dim
+  (`aria-busy={isPending}`); skeletons `aria-hidden`; count-up not a live region (no SR spam), ghost
+  `aria-hidden`; `focus-visible` rings intact (Phase E); range focus preserved across the
+  `scroll:false` soft nav; dimmed content `pointer-events-none` only briefly (controls stay live).
+- **Verification:** 83 tests · typecheck · lint · production build green. Overview route **5.26 kB**
+  (was 5.21; +~0.05 kB; First Load 119 kB unchanged — no bundle bloat). No new dependency. No browser
+  in env → reduced-motion/a11y/60fps reasoned from the gated CSS/JS + green build, not screenshots.
+- **What remained unchanged:** Move #1 visuals + all data + queries; other pages; server-first (client
+  leaves only); monochrome (accent = Move #3); no layout shift.
+
+**MOVE #2 — `MOVE-2-SPEC.md` §9 success criteria (reconciled):**
+1. **Instant** (range <100ms, no white flash, scroll preserved) — ✅ Phase B (`useTransition` + dim +
+   `scroll:false`).
+2. **Never blank** (skeleton mirrors layout, zero layout shift) — ✅ Phase A (`<OverviewSkeleton>`,
+   hero block matches exactly; in-page Suspense scoped to the Overview).
+3. **Alive, once** (count-up + draw-in, single, not gimmicky/looping) — ✅ in spirit: the **draw-in
+   fires on arrival**; the **count-up fires on data change** (range switch) rather than arrival — a
+   deliberate trade to eliminate the hard-load flash (per the Phase-G directive). Single, noticeable,
+   non-looping.
+4. **Reduced-motion is whole** (identical info instantly, zero motion, nothing broken) — ✅ full sweep.
+5. **Nothing regressed** (no new dep, small bundle, server-first, Move #1 visuals + data identical,
+   60fps) — ✅ (no-browser caveat on the 60fps/INP measurement; reasoned from cheap CSS/rAF + the
+   bundle numbers).
+**→ Move #2 core (Phases 0, A–G) is implemented + verified, in review. The ONLY remaining Move #2 item
+is `ONE-55` (B2 optimistic section tabs).** Move #3 (accent/identity) stays locked.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
