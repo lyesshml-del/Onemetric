@@ -88,10 +88,20 @@ converts / earns) are promoted above raw tables. The page answers six questions 
 (growing? where-from? what-changed? which-pages? which-funnel? which-source-earns?).
 
 ## Motion philosophy
-- **Today: near-zero** (only `transition-colors` on hovers) — honest but static.
-- **Target (Move #2):** Apple-grade restraint — 150–250ms route transitions, a count-up on
-  metrics, a chart that draws in once, subtle hover lifts. Motion signals quality + causality;
-  never decorative, never blocking. Respect `prefers-reduced-motion`.
+- **Move #2 is in progress — the motion *foundations* shipped (Phase 0).** A token system + a global
+  reduced-motion guard, consumed by the later phases (skeletons → optimistic switching → count-up →
+  chart draw-in → hover/press → view transitions). Full philosophy: `MOVE-2-SPEC.md`.
+- **Motion tokens** (`globals.css`, theme-agnostic): one easing `--motion-ease`
+  (`cubic-bezier(0.22,1,0.36,1)`, exposed as the `ease-soft` utility) + a duration ladder —
+  `--motion-micro 120ms` (hover/press) · `--motion-base 180ms` (pending · view-transition) ·
+  `--motion-entrance 600ms` (count-up · chart draw-in, **once**). Keyframes `shimmer` (skeletons) and
+  `draw-in` (charts, via `pathLength=1`) exist as the `animate-shimmer` / `animate-draw-in` utilities.
+- **Reduced-motion is CSS-first + first-class:** a global `@media (prefers-reduced-motion: reduce)`
+  guard makes every animation/transition effectively instant; JS-driven motion (count-up) also
+  branches via the `useReducedMotion()` hook → final value immediately. Never decorative, never
+  blocking; Apple-grade restraint (enter gently, respond instantly).
+- **Primitives:** `useCountUp` (rAF; pure math in `lib/motion.ts`, unit-tested), `useReducedMotion`,
+  `<Skeleton>`. Built in Phase 0; wired into the UI by Phases A–G.
 
 ## Chart philosophy
 - **Dependency-free SVG only** (no charting library). Three components today:

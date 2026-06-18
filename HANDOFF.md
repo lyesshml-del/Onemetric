@@ -534,6 +534,38 @@ up Linear; **nothing was implemented**.
 - **Next:** on approval of the spec + plan, implement **Phase 0 (`ONE-47`) only**, then stop. Do not
   start Move #3.
 
+**✅ Move #2 / Phase 0 — Motion foundations (2026-06-18). Foundations only — nothing wired into a
+page, so ZERO visible change for default users.** Implemented `ONE-47`.
+
+- **`globals.css`:** motion tokens (theme-agnostic) — `--motion-ease` (`cubic-bezier(0.22,1,0.36,1)`,
+  exposed as the `ease-soft` utility) + durations `--motion-micro 120ms` / `--motion-base 180ms` /
+  `--motion-entrance 600ms`; the `shimmer` + `draw-in` keyframes + their `animate-shimmer` /
+  `animate-draw-in` utilities; and a **global `@media (prefers-reduced-motion: reduce)` guard** that
+  makes every animation/transition instant.
+- **`lib/motion.ts`** (pure, **unit-tested — +8**): `easeOutCubic` + `countUpValue` (the count-up
+  math, kept pure for the node-only suite per ADR-017).
+- **`lib/hooks/use-reduced-motion.ts`:** `useReducedMotion()` (SSR-safe matchMedia; `false` on
+  server + first render → no hydration mismatch) — for the few JS-driven motions that must branch.
+- **`lib/hooks/use-count-up.ts`:** `useCountUp(target, durationMs=600)` — rAF; renders `target` on
+  SSR / no-JS / reduced-motion (no layout shift), else eases 0→target once. Returns a raw number;
+  callers round/format (Phase C wires it in; the SSR-flash handling is a Phase-C concern).
+- **`components/ui/skeleton.tsx`:** `<Skeleton>` — muted block + a subtle shimmer span; static under
+  reduced-motion. Consumed by Phase A.
+- **`DESIGN-SYSTEM.md`:** "Motion philosophy" updated (target → in progress) — tokens, the
+  reduced-motion gate, the primitives.
+- **Verification:** 83 tests (+8) · typecheck · lint · production build all green. Overview route
+  **4.48 kB First Load — unchanged** (CSS-only + unimported primitives = no client weight). Grep
+  confirmed the new symbols are referenced only by their own defs/tests (no `app/` page wiring). No
+  browser in env → the reduced-motion guard / shimmer are reasoned from valid CSS + the green build.
+- **Decisions:** reduced-motion is **CSS-first** (one global guard) + a JS hook only where needed, so
+  later pure-CSS phases inherit reduced-motion for free. `--animate-*`/`--ease-*` live in
+  `@theme inline` (Tailwind v4 idiom → real utilities); durations are plain `:root` vars (used by the
+  keyframes now, arbitrary values later).
+- **What remained unchanged:** every page's default rendering; all data + queries; other pages;
+  server-first; monochrome (motion only; accent = Move #3); the suite (extended, +8).
+- **Next:** **Phase A — Skeletons / loading states (`ONE-48`)** — a `loading.tsx` mirroring the
+  Overview, built from `<Skeleton>`; Phase B then reuses that skeleton as its optimistic pending state.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

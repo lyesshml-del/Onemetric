@@ -492,8 +492,14 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 > `Move #2 — Feel & Performance` (Planned) with 8 phase issues. **Do not implement any phase until
 > the spec + plan are approved.**
 
-- [ ] **Phase 0 — Motion foundations** (`ONE-47`, **Todo**) — tokens, reduced-motion gate,
-      `useCountUp` + tests, `<Skeleton>`, keyframes. No visible change.
+- [x] **Phase 0 — Motion foundations ✅ (2026-06-18)** (`ONE-47`) — motion tokens + one easing
+      (`ease-soft`) in `globals.css`; global `prefers-reduced-motion` guard + `useReducedMotion()`;
+      `useCountUp` (rAF) with pure math in `lib/motion.ts` (**+8 unit tests**); `<Skeleton>` + the
+      `shimmer`/`draw-in` keyframes (defined, unused yet). **Nothing wired into a page → zero visible
+      change** (Overview route 4.48 kB, unchanged; grep-confirmed self-contained). 83 tests,
+      typecheck · lint · build green. No new dependency. Files: `globals.css`,
+      `lib/motion.ts`(+test), `lib/hooks/use-reduced-motion.ts`, `lib/hooks/use-count-up.ts`,
+      `components/ui/skeleton.tsx`, `DESIGN-SYSTEM.md`.
 - [ ] Phase A — Skeletons / loading states (`ONE-48`) — `loading.tsx` mirroring the Overview.
 - [ ] Phase B — Optimistic range + section switching (`ONE-49`) — `useTransition`, scroll preserved.
 - [ ] Phase C — Number count-up (`ONE-50`) — hero + KPIs, once, reduced-motion instant.

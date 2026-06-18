@@ -22,11 +22,13 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (email, WAF rate-limit, custom domain, `/api/collect` never-500 hardening).
 - **Revenue-ready, pending config only** — see `GO-LIVE.md`. Two blockers: (1) add Paddle
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
-- **Move #1 — the "Opinionated Overview" redesign is COMPLETE & APPROVED.** Phases **0, A–J done**;
-  `ONE-15` Done, the **Move #1** Linear project **Completed** (2026-06-18). **Move #2 (Feel &
-  Performance) is now PLANNED** — `MOVE-2-SPEC.md` + `MOVE-2-IMPLEMENTATION-PLAN.md` written, 8 phase
-  issues filed (`ONE-47` Phase 0 Todo, A–G Backlog). **The Move #2 spec + plan await approval before
-  Phase 0 starts.**
+- **Move #1 — the "Opinionated Overview" redesign is COMPLETE & APPROVED.** `ONE-15` Done, the
+  **Move #1** Linear project **Completed**.
+- **Move #2 — Feel & Performance is UNDERWAY.** The spec + plan are approved (`MOVE-2-SPEC.md` +
+  `MOVE-2-IMPLEMENTATION-PLAN.md`). **Phase 0 (Motion foundations, `ONE-47`) is implemented +
+  verified + committed locally (in review)** — motion tokens, the global reduced-motion guard,
+  `useCountUp`/`useReducedMotion`, `<Skeleton>`; nothing wired into a page yet (zero visible change).
+  **Next is Phase A — Skeletons (`ONE-48`).** Phases B–G Backlog.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -42,16 +44,16 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Move #1 is COMPLETE & APPROVED** — `ONE-15` Done, the Move #1 project Completed in Linear.
-- **Move #2 — Feel & Performance is PLANNED (awaiting approval).** Planning artifacts exist:
-  `MOVE-2-SPEC.md` (design) + `MOVE-2-IMPLEMENTATION-PLAN.md` (phased build, 0 + A–G). Linear: the
-  `Move #2 — Feel & Performance` project (Planned) holds 8 phase issues — **`ONE-47` Phase 0 (Motion
-  foundations) is Todo**, A–G Backlog.
-- **Next exact step:** get the user's approval of `MOVE-2-SPEC.md` + `MOVE-2-IMPLEMENTATION-PLAN.md`,
-  then implement **Phase 0 (ONE-47) only** — additive, server-first, no new dependency,
-  reduced-motion-safe — and stop for approval (one phase per turn).
-- **Do not implement any Move #2 phase (or Move #3) without approval.** No animation library / no new
-  dependency (CSS + native View Transitions API + tiny hooks). Accent/identity stays **Move #3**.
+- **Move #1 is COMPLETE & APPROVED.** **Move #2 — Feel & Performance is UNDERWAY** (spec + plan
+  approved). **Phase 0 (`ONE-47`, Motion foundations) is implemented + verified + committed locally
+  (in review)** — motion tokens + `ease-soft`, the global `prefers-reduced-motion` guard,
+  `useCountUp`/`useReducedMotion`, `<Skeleton>`, `shimmer`/`draw-in` keyframes; **nothing wired into
+  a page** (zero visible change; Overview route unchanged at 4.48 kB).
+- **Next exact step:** on approval of Phase 0, implement **Phase A — Skeletons / loading states
+  (`ONE-48`) only**: a `loading.tsx` for the Overview built from `<Skeleton>`, mirroring the final
+  layout (zero layout shift); static under reduced-motion. Then stop for approval.
+- **Do not implement more than one phase, or Move #3, without approval.** No animation library / no
+  new dependency (CSS + native View Transitions API + tiny hooks). Accent/identity stays **Move #3**.
 
 ## 5. Source-of-truth documents (read before acting)
 | Document | What it governs |
@@ -132,7 +134,7 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - Branch **`main`**. Recent Move #1 work is committed as **one local commit per phase**, several
   **not yet pushed** (network was intermittent during the session). Pushing triggers a Vercel
   production deploy.
-- **Verification baseline:** `75 tests` pass; `typecheck`, `lint`, and production `build` green.
+- **Verification baseline:** `83 tests` pass; `typecheck`, `lint`, and production `build` green.
   Run all four before finishing any phase (`cd apps/web && npm run test && npm run typecheck &&
   npm run lint && npm run build`).
 
