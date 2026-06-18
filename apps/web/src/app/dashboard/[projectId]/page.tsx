@@ -34,6 +34,7 @@ import { AudienceCard } from "@/components/dashboard/audience-card";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
 import { Lede } from "@/components/dashboard/lede";
+import { InstallSnippet } from "@/components/dashboard/install-snippet";
 import {
   Card,
   CardContent,
@@ -90,6 +91,10 @@ export default async function ProjectOverviewPage({
 
   const { metrics, timeseries } = analytics;
   const hasData = metrics.sessions > 0;
+  // Install snippet for the focused empty state (Phase J). Same construction as
+  // Settings, kept Overview-local so the Settings page stays untouched.
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const installSnippet = `<script defer src="${appUrl}/onemetric.js" data-public-key="${project.publicKey}"></script>`;
 
   // Primary funnel (Phase E, decision E1 = oldest funnel). Compute conversion for
   // the current + previous windows so the KPI can show a delta. Reuses getFunnelResults.
@@ -151,23 +156,34 @@ export default async function ProjectOverviewPage({
         active="overview"
       />
 
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-medium">Overview</h2>
+      {/* Range control only — the redundant "Overview" <h2> is removed (Phase J);
+          the ProjectHeader tab already names the view (spec §4.0). */}
+      <div className="flex items-center justify-end">
         <RangeSelect value={range} />
       </div>
 
       {!hasData ? (
+        // Single focused empty state (spec §7): a live pulse + the copyable
+        // install snippet — not a generic "no data" card. Phase J.
         <Card>
-          <CardContent className="py-10 text-center">
-            <p className="font-medium">No data in this period yet.</p>
-            <p className="text-muted-foreground mt-1 text-sm">
-              Install the snippet to start collecting analytics.
+          <CardContent className="flex flex-col items-center py-12 text-center">
+            <span className="relative mb-4 flex size-3" aria-hidden>
+              <span className="bg-emerald-500/60 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 motion-reduce:animate-none" />
+              <span className="bg-emerald-500 relative inline-flex size-3 rounded-full" />
+            </span>
+            <p className="text-lg font-medium">Waiting for your first pageview</p>
+            <p className="text-muted-foreground mt-1 max-w-md text-sm">
+              Add the snippet to your site&apos;s <code>&lt;head&gt;</code> and your
+              analytics appear here automatically — it takes less than a minute.
             </p>
+            <div className="mt-6 w-full max-w-xl text-left">
+              <InstallSnippet snippet={installSnippet} />
+            </div>
             <Link
               href={`/dashboard/${project.id}/settings`}
-              className="text-foreground mt-3 inline-block text-sm underline"
+              className="text-muted-foreground hover:text-foreground mt-4 inline-block text-xs underline-offset-4 hover:underline"
             >
-              Go to install instructions →
+              Full setup &amp; verification →
             </Link>
           </CardContent>
         </Card>
@@ -200,10 +216,6 @@ export default async function ProjectOverviewPage({
                   heightClassName="h-[200px] sm:h-[260px]"
                   ariaLabel="Daily unique visitors, current vs previous period"
                 />
-              </div>
-              <div className="text-muted-foreground mt-2 flex justify-between text-xs tabular-nums">
-                <span>{heroPoints[0]?.label}</span>
-                <span>{heroPoints[heroPoints.length - 1]?.label}</span>
               </div>
             </CardContent>
           </Card>

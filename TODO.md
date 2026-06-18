@@ -458,9 +458,27 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       build green; Overview route **3.72 kB** (was 3.68; +~40 B for `cn` + class strings). Desktop
       provably unchanged. Monochrome (accent = Move #3). Files: `trend-chart.tsx`, `sources-card.tsx`,
       `page.tsx`.
-- [ ] Phase J — Cleanup + hierarchy polish (retire `MetricCard`, focused empty state)
+- [x] **Phase J — Cleanup & hierarchy polish ✅ (2026-06-18).** Final coherence pass. **Removed**
+      the redundant "Overview" `<h2>` (the ProjectHeader tab names the view) and the hero's bare
+      min/max date labels (the branded hover tooltip provides dates — spec §4.2). **Replaced** the
+      generic "No data in this period yet" card with the single focused empty state (spec §7): a
+      live emerald pulse + "Waiting for your first pageview" + the **copyable install snippet**
+      (reuses `<InstallSnippet>`; snippet built Overview-local so Settings stays untouched) + a quiet
+      "Full setup" link. **Coherence:** `tabular-nums` added to the Lede (every Overview number is
+      now tabular); a `focus-visible` ring on the Audience segmented control (matches the Button
+      convention); the Overview is on **one card spec** (`Card`/`StatCard`, `rounded-xl`) + **one bar
+      style** (`bg-foreground/5` across `SourceRow`/`FunnelMini`). **`MetricCard` NOT deleted** —
+      grep found **3 live importers** (Events-detail, Funnels-detail, Revenue), so deleting it would
+      break those pages; its unification is deferred to **Move #3**. `BreakdownCard` likewise stays
+      (Revenue uses it). No query/schema change. Verified: 75 tests, typecheck · lint · build green;
+      Overview route 4.48 kB (was 3.72; +~2 kB for the embedded `<InstallSnippet>`). Monochrome
+      (emerald = existing "live" semantic). Files: `page.tsx`, `lede.tsx`, `audience-card.tsx`,
+      `DESIGN-SYSTEM.md`.
 
-> **Not started: Phases A–J.** Each requires its own approval. Accent color is **Move #3**.
+> **Move #1 — Opinionated Overview: COMPLETE** (Phases 0, A–J done; J in review, pending approval).
+> The Overview is a briefing: Lede → Hero → 4 KPIs → outcomes triad → detail row; deltas
+> everywhere; responsive; one card/number/bar spec. **Next: Move #2 (Feel & Performance) — needs
+> its own approved plan before any phase.** Accent/identity stays **Move #3**.
 
 ---
 

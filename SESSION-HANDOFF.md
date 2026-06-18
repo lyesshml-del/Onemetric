@@ -22,31 +22,32 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (email, WAF rate-limit, custom domain, `/api/collect` never-500 hardening).
 - **Revenue-ready, pending config only** — see `GO-LIVE.md`. Two blockers: (1) add Paddle
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
-- **Active work: Move #1 — the "Opinionated Overview" redesign.** Phases **0, A–I are done**;
-  **only J remains** (cleanup). See `MOVE-1-IMPLEMENTATION-PLAN.md`.
+- **Move #1 — the "Opinionated Overview" redesign is COMPLETE.** Phases **0, A–J are done**
+  (Phase J in review, pending approval). Next is **Move #2 (Feel & Performance)**, which needs its
+  own approved plan before any phase. See `MOVE-1-IMPLEMENTATION-PLAN.md`.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
   dashboard · 5 Events · 6 Funnels · 7 PayPal revenue · 8 Weekly reports.
 - **Launch prep:** 9 Billing (Paddle) · 10 Marketing+legal · 11 Tests+CI · 12 Deploy · email /
   WAF / custom-domain / 500-hardening.
-- **Move #1 Overview redesign:** Phase 0 (foundations) · A (Hero) · B (Lede) · C (KPI strip) ·
-  D (Sources card) · E (Funnel card + conversion KPI) · F (Revenue card + Revenue KPI) ·
-  G (Audience card — merged Countries/Devices/Browsers) · H (Top pages → `SourceRow` + finalized
-  engagement line) · I (mobile layout pass — responsive hero height + triad order). The outcomes
-  triad, the 4-KPI strip, the full detail row, and the mobile layout are complete.
+- **Move #1 Overview redesign (COMPLETE):** Phase 0 (foundations) · A (Hero) · B (Lede) ·
+  C (KPI strip) · D (Sources card) · E (Funnel card + conversion KPI) · F (Revenue card + Revenue
+  KPI) · G (Audience card — merged Countries/Devices/Browsers) · H (Top pages → `SourceRow` +
+  finalized engagement line) · I (mobile layout pass) · J (cleanup: removed the "Overview" h2 +
+  hero min/max labels, focused empty state, coherence/a11y; `MetricCard` kept — still used by 3
+  detail pages). The Overview redesign is done end-to-end.
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Next phase: Move #1 Phase J — Cleanup & hierarchy polish** (the final coherence pass: retire the
-  now-unused `MetricCard`, remove the redundant "Overview" `<h2>`, single focused "Waiting for your
-  first pageview" empty state per spec §7, final tabular-nums/focus/contrast/spacing a11y).
-- **Exact next step:** implement Phase J **exactly** as specified in
-  `MOVE-1-IMPLEMENTATION-PLAN.md` → "Phase J — Cleanup and hierarchy polish" + `OVERVIEW-SPEC.md`
-  §7/§11/§13. **Grep before every deletion;** `BreakdownCard` **stays** (the Revenue page uses it).
-- **Do not start Phase J (or anything) without the user's explicit approval for that phase.**
-- Phase J is the **last** Move #1 phase. After it, **Move #2** (feel/speed) and **Move #3**
-  (accent/identity) each need their own approved plan — do not start either.
+- **Move #1 is COMPLETE** (Phase J implemented + verified + committed locally; in review pending
+  approval). On approval: mark `ONE-15` Done and the **Move #1** project Done in Linear.
+- **Next: Move #2 — Feel & Performance** (motion / perceived-speed: optimistic range/section
+  switching, skeletons, view transitions, count-up, chart draw-in). This is a **planning task
+  first**, not implementation: produce an approved Move #2 spec + phased plan (mirroring
+  `DESIGN-AUDIT` → `OVERVIEW-SPEC` → `MOVE-1-IMPLEMENTATION-PLAN`) **before any phase**.
+- **Do not write any Move #2 feature code (or Move #3) without an approved plan + explicit
+  approval.** Accent/identity stays **Move #3**.
 
 ## 5. Source-of-truth documents (read before acting)
 | Document | What it governs |
@@ -112,8 +113,10 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   GitHub App is first granted private-repo access (see §13).
 
 ## 11. Things intentionally deferred / temporary states
-- **Move #1 transitional states:** the redundant "Overview" `<h2>` and the now-unused
-  `MetricCard` component are intentionally **kept** until **Phase J** (cleanup).
+- **Move #1 transitional states — resolved (Phase J):** the redundant "Overview" `<h2>` and the
+  hero min/max date labels were removed; the focused empty state shipped. `MetricCard` was **not**
+  deletable (grep: 3 importers on the Events-detail / Funnels-detail / Revenue pages) — it stays,
+  and unifying it onto the `rounded-xl` spec is a **Move #3** item.
 - **Drill links** in the Lede / cards are absent until their target views exist (D/E/F).
 - **Accent + motion** deferred to **Move #2 (motion/speed)** and **Move #3 (accent/identity)**.
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.

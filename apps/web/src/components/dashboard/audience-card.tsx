@@ -96,7 +96,7 @@ export function AudienceCard({
               aria-pressed={segment === s}
               onClick={() => setSegment(s)}
               className={cn(
-                "rounded px-2 py-1 capitalize transition-colors",
+                "rounded px-2 py-1 capitalize transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
                 segment === s
                   ? "bg-background text-foreground"
                   : "text-muted-foreground hover:text-foreground",

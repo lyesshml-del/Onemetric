@@ -463,6 +463,52 @@ assembled Overview — no data, query, or logic change (the 75 pure-logic tests 
   redundant "Overview" `<h2>`, single focused "Waiting for your first pageview" empty state (spec
   §7), final tabular-nums/focus/contrast/spacing a11y. Accent stays Move #3.
 
+**✅ Phase J — Cleanup & hierarchy polish (2026-06-18). Overview only. — COMPLETES MOVE #1.** The
+final coherence pass; no query/schema change, no other page touched.
+
+- **Removed (Overview):**
+  - the redundant **"Overview" `<h2>`** (the `ProjectHeader` tab already names the view; spec §4.0)
+    — the header row is now just the right-aligned `RangeSelect` (`justify-end`).
+  - the hero's **bare min/max date labels** — the branded `TrendChart` hover tooltip provides the
+    date now (spec §4.2 / plan Phase J "delete the bare min/max date labels").
+- **Empty state (spec §7):** replaced the generic "No data in this period yet." card with **one
+  focused panel** — a live **emerald pulse** (`animate-ping`, `motion-reduce:animate-none`) +
+  "**Waiting for your first pageview**" + the **copyable install snippet** (`<InstallSnippet>`,
+  already a component) + a quiet "Full setup & verification →" link. The snippet string is built
+  **Overview-local** (same construction as Settings) so the Settings page stays untouched. Triggers
+  on `sessions === 0` for the range, per spec.
+- **Coherence / a11y:**
+  - `tabular-nums` added to the **Lede** `<p>` → every number on the Overview is now tabular
+    (hero, KPIs, rows, charts, engagement line, Lede).
+  - `focus-visible` ring on the **Audience segmented control** buttons (`outline-none
+    focus-visible:ring-[3px] focus-visible:ring-ring/50`, matching the `Button` convention).
+  - confirmed **one card spec** (`Card`/`StatCard`, `rounded-xl`) and **one bar style**
+    (`bg-foreground/5` across `SourceRow`/`FunnelMini`/`RevenueMini`) on the Overview — already true
+    after H/F, re-verified here.
+- **`MetricCard` was NOT deleted (important).** The plan said "retire if nothing else imports it"
+  and the issue said "grep-confirm zero imports, then delete." **Grep found 3 live importers** —
+  `revenue/page.tsx`, `events/[name]/page.tsx`, `funnels/[funnelId]/page.tsx` — so deleting it
+  would break those pages (and violate "other pages unchanged"). It stays. The Overview itself no
+  longer uses it (StatCard replaced the tiles in C), so the Overview is already on one card system.
+  Unifying `MetricCard` (`rounded-lg`) onto the `rounded-xl` spec across the detail pages is a
+  **Move #3 "unify specs"** item. `DESIGN-SYSTEM.md` updated to say so. `BreakdownCard` likewise
+  stays (Revenue uses it).
+- **Files:** `apps/web/src/app/dashboard/[projectId]/page.tsx`, `components/dashboard/lede.tsx`,
+  `components/dashboard/audience-card.tsx`, `DESIGN-SYSTEM.md`. (`metric-card.tsx` deliberately
+  untouched.)
+- **Verification:** 75 tests · typecheck · lint · production build all green. Overview route **4.48
+  kB** First Load (was 3.72; +~2 kB because `<InstallSnippet>`, a client copy-button, is now in the
+  empty state). No browser in this env → empty-state visual reasoned from the markup + green build.
+- **What remained unchanged:** every query + all data; the Events/Funnels/Revenue/Reports/Settings
+  pages; `MetricCard` + `BreakdownCard` + their consumers; the hero/Lede/KPI/triad/detail content
+  and the A–I desktop+mobile layouts; monochrome (emerald is the existing "live"/positive semantic,
+  not a brand accent).
+- **MOVE #1 IS COMPLETE** (Phases 0, A–J). The Overview is a briefing — Lede → Hero → 4 KPIs →
+  outcomes triad → detail row, deltas everywhere, responsive, one card/number/bar spec, focused
+  empty state. Pending the user's approval of Phase J, then: mark `ONE-15` Done + the **Move #1**
+  Linear project Done. **Next is Move #2 (Feel & Performance) — a planning task first** (spec +
+  phased plan, approved) **before any phase**. Accent/identity is Move #3.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

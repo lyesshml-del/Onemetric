@@ -66,9 +66,11 @@ OneMetric is **dark-first** (`.dark` on `<html>`); light tokens exist for a futu
 
 ## Border radius
 - Token ladder: `sm` 6px · `md` 8px · `lg` 10px · `xl` 14px.
-- **One card radius across the Overview: `rounded-xl` (14px)** — hero `Card`, `StatCard`, and
-  `BreakdownCard` all use it. The legacy `MetricCard` (`rounded-lg`) is **being retired in
-  Phase J**; do not introduce new `rounded-lg` cards.
+- **One card radius across the Overview: `rounded-xl` (14px)** — hero `Card`, `StatCard`, and the
+  `SourcesCard`/`TopPagesCard`/`AudienceCard` (all `Card`-based) use it. The legacy `MetricCard`
+  (`rounded-lg`) is **still used by the Events-detail / Funnels-detail / Revenue pages** (Phase J
+  grep found 3 importers, so it was **not** deleted); the Overview no longer uses it. Unifying it
+  onto `rounded-xl` is deferred to **Move #3**; do not introduce new `rounded-lg` cards.
 
 ## Card system (ONE system)
 - Canonical card: `rounded-xl border bg-card` (shadcn `Card` = `py-6 px-6 shadow-sm`; compact
@@ -76,7 +78,8 @@ OneMetric is **dark-first** (`.dark` on `<html>`); light tokens exist for a futu
 - `StatCard` (Phase C) is the unified KPI card: label · value · optional `<Delta>` · optional
   `<Sparkline>` · optional live dot · `pending` (dimmed "—" placeholder for later-phase data).
 - **Avoid a second card system.** The two-card-system inconsistency flagged in `DESIGN-AUDIT.md`
-  is being resolved by retiring `MetricCard`.
+  is resolved **on the Overview** (only `Card` / `StatCard`); `MetricCard` (`rounded-lg`) remains
+  on the three detail pages and unifying it is a **Move #3** item.
 
 ## Information hierarchy (the Overview, per `OVERVIEW-SPEC.md`)
 Loudest → quietest: **Lede → Hero → KPI strip → Outcomes triad (Sources / Funnel / Revenue) →

@@ -12,7 +12,7 @@ import type { LedeToken } from "@/lib/lede";
  */
 export function Lede({ tokens }: { tokens: LedeToken[] }) {
   return (
-    <p className="text-muted-foreground text-lg leading-relaxed text-balance">
+    <p className="text-muted-foreground text-lg leading-relaxed text-balance tabular-nums">
       {tokens.map((t, i) => {
         const emphasis = t.emphasis ? "text-foreground font-medium" : undefined;
         if (t.href) {
