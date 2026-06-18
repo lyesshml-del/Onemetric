@@ -596,6 +596,35 @@ streams a layout-matching skeleton instead of waiting blank — implemented `ONE
   (and tab) changes flip the active state instantly + show a pending visual (reuse
   `<OverviewSkeleton>` or a subtle dim) while the server re-renders; preserve scroll.
 
+**✅ Move #2 / Phase B (B1) — Optimistic range switching (2026-06-18). Overview only.** Range changes
+now feel instant — implemented `ONE-49` (B1; B2 split to `ONE-55`).
+
+- **New `components/dashboard/overview-shell.tsx`** — `<OverviewShell>` (client): owns the Overview's
+  range `<select>` and navigates via **`useTransition`**. The active value flips immediately (local
+  state); the content is **dimmed + `aria-busy`** while the server re-renders — the transition
+  **suppresses the Phase-A Suspense skeleton**, so the content stays in place (no flash) — and
+  **scroll is preserved** (`router.push(url, { scroll: false })`). The dim's opacity transition uses
+  the Phase-0 `--motion-base`/`--motion-ease` tokens; the global reduced-motion guard makes it instant.
+- **`page.tsx`** — wraps the rendered content in `<OverviewShell range={range}>…children…</…>`. The
+  page stays a **server component** and passes its content as `children` (the RSC-into-client
+  pattern); **no client data/state library** ("optimistic" = instant feedback during the server
+  round-trip, not client mutation).
+- **`RangeSelect` is SHARED — left untouched.** Grep: `<RangeSelect>` is also used by Events,
+  Funnels-detail, and Revenue, so it was **not** modified; `<OverviewShell>` renders its own inline
+  select (Overview-only). The other three pages keep the unchanged control.
+- **B2 (section tabs) deferred → `ONE-55`.** The `ProjectHeader` tabs are shared by all 6 project
+  pages; making them optimistic changes shared chrome → its own reviewable unit. Phase B stayed
+  Overview-scoped (range only).
+- **Verification:** 83 tests · typecheck · lint · production build green. Overview route **4.64 kB**
+  (was 4.48; +~0.16 kB for the `<OverviewShell>` client leaf). No new dependency. No browser in env →
+  the optimistic feel / scroll preservation / dim reasoned from the architecture (`useTransition` +
+  the Phase-A Suspense + `scroll:false` + content-as-children dim) + the green build.
+- **What remained unchanged:** the shared `<RangeSelect>` + Events/Funnels/Revenue; the data,
+  queries, URL/range semantics, loaded output; server-first; monochrome; the 83-test suite.
+- **Next:** **Phase C — Number count-up (`ONE-50`)** — wire the Phase-0 `useCountUp` into the hero
+  metric + KPI values (once on arrival; reduced-motion → final value; `tabular-nums`); mind the
+  SSR/hydration handling.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

@@ -509,7 +509,15 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       Reduced-motion → static (Phase-0 global guard). Server-only (route 4.48 kB, unchanged). 83
       tests, typecheck · lint · build green. No new dependency. Files: +`overview-skeleton.tsx`,
       `page.tsx`.
-- [ ] Phase B — Optimistic range + section switching (`ONE-49`) — `useTransition`, scroll preserved.
+- [x] **Phase B — Optimistic range switching ✅ (2026-06-18)** (`ONE-49`) — new `<OverviewShell>`
+      (client) owns the Overview range select + navigates via `useTransition`: instant active value,
+      content **dimmed + aria-busy** while the server re-renders (the transition suppresses the
+      Phase-A skeleton → no flash), **scroll preserved** (`scroll:false`). Page stays an RSC (content
+      passed as children); no client data lib. `RangeSelect` is **shared** (Events/Funnels/Revenue) →
+      left untouched; the shell has its own select. **B2 (section tabs) split to `ONE-55`.** 83 tests,
+      typecheck · lint · build green; route 4.64 kB (+0.16). No new dependency. Files:
+      +`overview-shell.tsx`, `page.tsx`.
+- [ ] Phase B2 — Optimistic section-tab switching (`ONE-55`, Backlog) — shared ProjectHeader (deferred).
 - [ ] Phase C — Number count-up (`ONE-50`) — hero + KPIs, once, reduced-motion instant.
 - [ ] Phase D — Chart draw-in (`ONE-51`) — TrendChart + Sparklines, once, CSS.
 - [ ] Phase E — Hover & press micro-interactions (`ONE-52`).

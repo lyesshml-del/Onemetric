@@ -25,7 +25,7 @@ import {
   formatPercent,
 } from "@/lib/format";
 import { ProjectHeader } from "@/components/dashboard/project-header";
-import { RangeSelect } from "@/components/dashboard/range-select";
+import { OverviewShell } from "@/components/dashboard/overview-shell";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { TopPagesCard } from "@/components/dashboard/top-pages-card";
 import { SourcesCard } from "@/components/dashboard/sources-card";
@@ -171,13 +171,12 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
         active="overview"
       />
 
-      {/* Range control only — the redundant "Overview" <h2> is removed (Phase J);
-          the ProjectHeader tab already names the view (spec §4.0). */}
-      <div className="flex items-center justify-end">
-        <RangeSelect value={range} />
-      </div>
-
-      {!hasData ? (
+      {/* Move #2 / Phase B — OverviewShell owns the range control + an optimistic
+          (useTransition) navigation: the active value flips instantly, the content
+          dims + aria-busy while the server re-renders, and scroll is preserved. The
+          content is passed as children, so the page stays a server component. */}
+      <OverviewShell range={range}>
+        {!hasData ? (
         // Single focused empty state (spec §7): a live pulse + the copyable
         // install snippet — not a generic "no data" card. Phase J.
         <Card>
@@ -369,6 +368,7 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
           </div>
         </>
       )}
+      </OverviewShell>
     </div>
   );
 }

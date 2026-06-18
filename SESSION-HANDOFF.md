@@ -24,11 +24,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
 - **Move #1 — the "Opinionated Overview" redesign is COMPLETE & APPROVED.** `ONE-15` Done, the
   **Move #1** Linear project **Completed**.
-- **Move #2 — Feel & Performance is UNDERWAY.** The spec + plan are approved (`MOVE-2-SPEC.md` +
-  `MOVE-2-IMPLEMENTATION-PLAN.md`). **Phase 0 (`ONE-47`, Motion foundations) is Done; Phase A
-  (`ONE-48`, Skeletons) is implemented + committed locally (in review)** — the Overview now streams a
-  layout-matching `<OverviewSkeleton>` via an in-page `<Suspense>` (scoped to the Overview; no blank
-  flash). **Next is Phase B — Optimistic range + section switching (`ONE-49`).** Phases C–G Backlog.
+- **Move #2 — Feel & Performance is UNDERWAY.** The spec + plan are approved. **Phases 0 (`ONE-47`)
+  + A (`ONE-48`) are Done; Phase B/B1 (`ONE-49`, optimistic range switching) is implemented +
+  committed locally (in review)** — `<OverviewShell>` flips the range instantly + dims the content
+  (aria-busy) while the server re-renders, scroll preserved; no client data lib. **B2 (section tabs)
+  split to `ONE-55` (Backlog).** **Next is Phase C — Number count-up (`ONE-50`).** Phases D–G Backlog.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -44,15 +44,15 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Move #1 is COMPLETE & APPROVED. Move #2 is UNDERWAY** (spec + plan approved). **Phase 0
-  (`ONE-47`) Done; Phase A (`ONE-48`, Skeletons) implemented + verified + committed locally (in
-  review)** — `<OverviewSkeleton>` + an in-page `<Suspense>` in the Overview `page.tsx` (split into a
-  sync wrapper + the unchanged async `OverviewContent`); scoped to the Overview, server-only, route
-  unchanged (4.48 kB).
-- **Next exact step:** on approval of Phase A, implement **Phase B — Optimistic range + section
-  switching (`ONE-49`) only**: wrap the range (and tab) navigation in `useTransition` → instant
-  active state + a pending visual (reuse `<OverviewSkeleton>` or a subtle dim, `aria-busy`) while the
-  server re-renders; **preserve scroll**. No client data library. Then stop for approval.
+- **Move #1 is COMPLETE & APPROVED. Move #2 is UNDERWAY** (spec + plan approved). **Phases 0
+  (`ONE-47`) + A (`ONE-48`) Done; Phase B/B1 (`ONE-49`, optimistic range switching) implemented +
+  verified + committed locally (in review)** — `<OverviewShell>` (client) owns the range select +
+  `useTransition` (instant value, content dim + aria-busy, scroll preserved); page stays an RSC;
+  `RangeSelect` is shared so it was left untouched. **B2 (section tabs) → `ONE-55` (Backlog).**
+- **Next exact step:** on approval of Phase B, implement **Phase C — Number count-up (`ONE-50`)
+  only**: wire the Phase-0 `useCountUp` into the hero metric + `StatCard` values (animate up once on
+  arrival; reduced-motion / no-JS → final value instantly; `tabular-nums` so width never jitters);
+  mind the SSR/hydration handling. Then stop for approval.
 - **Do not implement more than one phase, or Move #3, without approval.** No animation library / no
   new dependency. Accent/identity stays **Move #3**.
 
