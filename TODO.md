@@ -542,7 +542,15 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       layout shift (transform/bg only); reduced-motion → color-only. Shared `RangeSelect`/`Button` +
       other pages untouched. 83 tests, typecheck · lint · build green; route 5.21 kB (+0.06). No new
       dependency. Files: `audience-card.tsx`, `overview-shell.tsx`.
-- [ ] Phase F — Route / view transitions (`ONE-53`) — native View Transitions API, progressive.
+- [x] **Phase F — Route / view transitions ✅ (2026-06-18)** (`ONE-53`) — native View Transitions
+      API, **CSS-only**, progressive enhancement. A reduced-motion-gated
+      `@view-transition { navigation: auto }` + a subtle ~200ms root cross-fade (`--motion-ease`) on
+      **cross-document** navigations (full page loads). **Deliberately scoped to cross-document nav:**
+      range changes already animate via Phase B (and aren't doc navs → no conflict); SPA section-tab VT
+      would need the shared `ProjectHeader` interactive (B2/`ONE-55`) or Next's experimental API — both
+      out of scope. Unsupported browsers / reduced-motion → instant nav. No component change, no JS, no
+      dependency; Phase A/B/C/D untouched. 83 tests, typecheck · lint · build green; route 5.21 kB
+      (unchanged). File: `globals.css`.
 - [ ] Phase G — Polish, reduced-motion & a11y pass (`ONE-54`).
 
 > Accent color + visual identity remain **Move #3** (separate plan). Plan Move #3 only after Move #2.

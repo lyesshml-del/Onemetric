@@ -132,3 +132,26 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Move #2 — view transitions (Phase F). Pure progressive enhancement: browsers
+   without the View Transitions API ignore these rules entirely, and reduced-motion
+   users are excluded (instant navigation). A subtle ~200ms root cross-fade on
+   **cross-document** navigations (full page loads — entering the app, some auth
+   redirects, hard reloads).
+
+   In-app SPA navigation is intentionally NOT wrapped here: range changes already
+   animate via Phase B's optimistic switching (and aren't document navigations, so
+   `navigation: auto` never touches them — no conflict), and section-tab transitions
+   would require making the shared `ProjectHeader` interactive (B2 / ONE-55) or Next's
+   experimental ViewTransition API — both out of this phase's scope. See HANDOFF.md. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
+  animation-timing-function: var(--motion-ease);
+}

@@ -705,6 +705,36 @@ conservative.** Implemented `ONE-52`.
   navigation via the native View Transitions API (feature-detected + reduced-motion gated); no support
   → today's instant nav; don't regress the Phase-B optimistic switching or the Suspense skeleton.
 
+**✅ Move #2 / Phase F — Route / view transitions (2026-06-18). CSS-only; deliberately partial scope.**
+Implemented `ONE-53`.
+
+- **What shipped (`globals.css` only):** a reduced-motion-gated native `@view-transition { navigation:
+  auto }` (inside `@media (prefers-reduced-motion: no-preference)`) + a subtle ~200ms root cross-fade
+  (`::view-transition-old/new(root)`, `--motion-ease`). Pure progressive enhancement — browsers without
+  the View Transitions API ignore the rules; reduced-motion users get instant navigation.
+- **Scope decision (a reasoned partial implementation, per the phase's own latitude):**
+  `@view-transition` drives **cross-document** transitions only (full page loads — entering the app,
+  some auth redirects, hard reloads). The in-app SPA navigations were NOT wrapped, for hard reasons:
+  - **Range changes** are SPA `searchParams` updates (not document navigations), already animated by
+    **Phase B's optimistic dim** — `navigation: auto` never touches them, so **no conflict** (and the
+    direction was to leave Phase B unchanged).
+  - **Section-tab** SPA transitions would require making the **shared `ProjectHeader` interactive**
+    (= B2 / `ONE-55`, deferred) or Next's **experimental** `ViewTransition` (avoided per direction) —
+    both out of scope. A global click-interceptor was rejected as fragile.
+  So the native, dependency-free, zero-conflict, zero-component-change implementation is the
+  cross-document cross-fade, documented inline in `globals.css`.
+- **No conflicts:** Phase A skeleton, Phase C count-up, Phase D draw-in are element-level and unrelated
+  to the page-level root cross-fade; Phase B is untouched (range ≠ doc nav). Reduced-motion → no VT.
+- **Verification:** 83 tests · typecheck · lint · production build green (Tailwind v4 / Lightning CSS
+  accepts `@view-transition` + `::view-transition-*`). Overview route **5.21 kB — unchanged** (CSS
+  only, no JS). No new dependency. No browser in env → reasoned from valid native VT CSS + green build.
+- **What remained unchanged:** every component; Phase A/B/C/D/E; the shared `ProjectHeader` (no B2);
+  server-first; all pages' content/queries; monochrome; no layout shift; the 83-test suite.
+- **Next:** **Phase G — Polish, reduced-motion & a11y pass (`ONE-54`)** — the **LAST core Move #2
+  phase**: tune timings/consistency, a full reduced-motion audit (incl. the Phase-C count-up SSR/
+  hydration reset + delta intra-count jiggle), a11y (aria-busy/focus across motions), perf check, and
+  reconcile the `MOVE-2-SPEC` success criteria.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

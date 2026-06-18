@@ -24,12 +24,12 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
 - **Move #1 — the "Opinionated Overview" redesign is COMPLETE & APPROVED.** `ONE-15` Done, the
   **Move #1** Linear project **Completed**.
-- **Move #2 — Feel & Performance is UNDERWAY.** The spec + plan are approved. **Phases 0, A, B, C, D
-  (`ONE-47…51`) are Done; Phase E (`ONE-52`, hover & press) is implemented + committed locally (in
-  review)** — conservative press/hover on the Audience segmented control + range select
-  (`--motion-micro`; reduced-motion → color-only; no fake card/row hover). **B2 (section tabs)
-  deferred in `ONE-55` (Backlog).** **Next is Phase F — Route / view transitions (`ONE-53`).** Phase G
-  Backlog.
+- **Move #2 — Feel & Performance is UNDERWAY.** The spec + plan are approved. **Phases 0, A, B, C, D, E
+  (`ONE-47…52`) are Done; Phase F (`ONE-53`, view transitions) is implemented + committed locally (in
+  review)** — native, CSS-only `@view-transition` cross-fade on cross-document navs (reduced-motion
+  gated; SPA tab/range nav intentionally out of scope — Phase B unchanged). **B2 (section tabs)
+  deferred in `ONE-55` (Backlog).** **Next is Phase G — Polish, reduced-motion & a11y pass (`ONE-54`)
+  — the LAST core Move #2 phase.**
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -46,15 +46,17 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 
 ## 4. Current phase & exact next step
 - **Move #1 is COMPLETE & APPROVED. Move #2 is UNDERWAY** (spec + plan approved). **Phases 0, A, B, C,
-  D (`ONE-47…51`) Done; Phase E (`ONE-52`, hover & press) implemented + verified + committed locally
-  (in review)** — conservative, controls-only: press cue on the Audience segmented control (reduced-
-  motion-gated) + a hover tint on the range select, on the `--motion-micro`/`ease-soft` tokens; no
-  fake card/row hover; focus-visible preserved. **B2 (tabs) → `ONE-55`.**
-- **Next exact step:** on approval of Phase E, implement **Phase F — Route / view transitions
-  (`ONE-53`) only**: a subtle cross-fade on Overview navigation via the **native View Transitions
-  API**, progressive-enhancement (feature-detect; no support → today's instant nav) + reduced-motion
-  gated; ~150–250ms; do NOT regress the Phase-B optimistic switching or the Suspense skeleton. Then
-  stop for approval.
+  D, E (`ONE-47…52`) Done; Phase F (`ONE-53`, view transitions) implemented + verified + committed
+  locally (in review)** — native CSS-only `@view-transition { navigation: auto }` + a ~200ms root
+  cross-fade on **cross-document** navs, reduced-motion-gated, progressive-enhancement; SPA tab/range
+  nav intentionally out of scope (Phase B unchanged; tabs = B2/shared ProjectHeader; no experimental
+  API). **B2 (tabs) → `ONE-55`.**
+- **Next exact step:** on approval of Phase F, implement **Phase G — Polish, reduced-motion & a11y pass
+  (`ONE-54`) only — the LAST core Move #2 phase**: audit/tune all motion timings for consistency; full
+  `prefers-reduced-motion` sweep (incl. the count-up SSR/hydration reset + delta intra-count jiggle
+  from Phase C); a11y (aria-busy/focus across motions); perf check (bundle, no jank); reconcile the
+  `MOVE-2-SPEC` success criteria. Then stop. **After G, Move #2 core is complete** (B2 remains; Move #3
+  stays locked).
 - **Do not implement more than one phase, or Move #3, without approval.** No animation library / no
   new dependency. Accent/identity stays **Move #3**.
 
