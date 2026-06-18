@@ -518,7 +518,14 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       typecheck · lint · build green; route 4.64 kB (+0.16). No new dependency. Files:
       +`overview-shell.tsx`, `page.tsx`.
 - [ ] Phase B2 — Optimistic section-tab switching (`ONE-55`, Backlog) — shared ProjectHeader (deferred).
-- [ ] Phase C — Number count-up (`ONE-50`) — hero + KPIs, once, reduced-motion instant.
+- [x] **Phase C — Number count-up ✅ (2026-06-18)** (`ONE-50`) — new `<CountUp>` (client, wraps the
+      Phase-0 `useCountUp`) animates the hero number + the 4 KPI values up once on arrival;
+      `tabular-nums`; reduced-motion / no-JS / SSR → final value instantly. Format is a **serializable
+      token** (`"number"|"percent"|"money"` + currency) since a function can't cross the server→client
+      boundary; `"number"` rounds to an integer. `StatCard.value` widened `string → ReactNode`
+      (non-breaking). Removed the now-unused `formatMoney` import. 83 tests, typecheck · lint · build
+      green; route 5.12 kB (+0.48). No new dependency. Files: +`count-up.tsx`, `stat-card.tsx`,
+      `page.tsx`. (Hard-load reset + delta intra-count jiggle → Phase G polish.)
 - [ ] Phase D — Chart draw-in (`ONE-51`) — TrendChart + Sparklines, once, CSS.
 - [ ] Phase E — Hover & press micro-interactions (`ONE-52`).
 - [ ] Phase F — Route / view transitions (`ONE-53`) — native View Transitions API, progressive.

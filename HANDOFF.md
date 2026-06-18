@@ -625,6 +625,35 @@ now feel instant — implemented `ONE-49` (B1; B2 split to `ONE-55`).
   metric + KPI values (once on arrival; reduced-motion → final value; `tabular-nums`); mind the
   SSR/hydration handling.
 
+**✅ Move #2 / Phase C — Number count-up (2026-06-18). Overview only.** The hero + KPI numbers animate
+up once on arrival — implemented `ONE-50`.
+
+- **New `components/dashboard/count-up.tsx`** — `<CountUp>` (client): renders
+  `format(useCountUp(value))` with `tabular-nums`. Animates 0→value once on mount + on value change;
+  reduced-motion / no-JS / SSR → the final value instantly (the Phase-0 `useCountUp` returns target).
+- **Serializable `format` token, NOT a function.** A function prop can't cross the server→client
+  boundary (the hero/KPIs are server-rendered and pass `<CountUp>` in), so `format` is
+  `"number" | "percent" | "money"` (+ `currency`); `<CountUp>` imports the format helpers. `"number"`
+  rounds to an integer so counts never show decimals mid-count.
+- **Wired (5 numbers):** hero unique-visitors (`page.tsx`) + the 4 KPI values — Pageviews, Signup
+  conversion (%), Revenue ($), Active now — via `StatCard.value`, widened `string → ReactNode`
+  (non-breaking; strings are still valid).
+- **`formatMoney` import removed** from `page.tsx` (its only use, the Revenue KPI, now goes through
+  `<CountUp>`).
+- **Final values exact:** integers are already whole (`Math.round` is a no-op on them); `%`/`$` keep
+  their formatting. `Delta` / `Sparkline` / live dot / `pending` untouched.
+- **Verification:** 83 tests · typecheck · lint · production build green. Overview route **5.12 kB**
+  (was 4.64; +~0.48 kB for `<CountUp>` + the hooks/format helpers in the client). No new dependency.
+  No browser in env → the count-up is reasoned from the tested `useCountUp` math + the green build.
+- **Known polish (→ Phase G):** on a *hard* load the number shows final → resets → counts up (clean on
+  soft-nav / range-change); the delta badge has a minor intra-count width jiggle (count from 0). Both
+  are restraint/polish items for Phase G, not correctness issues.
+- **What remained unchanged:** the values themselves; tabular alignment; `Delta`/`Sparkline`/live/
+  pending; other pages; server-first (CountUp is a tiny client leaf); monochrome; the 83-test suite.
+- **Next:** **Phase D — Chart draw-in (`ONE-51`)** — the hero `TrendChart` + `Sparkline`s draw in once
+  on mount via the Phase-0 `draw-in` keyframe (CSS, `pathLength=1`); reduced-motion → static; the
+  chart's correctness/scaling/tooltip untouched.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

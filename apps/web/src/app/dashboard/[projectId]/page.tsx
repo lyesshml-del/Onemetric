@@ -18,15 +18,11 @@ import {
 import { getPayPalConnection } from "@/server/queries/integrations";
 import { resolveRange, previousRange, rangePeriodWord } from "@/lib/range";
 import { buildLede } from "@/lib/lede";
-import {
-  formatDuration,
-  formatMoney,
-  formatNumber,
-  formatPercent,
-} from "@/lib/format";
+import { formatDuration, formatNumber, formatPercent } from "@/lib/format";
 import { ProjectHeader } from "@/components/dashboard/project-header";
 import { OverviewShell } from "@/components/dashboard/overview-shell";
 import { StatCard } from "@/components/dashboard/stat-card";
+import { CountUp } from "@/components/dashboard/count-up";
 import { TopPagesCard } from "@/components/dashboard/top-pages-card";
 import { SourcesCard } from "@/components/dashboard/sources-card";
 import { FunnelMini } from "@/components/dashboard/funnel-mini";
@@ -212,9 +208,11 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
             <CardContent>
               <p className="text-muted-foreground text-sm">Unique visitors</p>
               <div className="mt-1 flex items-baseline gap-3">
-                <span className="text-4xl font-semibold tracking-tight tabular-nums">
-                  {formatNumber(metrics.uniqueVisitors)}
-                </span>
+                <CountUp
+                  value={metrics.uniqueVisitors}
+                  format="number"
+                  className="text-4xl font-semibold tracking-tight"
+                />
                 <Delta
                   current={metrics.uniqueVisitors}
                   previous={prevMetrics.uniqueVisitors}
@@ -239,7 +237,7 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             <StatCard
               label="Pageviews"
-              value={formatNumber(metrics.pageviews)}
+              value={<CountUp value={metrics.pageviews} format="number" />}
               delta={{
                 current: metrics.pageviews,
                 previous: prevMetrics.pageviews,
@@ -249,7 +247,9 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
             {primaryFunnel && funnelNow && funnelPrev ? (
               <StatCard
                 label="Signup conversion"
-                value={formatPercent(funnelNow.overallConversion)}
+                value={
+                  <CountUp value={funnelNow.overallConversion} format="percent" />
+                }
                 delta={{
                   current: funnelNow.overallConversion,
                   previous: funnelPrev.overallConversion,
@@ -262,7 +262,13 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
             {showRevenue ? (
               <StatCard
                 label="Revenue"
-                value={formatMoney(revenueSummary.total, revenueSummary.currency)}
+                value={
+                  <CountUp
+                    value={revenueSummary.total}
+                    format="money"
+                    currency={revenueSummary.currency}
+                  />
+                }
                 delta={{
                   current: revenueSummary.total,
                   previous: prevRevenueSummary.total,
@@ -273,7 +279,7 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
             )}
             <StatCard
               label="Active now"
-              value={formatNumber(activeNow)}
+              value={<CountUp value={activeNow} format="number" />}
               live={activeNow > 0}
             />
           </div>

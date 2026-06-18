@@ -24,11 +24,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
 - **Move #1 — the "Opinionated Overview" redesign is COMPLETE & APPROVED.** `ONE-15` Done, the
   **Move #1** Linear project **Completed**.
-- **Move #2 — Feel & Performance is UNDERWAY.** The spec + plan are approved. **Phases 0 (`ONE-47`)
-  + A (`ONE-48`) are Done; Phase B/B1 (`ONE-49`, optimistic range switching) is implemented +
-  committed locally (in review)** — `<OverviewShell>` flips the range instantly + dims the content
-  (aria-busy) while the server re-renders, scroll preserved; no client data lib. **B2 (section tabs)
-  split to `ONE-55` (Backlog).** **Next is Phase C — Number count-up (`ONE-50`).** Phases D–G Backlog.
+- **Move #2 — Feel & Performance is UNDERWAY.** The spec + plan are approved. **Phases 0, A, B
+  (`ONE-47/48/49`) are Done; Phase C (`ONE-50`, number count-up) is implemented + committed locally
+  (in review)** — `<CountUp>` animates the hero + 4 KPI numbers up once on arrival (reduced-motion →
+  instant). **B2 (section tabs) deferred in `ONE-55` (Backlog).** **Next is Phase D — Chart draw-in
+  (`ONE-51`).** Phases E–G Backlog.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -44,15 +44,15 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Move #1 is COMPLETE & APPROVED. Move #2 is UNDERWAY** (spec + plan approved). **Phases 0
-  (`ONE-47`) + A (`ONE-48`) Done; Phase B/B1 (`ONE-49`, optimistic range switching) implemented +
-  verified + committed locally (in review)** — `<OverviewShell>` (client) owns the range select +
-  `useTransition` (instant value, content dim + aria-busy, scroll preserved); page stays an RSC;
-  `RangeSelect` is shared so it was left untouched. **B2 (section tabs) → `ONE-55` (Backlog).**
-- **Next exact step:** on approval of Phase B, implement **Phase C — Number count-up (`ONE-50`)
-  only**: wire the Phase-0 `useCountUp` into the hero metric + `StatCard` values (animate up once on
-  arrival; reduced-motion / no-JS → final value instantly; `tabular-nums` so width never jitters);
-  mind the SSR/hydration handling. Then stop for approval.
+- **Move #1 is COMPLETE & APPROVED. Move #2 is UNDERWAY** (spec + plan approved). **Phases 0, A, B
+  (`ONE-47/48/49`) Done; Phase C (`ONE-50`, number count-up) implemented + verified + committed
+  locally (in review)** — `<CountUp>` (client; wraps the Phase-0 `useCountUp`) animates the hero +
+  4 KPI numbers up once on arrival; reduced-motion / SSR → final value instantly; format is a
+  serializable token (no function across the server→client boundary). **B2 (tabs) → `ONE-55`.**
+- **Next exact step:** on approval of Phase C, implement **Phase D — Chart draw-in (`ONE-51`) only**:
+  the hero `TrendChart` + `Sparkline`s draw in **once** on mount via the Phase-0 `draw-in` keyframe
+  (CSS, `pathLength=1` so `stroke-dashoffset` 1→0 works at any length); reduced-motion → static; the
+  chart's correctness/scaling/tooltip untouched. Then stop for approval.
 - **Do not implement more than one phase, or Move #3, without approval.** No animation library / no
   new dependency. Accent/identity stays **Move #3**.
 

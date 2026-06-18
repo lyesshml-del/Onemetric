@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Delta } from "@/components/dashboard/delta";
 import { Sparkline } from "@/components/charts/sparkline";
@@ -27,7 +28,7 @@ export function StatCard({
   pending = false,
 }: {
   label: string;
-  value?: string;
+  value?: ReactNode;
   delta?: DeltaInput;
   spark?: number[];
   live?: boolean;
