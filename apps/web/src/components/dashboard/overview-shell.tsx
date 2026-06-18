@@ -51,7 +51,8 @@ export function OverviewShell({
           value={value}
           onChange={(e) => onChange(e.target.value as RangeKey)}
           aria-label="Date range"
-          className="border-input bg-background h-9 rounded-md border px-3 text-sm"
+          // Move #2 / Phase E — subtle hover tint on the range control (--motion-micro).
+          className="border-input bg-background hover:bg-accent/50 h-9 rounded-md border px-3 text-sm transition-colors duration-[var(--motion-micro)] ease-soft"
         >
           {(Object.keys(RANGES) as RangeKey[]).map((key) => (
             <option key={key} value={key}>

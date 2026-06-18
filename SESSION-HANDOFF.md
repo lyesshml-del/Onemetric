@@ -24,11 +24,12 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
 - **Move #1 — the "Opinionated Overview" redesign is COMPLETE & APPROVED.** `ONE-15` Done, the
   **Move #1** Linear project **Completed**.
-- **Move #2 — Feel & Performance is UNDERWAY.** The spec + plan are approved. **Phases 0, A, B, C
-  (`ONE-47/48/49/50`) are Done; Phase D (`ONE-51`, chart draw-in) is implemented + committed locally
-  (in review)** — the hero chart + sparkline lines draw in once on mount (CSS; reduced-motion →
-  static). **B2 (section tabs) deferred in `ONE-55` (Backlog).** **Next is Phase E — Hover & press
-  micro-interactions (`ONE-52`).** Phases F–G Backlog.
+- **Move #2 — Feel & Performance is UNDERWAY.** The spec + plan are approved. **Phases 0, A, B, C, D
+  (`ONE-47…51`) are Done; Phase E (`ONE-52`, hover & press) is implemented + committed locally (in
+  review)** — conservative press/hover on the Audience segmented control + range select
+  (`--motion-micro`; reduced-motion → color-only; no fake card/row hover). **B2 (section tabs)
+  deferred in `ONE-55` (Backlog).** **Next is Phase F — Route / view transitions (`ONE-53`).** Phase G
+  Backlog.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -44,15 +45,16 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - Full detail lives in `TODO.md` and `HANDOFF.md` (the running log).
 
 ## 4. Current phase & exact next step
-- **Move #1 is COMPLETE & APPROVED. Move #2 is UNDERWAY** (spec + plan approved). **Phases 0, A, B, C
-  (`ONE-47/48/49/50`) Done; Phase D (`ONE-51`, chart draw-in) implemented + verified + committed
-  locally (in review)** — the hero `TrendChart` value line + the `Sparkline` lines draw in once on
-  mount (CSS `pathLength=1` + the Phase-0 `draw-in` keyframe, fill-mode `both`); reduced-motion →
-  static; scaling/tooltip/comparison-line untouched. **B2 (tabs) → `ONE-55`.**
-- **Next exact step:** on approval of Phase D, implement **Phase E — Hover & press micro-interactions
-  (`ONE-52`) only**: subtle hover lift on interactive cards/rows + press/active feedback on buttons
-  and the range/segmented controls, using the `--motion-micro` token (~120ms); reduced-motion safe
-  (color/opacity-only or guard-instant); no layout shift on hover. Then stop for approval.
+- **Move #1 is COMPLETE & APPROVED. Move #2 is UNDERWAY** (spec + plan approved). **Phases 0, A, B, C,
+  D (`ONE-47…51`) Done; Phase E (`ONE-52`, hover & press) implemented + verified + committed locally
+  (in review)** — conservative, controls-only: press cue on the Audience segmented control (reduced-
+  motion-gated) + a hover tint on the range select, on the `--motion-micro`/`ease-soft` tokens; no
+  fake card/row hover; focus-visible preserved. **B2 (tabs) → `ONE-55`.**
+- **Next exact step:** on approval of Phase E, implement **Phase F — Route / view transitions
+  (`ONE-53`) only**: a subtle cross-fade on Overview navigation via the **native View Transitions
+  API**, progressive-enhancement (feature-detect; no support → today's instant nav) + reduced-motion
+  gated; ~150–250ms; do NOT regress the Phase-B optimistic switching or the Suspense skeleton. Then
+  stop for approval.
 - **Do not implement more than one phase, or Move #3, without approval.** No animation library / no
   new dependency. Accent/identity stays **Move #3**.
 

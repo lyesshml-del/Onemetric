@@ -96,10 +96,13 @@ export function AudienceCard({
               aria-pressed={segment === s}
               onClick={() => setSegment(s)}
               className={cn(
-                "rounded px-2 py-1 capitalize transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
+                // Move #2 / Phase E — tactile press (subtle scale, gated off under
+                // reduced-motion) + a faint hover bg on the non-selected tabs, on the
+                // --motion-micro token. Focus-visible ring preserved.
+                "rounded px-2 py-1 capitalize transition duration-[var(--motion-micro)] ease-soft outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-[0.97] motion-reduce:active:scale-100",
                 segment === s
                   ? "bg-background text-foreground"
-                  : "text-muted-foreground hover:text-foreground",
+                  : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
               )}
             >
               {s}

@@ -680,6 +680,31 @@ draw in once on mount — implemented `ONE-51`. CSS-only (no client JS).
 - **Next:** **Phase E — Hover & press micro-interactions (`ONE-52`)** — subtle hover lift on
   interactive cards/rows + press feedback on buttons/controls (`--motion-micro`); reduced-motion safe.
 
+**✅ Move #2 / Phase E — Hover & press micro-interactions (2026-06-18). Overview only; deliberately
+conservative.** Implemented `ONE-52`.
+
+- **Scope decision (per direction): controls only — NO fake card/row hover.** The triad/detail/KPI
+  cards and `SourceRow`s are not clickable (drill-in isn't built), so highlighting them on hover would
+  imply a false affordance. Phase E refines only the two genuinely-interactive Overview controls.
+- **Audience segmented control (`audience-card.tsx`):** a subtle press cue `active:scale-[0.97]`
+  (**gated off under reduced-motion** via `motion-reduce:active:scale-100`) + a faint
+  `hover:bg-background/50` on the *non-selected* tabs; transitions on the Phase-0 `--motion-micro`
+  (~120ms) / `ease-soft` tokens. The `focus-visible` ring (Move #1 / Phase J) is preserved.
+- **Range select (`overview-shell.tsx`):** a subtle `hover:bg-accent/50` tint + `transition-colors` on
+  `--motion-micro`/`ease-soft`. No press cue (a native select opens a dropdown on click). Focus
+  indicator untouched.
+- **No layout shift** — only `transform` (scale) + `background` change. **Reduced-motion** → the global
+  guard makes transitions instant and the press scale is disabled → color-only, calm.
+- **Untouched:** the shared `<Button>` (all pages) and the shared `<RangeSelect>` (Events/Funnels/
+  Revenue) — Phase E only touched `OverviewShell`'s own select + `AudienceCard` (both Overview-only);
+  the drill links keep their existing hover; all focus-visible states intact.
+- **Verification:** 83 tests · typecheck · lint · production build green. Overview route **5.21 kB**
+  (was 5.15; +~0.06 kB — class strings, no new client JS). No new dependency. No browser in env → the
+  hover/press feel is reasoned from the standard CSS classes + token resolution + the green build.
+- **Next:** **Phase F — Route / view transitions (`ONE-53`)** — a progressive-enhancement cross-fade on
+  navigation via the native View Transitions API (feature-detected + reduced-motion gated); no support
+  → today's instant nav; don't regress the Phase-B optimistic switching or the Suspense skeleton.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

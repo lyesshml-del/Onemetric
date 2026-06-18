@@ -534,7 +534,14 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       (no replay on hover/data change). Chart scaling/tooltip/ghosted-prev-line/area untouched; CSS
       only (no client JS). 83 tests, typecheck · lint · build green; route 5.15 kB (+0.03). No new
       dependency. Files: `globals.css`, `trend-chart.tsx`, `sparkline.tsx`.
-- [ ] Phase E — Hover & press micro-interactions (`ONE-52`).
+- [x] **Phase E — Hover & press micro-interactions ✅ (2026-06-18)** (`ONE-52`) — conservative,
+      controls-only (no fake card/row hover, per direction). **Audience segmented control:** subtle
+      press `active:scale-[0.97]` (gated off via `motion-reduce:active:scale-100`) + faint hover bg on
+      non-selected tabs, on the `--motion-micro`/`ease-soft` tokens; focus-visible ring kept. **Range
+      select (OverviewShell):** subtle `hover:bg-accent/50` tint + `--motion-micro` transition. No
+      layout shift (transform/bg only); reduced-motion → color-only. Shared `RangeSelect`/`Button` +
+      other pages untouched. 83 tests, typecheck · lint · build green; route 5.21 kB (+0.06). No new
+      dependency. Files: `audience-card.tsx`, `overview-shell.tsx`.
 - [ ] Phase F — Route / view transitions (`ONE-53`) — native View Transitions API, progressive.
 - [ ] Phase G — Polish, reduced-motion & a11y pass (`ONE-54`).
 
