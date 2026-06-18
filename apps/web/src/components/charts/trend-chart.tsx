@@ -117,12 +117,18 @@ export function TrendChart({
             vectorEffect="non-scaling-stroke"
           />
         ) : null}
+        {/* Move #2 / Phase D — the line draws in once on mount: pathLength=1
+            normalizes the length so the `draw-in` keyframe (stroke-dashoffset
+            1→0) reveals it regardless of the real, non-uniformly-scaled length.
+            non-scaling-stroke is kept for the crisp constant-width stroke. */}
         <path
           d={line("value") ?? ""}
           fill="none"
-          className="stroke-foreground"
+          className="stroke-foreground animate-draw-in"
           strokeWidth={1.5}
           vectorEffect="non-scaling-stroke"
+          pathLength={1}
+          strokeDasharray={1}
         />
       </svg>
 

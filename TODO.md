@@ -526,7 +526,14 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       (non-breaking). Removed the now-unused `formatMoney` import. 83 tests, typecheck · lint · build
       green; route 5.12 kB (+0.48). No new dependency. Files: +`count-up.tsx`, `stat-card.tsx`,
       `page.tsx`. (Hard-load reset + delta intra-count jiggle → Phase G polish.)
-- [ ] Phase D — Chart draw-in (`ONE-51`) — TrendChart + Sparklines, once, CSS.
+- [x] **Phase D — Chart draw-in ✅ (2026-06-18)** (`ONE-51`) — the hero `TrendChart` value line + the
+      `Sparkline` lines draw in once on mount via the Phase-0 `draw-in` keyframe (`pathLength=1` +
+      `strokeDasharray=1` → `stroke-dashoffset` 1→0, works at any scaled length; `non-scaling-stroke`
+      kept). Refined `--animate-draw-in` fill-mode `forwards → both` (hidden before the draw; degrades
+      to fully-drawn if animations are off). Reduced-motion → instant/drawn (global guard); draws once
+      (no replay on hover/data change). Chart scaling/tooltip/ghosted-prev-line/area untouched; CSS
+      only (no client JS). 83 tests, typecheck · lint · build green; route 5.15 kB (+0.03). No new
+      dependency. Files: `globals.css`, `trend-chart.tsx`, `sparkline.tsx`.
 - [ ] Phase E — Hover & press micro-interactions (`ONE-52`).
 - [ ] Phase F — Route / view transitions (`ONE-53`) — native View Transitions API, progressive.
 - [ ] Phase G — Polish, reduced-motion & a11y pass (`ONE-54`).

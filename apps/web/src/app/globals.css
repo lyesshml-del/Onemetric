@@ -31,7 +31,7 @@
   /* Move #2 — motion utilities (Phase 0): one easing + the named animations. */
   --ease-soft: var(--motion-ease);
   --animate-shimmer: shimmer 1.6s ease-in-out infinite;
-  --animate-draw-in: draw-in 0.6s var(--motion-ease) forwards;
+  --animate-draw-in: draw-in 0.6s var(--motion-ease) both;
 }
 
 /* Light theme tokens (available for a future toggle). */

@@ -654,6 +654,32 @@ up once on arrival — implemented `ONE-50`.
   on mount via the Phase-0 `draw-in` keyframe (CSS, `pathLength=1`); reduced-motion → static; the
   chart's correctness/scaling/tooltip untouched.
 
+**✅ Move #2 / Phase D — Chart draw-in (2026-06-18). Overview only.** The hero chart + sparkline lines
+draw in once on mount — implemented `ONE-51`. CSS-only (no client JS).
+
+- **`trend-chart.tsx` + `sparkline.tsx`** — the **solid value line** in each gets `pathLength={1}` +
+  `strokeDasharray={1}` + the `animate-draw-in` class. The Phase-0 `draw-in` keyframe animates
+  `stroke-dashoffset` 1→0; `pathLength=1` normalizes the length so the reveal works regardless of the
+  real, non-uniformly-scaled (`preserveAspectRatio="none"`) path. `vectorEffect="non-scaling-stroke"`
+  is **kept** (crisp constant-width stroke) — it coexists with the pathLength dash reveal.
+- **`globals.css`** — refined the Phase-0 `--animate-draw-in` fill-mode **`forwards → both`** so the
+  line is hidden *before* the draw (backwards fill → no initial drawn-flash) and persists drawn after
+  (forwards). Robustness bonus: if CSS animations are disabled entirely (not via reduced-motion), the
+  base `stroke-dashoffset` (0) leaves the line **fully drawn**, not stuck hidden.
+- **Reduced-motion:** the global guard makes the animation instant → the line renders drawn (static).
+- **Draws once:** a CSS animation doesn't replay on React re-renders, so it plays on mount and not on
+  hover; on a range change the line updates without re-drawing (acceptable — "once on mount").
+- **Untouched:** the area fill, the **ghosted dashed comparison line** (`stroke-dasharray="4 4"` — NOT
+  given the draw-in, since its dash is its style), gridlines, scaling, and the crosshair + branded
+  hover tooltip (HTML overlays). `BarChart` (other pages) untouched. `Sparkline` stays a server
+  component (`aria-hidden`); `TrendChart` stays client.
+- **Verification:** 83 tests · typecheck · lint · production build green. Overview route **5.15 kB**
+  (was 5.12; +~0.03 kB — two SVG attributes + a class, no new client JS). No new dependency. No
+  browser in env → the draw-in is reasoned from the standard `pathLength=1` dash technique + the
+  Phase-0 keyframe + the green build.
+- **Next:** **Phase E — Hover & press micro-interactions (`ONE-52`)** — subtle hover lift on
+  interactive cards/rows + press feedback on buttons/controls (`--motion-micro`); reduced-motion safe.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

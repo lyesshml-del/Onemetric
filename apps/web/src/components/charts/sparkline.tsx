@@ -42,9 +42,11 @@ export function Sparkline({
       <path
         d={line}
         fill="none"
-        className="stroke-foreground/60"
+        className="stroke-foreground/60 animate-draw-in"
         strokeWidth={1}
         vectorEffect="non-scaling-stroke"
+        pathLength={1}
+        strokeDasharray={1}
       />
     </svg>
   );
