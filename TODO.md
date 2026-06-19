@@ -580,7 +580,7 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 
 ---
 
-## Move #3 — Identity & Craft (APPROVED — in progress: Phase 0 + A done, Phase B in review)
+## Move #3 — Identity & Craft (APPROVED — in progress: Phase 0, A, B done; Phase C in review)
 
 > Design source of truth: **`MOVE-3-SPEC.md`** (the single signature accent + craft) +
 > **`MOVE-3-IMPLEMENTATION-PLAN.md`** (phases 0 + A–F). Planning-only session **2026-06-18** — no code.
@@ -639,19 +639,33 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       new dependency; server-first; additive; deltas green/red; live dot emerald; sparkline + `--ring`
       neutral. Files: `tab-nav.tsx`, `audience-card.tsx`. *(Edits were found already in the working tree
       uncommitted — reviewed, verified, and adopted rather than rewriting identical code.)*
-- [ ] Phase C — Primary action + Lede link hover + focus ring (`ONE-59`) — Button `default` variant → accent.
+- [x] **Phase C — Primary action + Lede link hover ✅ (2026-06-19)** (`ONE-59`) — the accent now marks the
+      *one* primary action + the data-noun links on hover. **`Button` `default` variant** `bg-primary… →
+      bg-brand text-brand-foreground hover:bg-brand/90` (destructive/outline/secondary/ghost/link unchanged).
+      **Button call-site audit:** every `default` usage is a genuine single primary CTA (marketing hero/
+      closing CTAs, pricing CTA, signup/login submit, upgrade, dashboard form submits); every secondary
+      action already uses `outline` → **zero demotions**. **Lede** drill-links tint `hover:text-brand-text
+      focus-visible:text-brand-text` (rest = `text-foreground`; `--brand-text` = AA 7.15 dark / 5.98 light).
+      **`--ring` left NEUTRAL** (standing decision — not branded despite the title's "+ focus ring"). AA:
+      button 4.76/5.73 (≥4.5), Lede hover 7.15/5.98 (≥4.5); never colour-only (button = filled/largest, link
+      = underlined). Accent footprint now = hero line (A) + tab underline + segment (B) + **primary button +
+      Lede hover (C)** — the four sanctioned zones, no creep. Verified: 83 tests, typecheck · lint · build
+      green; route `/dashboard/[projectId]` **6.95 kB** (class swaps, zero new JS). No new dependency;
+      server-first; additive; deltas green/red; live dot emerald; sparkline + `--ring` neutral. Files:
+      `button.tsx`, `lede.tsx`.
 - [ ] Phase D — Card/number/chart spec unification (`ONE-60`) — retire `MetricCard` drift (folds in `ONE-46`).
 - [ ] Phase E — Logomark + favicon / identity marks (`ONE-61`).
 - [ ] Phase F — Coherence, contrast & a11y pass (`ONE-62`) — completes Move #3.
 
-> **Spec + plan APPROVED. Phases 0 (`ONE-56`) + A (`ONE-57`) Done (approved). Phase B (`ONE-58`)
-> implemented, verified, committed locally → In Review.** Next: **Phase C — Primary action + Lede link
-> hover (`ONE-59`)** — the shadcn `Button` **`default` variant** → accent (`bg-brand text-brand-foreground
-> hover:bg-brand/90`; secondary/outline/ghost/link stay neutral; destructive stays red); the Lede
-> drill-links tint to `--brand-text` **on hover/focus only**; audit every `Button` call site so only
-> primary CTAs change. **Per the standing decision, `--ring` stays NEUTRAL — do NOT brand the focus ring**
-> (despite the ONE-59 title's "+ focus ring"). Each phase is its own approval-gated, additive commit. No
-> new dependency; server-first; dark-first + WCAG-AA. Deltas stay semantic green/red; the live dot stays
+> **Spec + plan APPROVED. Phases 0 (`ONE-56`), A (`ONE-57`), B (`ONE-58`) Done (approved). Phase C
+> (`ONE-59`) implemented, verified, committed locally → In Review.** The accent now covers all four
+> sanctioned zones: hero data series (A) · active tab underline + selected segment (B) · **primary action
+> (`Button` default) + Lede-link hover (C)**. Next: **Phase D — Card/number/chart spec unification
+> (`ONE-60`, folds in `ONE-46`)** — unify the legacy `MetricCard` (`rounded-lg`) onto the `StatCard` /
+> `rounded-xl` + `tabular-nums` spec across the 3 detail pages, then retire/alias it; resolve the `BarChart`
+> chart-language drift. **Pure craft (no accent).** **`--ring` stays NEUTRAL** (standing decision — never
+> brand the focus ring, despite the ONE-59 title). Each phase is its own approval-gated, additive commit.
+> No new dependency; server-first; dark-first + WCAG-AA. Deltas stay semantic green/red; the live dot stays
 > emerald; the sparkline stays neutral — never the accent.
 
 ---

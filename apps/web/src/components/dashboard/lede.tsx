@@ -21,7 +21,10 @@ export function Lede({ tokens }: { tokens: LedeToken[] }) {
               key={i}
               href={t.href}
               className={cn(
-                "underline-offset-4 hover:underline",
+                // At rest: foreground (Move #1). Move #3 — tint to the signature
+                // accent on hover/focus only, via --brand-text (the lighter
+                // text-on-bg token, AA 7.15:1 dark / 5.98:1 light). Never at rest.
+                "underline-offset-4 hover:underline hover:text-brand-text focus-visible:text-brand-text",
                 emphasis ?? "text-foreground",
               )}
             >

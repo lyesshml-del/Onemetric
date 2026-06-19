@@ -979,6 +979,54 @@ Implemented `ONE-58`. Two components (`tab-nav.tsx`, `audience-card.tsx`); `over
   = foreground). **Audit every `Button` call site** so only primary CTAs change. **`--ring` stays NEUTRAL**
   (standing decision — do NOT brand the focus ring, despite the ONE-59 title's "+ focus ring").
 
+**✅ Move #3 / Phase C — Primary action + Lede link hover (2026-06-19). The accent marks the one primary
+action + the data-noun links on hover.** Implemented `ONE-59`. Two files (`button.tsx`, `lede.tsx`);
+`--ring` deliberately left neutral.
+
+- **`button.tsx` — the shadcn `Button` `default` variant → accent:** `bg-primary text-primary-foreground
+  hover:bg-primary/90` → `bg-brand text-brand-foreground hover:bg-brand/90`. **Only the `default` variant
+  changed** — `destructive` (stays red), `outline`, `secondary`, `ghost`, and `link` are byte-identical.
+- **Button call-site audit (the Medium risk — Button is shared app-wide):** grepped every `<Button>` /
+  `buttonVariants` usage. **Every `default`-variant call site is a genuine single primary CTA per screen** —
+  the marketing hero + closing CTAs (`(marketing)/page.tsx`), the pricing CTA, the signup/login submit, the
+  upgrade button, and the dashboard form submits (`add-subscription`, `connect-paypal`, `create-funnel`,
+  `create-project`). Every **secondary** action already uses `variant="outline"` (sign-out, cancel, copy
+  snippet, add/remove funnel step, refresh, manage-billing, marketing's secondary CTA). **→ zero demotions
+  needed**; flipping the default variant brands exactly the primary actions and nothing else (the plan's
+  hoped-for outcome). `buttonVariants` is imported only by `button.tsx` itself → no external
+  `buttonVariants({variant:"default"})` to recolour unexpectedly.
+- **`lede.tsx` — drill-links tint on hover/focus only:** added `hover:text-brand-text
+  focus-visible:text-brand-text` (kept `hover:underline`). **At rest the link stays `text-foreground`**
+  (Move #1): the `hover:`/`focus-visible:` pseudo-class rules out-specify the base `text-foreground`, and
+  tailwind-merge keeps both (different variant scopes → no conflict). Used **`--brand-text`** (the lighter
+  text-on-bg token), NOT `--brand`: `--brand` is only 4.00:1 on `--background` (fails AA 4.5 for text);
+  `--brand-text` is **7.15:1 dark / 5.98:1 light** (≥4.5 ✓). `focus-visible` (not `focus`) so a mouse click
+  doesn't tint. The only Lede drill-links today are the funnel/revenue clauses (they light up when those
+  targets exist); the change is harmless until then and correct when they appear.
+- **`--ring` left NEUTRAL — the standing decision honoured (despite the ONE-59 title's "+ focus ring").**
+  Phase 0 explicitly chose not to brand the ring; branding it would recolour the focus ring on **every**
+  focusable element app-wide (the largest possible blast radius — the opposite of "one surface, restrained").
+  Focus stays `focus-visible:ring-ring/50` everywhere. Recorded so Phase F doesn't "fix" it.
+- **WCAG AA (recorded):** primary-button label `text-brand-foreground` on `bg-brand` = **4.76:1 dark /
+  5.73:1 light** (≥4.5 ✓); Lede link hover `--brand-text` on `--background` = **7.15:1 dark / 5.98:1 light**
+  (≥4.5 ✓). **Never colour-only:** the primary button is also the filled/largest control; the Lede link also
+  has `hover:underline`. Values from the Phase 0 token computation — no re-pick.
+- **Accent footprint (grep `*-brand`):** `trend-chart.tsx` (A: line + gradient) + `tab-nav.tsx` (B:
+  `border-brand`) + `audience-card.tsx` (B: `bg-brand`) + **`button.tsx` (C: primary action) + `lede.tsx`
+  (C: hover/focus link)** — exactly the four sanctioned zones (data / active / action / links). No creep;
+  deltas stay green/red, the live dot emerald, the sparkline and `--ring` neutral.
+- **Verification:** 83 tests · typecheck · lint · production build green. Route `/dashboard/[projectId]`
+  **6.96 → 6.95 kB** (rounding noise — CSS class swaps, zero new JS; the Button is shared so the recolour is
+  global yet weightless). No new dependency; server-first; additive; dark-first. No browser in env → the
+  dark/light visual is reasoned from the AA numbers + valid Tailwind classes + the green build.
+- **What remained unchanged:** non-primary buttons (outline/secondary/ghost/link) + the destructive variant;
+  the Lede at rest; every link destination; focus-visible behaviour (`--ring` neutral); all data / queries /
+  layout; Moves #1 & #2; the 83-test suite (presentational class swaps — no JS logic; node-only suite).
+- **Next:** **Phase D — Card/number/chart spec unification (`ONE-60`, folds in `ONE-46`)** — unify the
+  legacy `MetricCard` (`rounded-lg`) onto the `StatCard`/`rounded-xl` + `tabular-nums` spec across the 3
+  detail pages (Events-detail / Funnels-detail / Revenue), then retire/alias it; resolve the `BarChart`
+  chart-language drift. Pure craft (no accent). **Await approval before starting.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

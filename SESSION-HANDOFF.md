@@ -34,9 +34,10 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (`ONE-56`) — accent token foundations — is implemented, verified, committed locally
   (`7ff0804`) → Done (approved 2026-06-19)** (the `--brand` / `--brand-foreground` / `--brand-text`
   tokens defined in `globals.css` for dark + light, AA-verified, **applied to nothing** — zero visual
-  change). **Phase A (`ONE-57`) is Done (approved); Phase B (`ONE-58`) — the active tab underline +
-  selected segment accent — is implemented + committed locally → In Review;** C–F (`ONE-59…62`) Backlog;
-  `ONE-46` canceled → folded into Phase D (`ONE-60`).
+  change). **Phases A (`ONE-57`) + B (`ONE-58`) are Done (approved); Phase C (`ONE-59`) — the primary
+  action (`Button` default → accent) + the Lede drill-link hover tint — is implemented + committed locally
+  → In Review;** D–F (`ONE-60…62`) Backlog; `ONE-46` canceled → folded into Phase D (`ONE-60`). The accent
+  now covers all four sanctioned zones (hero series · active state · primary action · Lede-link hover).
   The accent is introduced ONLY in Move #3.
 
 ## 3. Completed phases
@@ -67,19 +68,27 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   neutral; the sparkline stays neutral; the Move #2 draw-in / tooltip / scaling are intact. Line-on-
   `--background` AA: **4.00 dark / 5.98 light**. Only `trend-chart.tsx` changed (single consumer →
   `BarChart` + other pages unaffected).
-- **Phase B (`ONE-58`) is implemented, verified, committed locally → In Review:** the active section-tab
-  underline (`TabNav`: `border-foreground → border-brand`; label stays `text-foreground` for AA) + the
-  selected segmented-control segment (`AudienceCard`: `bg-brand text-brand-foreground`). The range select is
-  left neutral (native `<select>`). Move #2 optimistic logic intact; only the active colour changed. AA:
+- **Phase B (`ONE-58`) is Done (approved 2026-06-19):** the active section-tab underline (`TabNav`:
+  `border-foreground → border-brand`; label stays `text-foreground` for AA) + the selected
+  segmented-control segment (`AudienceCard`: `bg-brand text-brand-foreground`). The range select is left
+  neutral (native `<select>`). Move #2 optimistic logic intact; only the active colour changed. AA:
   underline 4.00/5.98 (graphical ≥3); segment text 4.76/5.73 (≥4.5). Shared `TabNav` → all 6 pages' active
-  underline branded; non-active render byte-identical. C–F (`ONE-59…62`) Backlog; `ONE-46` canceled →
-  folded into Phase D.
-- **Next exact step:** Phase A approved; Phase B in review. On approval of Phase B, implement **Phase C —
-  Primary action + Lede link hover (`ONE-59`) only** — the shadcn `Button` `default` variant → accent
-  (`bg-brand text-brand-foreground hover:bg-brand/90`; secondary/outline/ghost/link neutral; destructive
-  stays red); the Lede drill-links tint to `--brand-text` on hover/focus only; **audit every `Button` call
-  site** so only primary CTAs change. **`--ring` stays NEUTRAL — do NOT brand the focus ring** (standing
-  decision, despite the ONE-59 title). Then stop for approval. One phase per turn; additive; no new
+  underline branded; non-active render byte-identical.
+- **Phase C (`ONE-59`) is implemented, verified, committed locally → In Review:** the **primary action** —
+  shadcn `Button` `default` variant `bg-primary… → bg-brand text-brand-foreground hover:bg-brand/90`
+  (destructive/outline/secondary/ghost/link unchanged) — and the **Lede drill-links** tint to `--brand-text`
+  on hover/focus only (`hover:text-brand-text focus-visible:text-brand-text`; at rest = `text-foreground`).
+  **Button call-site audit:** every `default` usage is a single primary CTA (marketing hero/closing CTAs,
+  pricing, signup/login submit, upgrade, dashboard form submits); every secondary action already uses
+  `outline` → **zero demotions**. AA: button 4.76/5.73, Lede hover 7.15/5.98 (both ≥4.5); never colour-only.
+  **`--ring` left NEUTRAL** (standing decision). Accent footprint now = the four sanctioned zones only
+  (hero series · active tab/segment · primary button · Lede hover). Route `/dashboard/[projectId]` 6.95 kB.
+  Files: `button.tsx`, `lede.tsx`. D–F (`ONE-60…62`) Backlog; `ONE-46` canceled → folded into Phase D.
+- **Next exact step:** Phases A–C approved/in-review. On approval of Phase C, implement **Phase D —
+  Card/number/chart spec unification (`ONE-60`, folds in `ONE-46`) only** — unify the legacy `MetricCard`
+  (`rounded-lg`) onto the `StatCard` / `rounded-xl` + `tabular-nums` spec across the 3 detail pages
+  (Events-detail / Funnels-detail / Revenue), then retire/alias it; resolve the `BarChart` chart-language
+  drift. **Pure craft (no accent).** Then stop for approval. One phase per turn; additive; no new
   dependency; server-first; **Moves #1 & #2 behaviour must not change**; deltas stay semantic green/red;
   the live dot stays emerald; `--ring` + sparkline stay neutral.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
@@ -97,8 +106,8 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 | `MOVE-1-IMPLEMENTATION-PLAN.md` | Approved phased build plan (0 + A–J) — **Move #1 done** |
 | `MOVE-2-SPEC.md` | Move #2 "instant + alive" design spec — **done & approved** |
 | `MOVE-2-IMPLEMENTATION-PLAN.md` | Move #2 phased build plan (0 + A–G) — **done & approved** |
-| `MOVE-3-SPEC.md` | Move #3 "one signature" accent + craft spec — **approved; Phase 0 done** |
-| `MOVE-3-IMPLEMENTATION-PLAN.md` | Move #3 phased build plan (0 + A–F) — **approved; on Phase A next** |
+| `MOVE-3-SPEC.md` | Move #3 "one signature" accent + craft spec — **approved; Phases 0/A/B done, C in review** |
+| `MOVE-3-IMPLEMENTATION-PLAN.md` | Move #3 phased build plan (0 + A–F) — **approved; Phase D next** |
 | `DESIGN-SYSTEM.md` | How it should feel + tokens/patterns |
 | `ENGINEERING-STANDARDS.md` | How we build |
 | `DECISIONS.md` | Why the big choices were made (ADRs) |
