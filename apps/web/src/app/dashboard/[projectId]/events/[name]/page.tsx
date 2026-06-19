@@ -8,7 +8,7 @@ import { resolveRange, isRangeKey, DEFAULT_RANGE } from "@/lib/range";
 import { formatNumber } from "@/lib/format";
 import { ProjectHeader } from "@/components/dashboard/project-header";
 import { MetricCard } from "@/components/dashboard/metric-card";
-import { BarChart } from "@/components/charts/bar-chart";
+import { TrendChart } from "@/components/charts/trend-chart";
 import {
   Card,
   CardContent,
@@ -75,8 +75,12 @@ export default async function EventDetailPage({
           <CardTitle className="text-base">Trend</CardTitle>
         </CardHeader>
         <CardContent>
-          <BarChart
+          <TrendChart
             data={detail.trend.map((p) => ({ label: p.date, value: p.count }))}
+            accent={false}
+            valueLabel="occurrences"
+            heightClassName="h-44"
+            ariaLabel="Event occurrences over time"
           />
           <div className="text-muted-foreground mt-2 flex justify-between text-xs tabular-nums">
             <span>{detail.trend[0]?.date}</span>

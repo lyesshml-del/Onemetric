@@ -19,10 +19,13 @@ export type TrendPoint = {
  * `vector-effect="non-scaling-stroke"`); the crosshair, dot, and tooltip are HTML
  * overlays so non-uniform scaling never distorts them.
  *
- * Move #3 / Phase A — the signature accent: the CURRENT-period value line
- * (`stroke-brand`) and the area fill (a `--brand` → transparent gradient) carry the
- * accent — "this is the data." The previous-period comparison line, gridlines,
- * crosshair, hover dot, and tooltip stay NEUTRAL (accent = the line + fill only).
+ * Move #3 / Phase A — the signature accent: for the hero (`accent` default true)
+ * the CURRENT-period value line (`stroke-brand`) and the area fill (a `--brand` →
+ * transparent gradient) carry the accent — "this is the data." The previous-period
+ * comparison line, gridlines, crosshair, hover dot, and tooltip stay NEUTRAL (accent
+ * = the line + fill only). Pass `accent={false}` for the same crafted chart in
+ * neutral monochrome (e.g. the events-detail trend) — the accent stays the hero's
+ * alone (MOVE-3-SPEC §4.4: "not on every chart").
  */
 export function TrendChart({
   data,
@@ -30,6 +33,7 @@ export function TrendChart({
   height = 260,
   heightClassName,
   ariaLabel = "Trend",
+  accent = true,
 }: {
   data: TrendPoint[];
   valueLabel?: string;
@@ -41,10 +45,20 @@ export function TrendChart({
    */
   heightClassName?: string;
   ariaLabel?: string;
+  /**
+   * Whether the value line + area fill carry the signature accent. Default `true`
+   * for the Overview hero — the one protagonist series. Other consumers (e.g. the
+   * events-detail trend) pass `accent={false}` for the same crafted chart in
+   * neutral monochrome, keeping the accent the hero's alone (MOVE-3-SPEC §4.4).
+   */
+  accent?: boolean;
 }) {
   const [hover, setHover] = useState<number | null>(null);
   // Unique gradient id; useId()'s colons are stripped so `url(#id)` is valid.
   const gradientId = `trend-area-${useId().replace(/:/g, "")}`;
+  // The series colour: the accent for the hero (default), neutral foreground for
+  // every other consumer — so the accent never creeps beyond the hero series.
+  const seriesColor = accent ? "var(--brand)" : "var(--foreground)";
 
   const n = data.length;
   const W = 1000;
@@ -104,8 +118,8 @@ export function TrendChart({
             stopColor uses var(--brand) via style so it resolves per theme (dark/light). */}
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" style={{ stopColor: "var(--brand)", stopOpacity: 0.25 }} />
-            <stop offset="100%" style={{ stopColor: "var(--brand)", stopOpacity: 0 }} />
+            <stop offset="0%" style={{ stopColor: seriesColor, stopOpacity: 0.25 }} />
+            <stop offset="100%" style={{ stopColor: seriesColor, stopOpacity: 0 }} />
           </linearGradient>
         </defs>
         {[0, 0.5, 1].map((g) => (
@@ -138,7 +152,7 @@ export function TrendChart({
         <path
           d={line("value") ?? ""}
           fill="none"
-          className="stroke-brand animate-draw-in"
+          className={cn(accent ? "stroke-brand" : "stroke-foreground", "animate-draw-in")}
           strokeWidth={1.5}
           vectorEffect="non-scaling-stroke"
           pathLength={1}

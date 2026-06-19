@@ -700,9 +700,11 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 > project is Completed** and the umbrella `ONE-44` is closed (`ONE-46` was folded into Phase D). The
 > signature accent lives in its four sanctioned zones + the logomark; one card/number/chart spec everywhere;
 > a quiet identity (logomark + favicon + OG); WCAG-AA dark + light; nothing from Moves #1/#2 regressed.
-> **All three design Moves (#1, #2, #3) are now COMPLETE & APPROVED.** Remaining work is **outside** the
-> Moves: `ONE-24` (push the local commits → Vercel prod deploy) and `ONE-45` (BarChart rewrite). **Nothing
-> pushed** — all Move #1/#2/#3 commits are local on `main`.
+> **All three design Moves (#1, #2, #3) are now COMPLETE & APPROVED.** Post-Move follow-up **`ONE-45`
+> (retire the distorting BarChart) — Done (in review):** the events-detail trend now uses the neutral
+> crafted `TrendChart` and the legacy `BarChart` is deleted — one chart language everywhere. The only open
+> item is **`ONE-24`** (push the accumulated local commits → Vercel prod deploy). **Nothing pushed** — all
+> commits are local on `main`.
 
 ---
 

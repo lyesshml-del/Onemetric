@@ -114,10 +114,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   `DESIGN-AUDIT.md`, `DESIGN-SYSTEM.md`, `TODO.md`, `HANDOFF.md`, `SESSION-HANDOFF.md`).
 - **Next exact step — all three design Moves are COMPLETE & APPROVED.** Phase F approved 2026-06-19;
   `ONE-62` is Done, the "Move #3 — Identity & Craft" project is Completed, and the umbrella `ONE-44` is
-  closed. There is **no open Move #1/#2/#3 work.** Remaining backlog is **outside the Moves**: `ONE-24`
-  (push the **34** local `main` commits → triggers a Vercel prod deploy) and `ONE-45` (BarChart rewrite).
-  **Nothing has been pushed** — every Move #1/#2/#3 commit is local on `main`; pushing is its own approved
-  step (`ONE-24`). Keep one-phase-per-turn discipline for any future work.
+  closed. There is **no open Move #1/#2/#3 work.** **`ONE-45` (retire the distorting BarChart) is Done (in
+  review)** — events-detail migrated to the neutral crafted `TrendChart`; the legacy `BarChart` is deleted
+  (one chart language everywhere). The only open backlog item is **`ONE-24`** — push the accumulated local
+  `main` commits → triggers a Vercel prod deploy. **Nothing has been pushed**; pushing is its own approved
+  step. Keep one-phase-per-turn discipline for any future work.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -148,7 +149,8 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Supabase Auth for authentication only** — it never reads `public.*`; Prisma (owner role)
   bypasses the deny-by-default RLS.
 - **Cookieless** visitor identity (daily-rotating salted SHA-256 hash) — no cookies, no PII.
-- **Dependency-free charts** (hand-rolled SVG: `BarChart`, `TrendChart`, `Sparkline`).
+- **Dependency-free charts** (hand-rolled SVG: `TrendChart`, `Sparkline`; the legacy distorting `BarChart`
+  was retired in `ONE-45` — the events-detail trend uses a neutral `TrendChart`).
 - **No Redis / queues / Kafka / RabbitMQ / cron service** beyond Vercel Cron.
 - **Merchant-of-Record = Paddle** (founder in Algeria → Stripe unavailable).
 - **Pre-aggregated `Session`** rows so metrics don't scan the `Event` firehose.

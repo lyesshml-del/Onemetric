@@ -1162,6 +1162,34 @@ touched.
   Linear project marked **Completed**, and the umbrella `ONE-44` closed (`ONE-46` was folded into D earlier). **Nothing pushed** — every Move #1/#2/#3 commit is local
   on `main`; pushing (→ a Vercel prod deploy) is its own approved step (`ONE-24`).
 
+**✅ ONE-45 — Retire the legacy distorting BarChart (2026-06-19). One chart language everywhere.** A
+post-Move-3 design-debt follow-up (not a Move phase). Additive; committed locally → In Review.
+
+- **Problem:** the legacy `BarChart` (`components/charts/bar-chart.tsx`) used `preserveAspectRatio="none"`
+  on a 720×180 viewBox stretched to `h-44 w-full` → bars distorted at every container width, with only a
+  native SVG `<title>` tooltip. It was the last chart not on the crafted `TrendChart` language.
+- **Single consumer confirmed (grep):** only the **events-detail trend** (`events/[name]/page.tsx`) used the
+  `<BarChart>` component; the marketing page's `BarChart3` is the **lucide icon**, not this component.
+- **Fix — migrate to the crafted `TrendChart`, in NEUTRAL:** `TrendChart` gained an additive **`accent?:
+  boolean` prop, default `true`** (the Overview hero is byte-identical → provably untouched). The
+  events-detail trend renders `<TrendChart accent={false} …>` — the same crafted chart (correct viewBox +
+  `vector-effect="non-scaling-stroke"`, HTML-overlay date·value tooltip, gridlines, draw-in) but in
+  **neutral monochrome** (`stroke-foreground` + a `--foreground`→transparent area gradient). Keeps the
+  signature accent the **hero's alone** (MOVE-3-SPEC §4.4 — "not on every chart"); grep `*-brand` confirms
+  no new accent surface (events-detail renders neutral).
+- **Data + layout preserved:** same `detail.trend` mapped to `{label,value}` (no `prev` → no ghost line);
+  the "Trend" card, the min/max date labels, and the chart footprint (`heightClassName="h-44"`) are
+  unchanged — only bars → crafted line/area. **`bar-chart.tsx` deleted** (zero remaining importers).
+- **Trade-off:** events-detail becomes a client route (TrendChart is `"use client"`) → First Load
+  **1.04 → 2.67 kB** (+~1.6 kB; bundle stays small) — the interactive HTML tooltip vs the old static one.
+  The Overview hero is 6.95 → 6.98 kB (+0.03 for the added conditional; render identical, `accent` default).
+- **Verified:** 83 tests · typecheck · lint · production build green. No new dependency (reuses
+  `TrendChart`); server-first (the RSC embeds a client chart, as the Overview does); additive; dark-first.
+- **Result: one chart language across the whole product** — `TrendChart` (hero = accent, elsewhere =
+  neutral) + `Sparkline`; the distorting `BarChart` is gone. Files: `trend-chart.tsx` (additive prop),
+  `events/[name]/page.tsx` (swap), `bar-chart.tsx` (deleted). **On approval:** `ONE-45` → Done; then the
+  only remaining backlog item is `ONE-24` (push + deploy).
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
