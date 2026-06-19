@@ -22,6 +22,18 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  /* Move #3 — signature accent (Phase 0). Maps the --brand tokens to Tailwind
+     color utilities: bg-brand / text-brand / border-brand / ring-brand /
+     from-brand / to-brand / via-brand / fill-brand / stroke-brand / outline-brand …
+     DEFINED ONLY — applied to nothing in Phase 0 (zero visual change). `@theme
+     inline` emits a utility's CSS only when that utility is used, so mapping these
+     adds no rendered bytes until a later phase consumes one. --brand-text is the
+     lighter text-on-background variant (AA 4.5:1); gradient/wash stops use the
+     alpha modifier (e.g. from-brand/15), so no separate --brand-muted is needed.
+     --ring is intentionally NOT remapped to the accent — the focus ring stays neutral. */
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-text: var(--brand-text);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -56,6 +68,20 @@
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.705 0.015 286.067);
 
+  /* Move #3 — signature accent (Phase 0): one restrained indigo-violet, leaning
+     into the ~285 hue already present in the neutral tokens. These are the LIGHT
+     values (defined for the future toggle; OneMetric ships dark-first). WCAG AA
+     verified on white (#ffffff):
+       --brand            #634cd4  white-on-brand (button) 5.73:1 · brand-on-white 5.98:1
+       --brand-foreground #fafafa  text/icon on --brand
+       --brand-text       #634cd4  accent text on background 5.98:1 (== --brand: the
+                                    light fill is already AA as text on white)
+     Applied to NOTHING in Phase 0 — defined for later phases (A–F). --ring stays
+     neutral; deltas stay green/red; the live dot stays emerald — never the accent. */
+  --brand: oklch(0.52 0.2 285);
+  --brand-foreground: oklch(0.985 0 0);
+  --brand-text: oklch(0.52 0.2 285);
+
   /* Move #2 — motion system (Phase 0): one easing + a duration ladder.
      Theme-agnostic (identical in light/dark); consumed by later phases. */
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -84,6 +110,19 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.552 0.016 285.938);
+
+  /* Move #3 — signature accent (Phase 0): the DARK values (OneMetric is dark-first),
+     tuned on the real dark surface (--background = #09090b) + WCAG AA verified:
+       --brand            #6e5dd8  white-on-brand (button) 4.76:1 · brand-on-bg 4.00:1
+       --brand-foreground #fafafa  text/icon on --brand
+       --brand-text       #968ff7  accent text on background 7.15:1 (lighter, in-gamut)
+     NOTE: the spec's first guess oklch(0.62 0.19 285) was tuned DOWN to L=0.56 here
+     because white-on-brand was only 3.70:1 (failed AA 4.5 for button text). Applied
+     to NOTHING in Phase 0. --ring stays neutral (unchanged); deltas stay green/red;
+     the live dot stays emerald — never the accent. */
+  --brand: oklch(0.56 0.18 285);
+  --brand-foreground: oklch(0.985 0 0);
+  --brand-text: oklch(0.7 0.15 285);
 }
 
 @layer base {

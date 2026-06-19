@@ -589,8 +589,22 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 > hover) + craft (one card/number/chart spec end-to-end, a logomark, favicon/flag polish). **Moves #1
 > & #2 must not change behavior; the accent is introduced only here.**
 
-- [ ] **Phase 0 — Accent token foundations** (`ONE-56`, **Todo**) — define `--brand` tokens +
-      utilities (oklch ~285), AA-verify (dark + light), **apply to nothing yet** (zero visual change).
+- [x] **Phase 0 — Accent token foundations ✅ (2026-06-19)** (`ONE-56`) — defined the signature accent in
+      `globals.css` for **dark + light**, AA-verified, **applied to NOTHING** (zero visual change — the
+      Move #1/#2 Phase-0 pattern). Tokens: `--brand` (fill) `oklch(0.56 0.18 285)` dark /
+      `oklch(0.52 0.2 285)` light · `--brand-foreground` `oklch(0.985 0 0)` (on brand) · `--brand-text`
+      (lighter accent-text-on-bg) `oklch(0.7 0.15 285)` dark / `== --brand` light. Mapped in
+      `@theme inline` → `bg-brand`/`text-brand`/`border-brand`/`ring-brand`/`from-brand`/`fill-brand`/…
+      (+ alpha modifiers like `from-brand/15`). **WCAG AA (computed sRGB→luminance, dark + light):**
+      white-on-`--brand` (button) **4.76 / 5.73**; `--brand`-on-bg (series/ring) **4.00 / 5.98**;
+      `--brand-text`-on-bg **7.15 / 5.98**; all in sRGB gamut. The spec's first guess
+      `oklch(0.62 0.19 285)` was tuned **down** to L=0.56 (white-on-brand was only **3.70** → failed AA).
+      **`--ring` kept neutral** (not branded); **no `--brand-muted`** (alpha modifiers cover washes).
+      **Proven applied-to-nothing:** grep `src/**/*.{tsx,ts}` for `*-brand` → none; compiled CSS has the
+      raw `--brand*` props (resolve) + **zero** `*-brand` utilities; route `/dashboard/[projectId]`
+      **6.83 kB byte-identical** with vs without the tokens. No new tests (no JS logic; 83 unchanged &
+      green). Verified: **83 tests**, typecheck · lint · build green. No new dependency; server-first;
+      deltas green/red; live dot emerald; sparkline neutral. Files: `globals.css`.
 - [ ] Phase A — Hero data series accent (`ONE-57`) — TrendChart line + gradient → accent.
 - [ ] Phase B — Active / selected states (`ONE-58`) — tab underline / range / segmented active → accent.
 - [ ] Phase C — Primary action + Lede link hover + focus ring (`ONE-59`) — Button `default` variant → accent.
@@ -598,9 +612,12 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 - [ ] Phase E — Logomark + favicon / identity marks (`ONE-61`).
 - [ ] Phase F — Coherence, contrast & a11y pass (`ONE-62`) — completes Move #3.
 
-> **Awaiting approval of `MOVE-3-SPEC.md` + `MOVE-3-IMPLEMENTATION-PLAN.md` before Phase 0.** Each phase
-> is its own approval-gated, additive PR. No new dependency; server-first; dark-first + WCAG-AA. Deltas
-> stay semantic green/red; the live dot stays emerald — never the accent.
+> **Spec + plan APPROVED. Phase 0 (`ONE-56`) implemented + verified, committed locally → In Review,
+> awaiting approval.** Next: **Phase A — Hero data series accent (`ONE-57`)** (TrendChart value line →
+> `stroke-brand` + `brand → transparent` area gradient; prev-period ghost line stays neutral; **sparkline
+> stays neutral**; AA-recheck on dark + light). Each phase is its own approval-gated, additive commit. No
+> new dependency; server-first; dark-first + WCAG-AA. Deltas stay semantic green/red; the live dot stays
+> emerald; `--ring` stays neutral — never the accent.
 
 ---
 

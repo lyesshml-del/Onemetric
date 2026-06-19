@@ -28,11 +28,13 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   project **Completed**. The whole app feels instant + alive (skeleton, optimistic range + section
   switching, count-up, chart draw-in, hover/press, view transitions), reduced-motion-first,
   server-first, no new dependency.
-- **Move #3 — Identity & Craft is now PLANNED** (the final design move). `MOVE-3-SPEC.md` +
-  `MOVE-3-IMPLEMENTATION-PLAN.md` written (the single restrained **violet accent** applied sparingly +
-  craft: one card/number/chart spec, a logomark, favicon/flag polish; phases 0 + A–F); 7 phase issues
-  filed (`ONE-56` Phase 0 **Todo**, A–F Backlog; `ONE-46` canceled → folded into Phase D). **The spec +
-  plan await approval before Phase 0.** The accent is introduced ONLY here.
+- **Move #3 — Identity & Craft is APPROVED and UNDERWAY** (the final design move). `MOVE-3-SPEC.md` +
+  `MOVE-3-IMPLEMENTATION-PLAN.md` define the single restrained **violet accent** applied sparingly +
+  craft (one card/number/chart spec, a logomark, favicon/flag polish; phases 0 + A–F). **Phase 0
+  (`ONE-56`) — accent token foundations — is implemented + verified + committed locally → In Review**
+  (the `--brand` / `--brand-foreground` / `--brand-text` tokens defined in `globals.css` for dark +
+  light, AA-verified, **applied to nothing** — zero visual change). Phases A–F (`ONE-57…62`) Backlog;
+  `ONE-46` canceled → folded into Phase D (`ONE-60`). The accent is introduced ONLY in Move #3.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -49,17 +51,23 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 
 ## 4. Current phase & exact next step
 - **Moves #1 & #2 are COMPLETE & APPROVED** (both Linear projects Completed). **Move #3 — Identity &
-  Craft is PLANNED** — `MOVE-3-SPEC.md` + `MOVE-3-IMPLEMENTATION-PLAN.md` written (the single restrained
-  violet accent, ~285 hue, applied sparingly + craft; phases 0 + A–F); 7 phase issues filed (`ONE-56`
-  Phase 0 **Todo**, A–F Backlog; `ONE-46` canceled → folded into Phase D). The accent is introduced
-  ONLY in Move #3.
-- **Next exact step:** await approval of `MOVE-3-SPEC.md` + `MOVE-3-IMPLEMENTATION-PLAN.md`. On
-  approval, implement **Phase 0 (`ONE-56`) only** — define the `--brand` token(s) + utilities in
-  `globals.css`, AA-verify (dark + light), **apply to nothing yet** (zero visual change) — then stop
-  for approval. One phase per turn; additive; no new dependency; server-first; **Moves #1 & #2
-  behaviour must not change**; deltas stay semantic, the live dot stays emerald.
-- **Do not implement more than one phase, or Move #3, without approval.** No animation library / no
-  new dependency. Accent/identity stays **Move #3**.
+  Craft is APPROVED and UNDERWAY** — `MOVE-3-SPEC.md` + `MOVE-3-IMPLEMENTATION-PLAN.md` (the single
+  restrained violet accent, ~285 hue, applied sparingly + craft; phases 0 + A–F). **Phase 0 (`ONE-56`)
+  is DONE locally → In Review:** `--brand` `oklch(0.56 0.18 285)` dark / `oklch(0.52 0.2 285)` light,
+  `--brand-foreground`, `--brand-text` (lighter text-on-bg) defined in `globals.css` + mapped to
+  `bg-brand`/`text-brand`/`ring-brand`/`from-brand`/… utilities, **WCAG-AA verified** (button 4.76/5.73,
+  series 4.00/5.98, text 7.15/5.98), **applied to nothing** (zero visual change, proven by grep +
+  compiled-CSS + byte-identical route size). `--ring` kept neutral; no `--brand-muted`. Phases A–F
+  Backlog; `ONE-46` canceled → folded into Phase D.
+- **Next exact step:** await approval of Phase 0, then implement **Phase A — Hero data series accent
+  (`ONE-57`) only** — the hero `TrendChart` value line `stroke-foreground → stroke-brand` + a
+  `brand → transparent` area gradient; the previous-period ghost line stays neutral; **the sparkline
+  stays neutral** (standing decision); keep the Move #2 draw-in / tooltip / scaling intact; AA-recheck
+  on dark + light — then stop for approval. One phase per turn; additive; no new dependency;
+  server-first; **Moves #1 & #2 behaviour must not change**; deltas stay semantic green/red; the live
+  dot stays emerald; `--ring` stays neutral.
+- **Do not implement more than one phase without approval.** No animation library / no new dependency.
+  The accent is applied only as each Move #3 phase sanctions it.
 
 ## 5. Source-of-truth documents (read before acting)
 | Document | What it governs |
@@ -71,8 +79,10 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 | `DESIGN-AUDIT.md` | Approved design critique (the "why premium") |
 | `OVERVIEW-SPEC.md` | Approved Overview redesign spec |
 | `MOVE-1-IMPLEMENTATION-PLAN.md` | Approved phased build plan (0 + A–J) — **Move #1 done** |
-| `MOVE-2-SPEC.md` | Move #2 "instant + alive" design spec — **awaiting approval** |
-| `MOVE-2-IMPLEMENTATION-PLAN.md` | Move #2 phased build plan (0 + A–G) — **awaiting approval** |
+| `MOVE-2-SPEC.md` | Move #2 "instant + alive" design spec — **done & approved** |
+| `MOVE-2-IMPLEMENTATION-PLAN.md` | Move #2 phased build plan (0 + A–G) — **done & approved** |
+| `MOVE-3-SPEC.md` | Move #3 "one signature" accent + craft spec — **approved; Phase 0 done** |
+| `MOVE-3-IMPLEMENTATION-PLAN.md` | Move #3 phased build plan (0 + A–F) — **approved; on Phase A next** |
 | `DESIGN-SYSTEM.md` | How it should feel + tokens/patterns |
 | `ENGINEERING-STANDARDS.md` | How we build |
 | `DECISIONS.md` | Why the big choices were made (ADRs) |

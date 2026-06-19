@@ -835,6 +835,59 @@ design docs (planning only): `MOVE-3-SPEC.md` (the single signature **accent** +
 - **Next:** await approval of the spec + plan, then implement **Phase 0 (`ONE-56`) only** (define the
   `--brand` token(s), AA-verify, apply nothing — zero visual change) and stop.
 
+**✅ Move #3 / Phase 0 — Accent token foundations (2026-06-19). Foundations only — applied to NOTHING, so
+ZERO visual change** (the Move #1/#2 Phase-0 pattern). Implemented `ONE-56`. CSS-only (`globals.css`).
+
+- **Tokens defined (dark + light) — the signature indigo-violet at hue ~285, leaning into the neutrals:**
+  - `--brand` — the accent **fill** (button bg, active indicator, hero series). Dark `oklch(0.56 0.18 285)`
+    (#6e5dd8) · light `oklch(0.52 0.2 285)` (#634cd4).
+  - `--brand-foreground` — text/icon **on** `--brand`. `oklch(0.985 0 0)` (#fafafa), both themes.
+  - `--brand-text` — the lighter **accent-text-on-background** variant. A single fill cannot be AA both as
+    white-on-button *and* as text on the dark bg (those pull L in opposite directions), so the spec (§4.2/
+    §7) reserved this. Dark `oklch(0.7 0.15 285)` (#968ff7) · light `oklch(0.52 0.2 285)` (== `--brand`;
+    the light fill is already AA as text on white).
+- **Mapped in `@theme inline`** → `--color-brand` / `--color-brand-foreground` / `--color-brand-text`,
+  generating `bg-brand` / `text-brand` / `border-brand` / `ring-brand` / `from-brand` / `fill-brand` /
+  `stroke-brand` / … (the full colour-utility set, incl. alpha modifiers like `from-brand/15`).
+- **WCAG AA — computed numerically** (no browser available: OKLCH → linear sRGB → relative luminance →
+  contrast ratio; the math is recorded inline in `globals.css`), dark + light, **all in sRGB gamut**:
+  - dark: white-on-`--brand` (button) **4.76:1** ✓ · `--brand`-on-bg (series/ring/underline, graphical)
+    **4.00:1** ✓ · `--brand-text`-on-bg **7.15:1** ✓.
+  - light: white-on-`--brand` **5.73:1** ✓ · `--brand`-on-white **5.98:1** ✓ · `--brand-text` **5.98:1** ✓.
+- **Tuned the spec's first guess.** `MOVE-3-SPEC.md` §4.2 proposed dark `oklch(0.62 0.19 285)`; that fails
+  AA (white-on-brand only **3.70:1** — large-text 3:1 but not button-text 4.5:1), so Phase 0 (whose job is
+  exactly "tune the oklch + AA-verify") brought the dark value down to **L=0.56**. The light value passed
+  as proposed and was kept.
+- **Decisions (resolving the plan's open Phase-0 questions):**
+  - **`--ring` stays NEUTRAL and unchanged** (the user's explicit rule + a design call). `ring-brand` is
+    *mapped* (the utility was requested) but **unused** — the focus ring is not branded.
+  - **No `--brand-muted`** (the issue marks it optional): gradient stops / hover washes use Tailwind's
+    alpha modifier (`from-brand/15`, etc.), so a dedicated low-alpha token would be redundant.
+  - **Names per spec:** `--brand` / `--brand-foreground` / `--brand-text` — *not* shadcn's neutral
+    `--accent` (a muted gray, left untouched).
+- **Applied to NOTHING — proven, not asserted:**
+  - grep over `apps/web/src/**/*.{tsx,ts,jsx}` for `(bg|text|border|ring|from|…)-brand` → **no matches**.
+  - the compiled stylesheet (`.next/static/css/*.css`) contains the raw `--brand*` custom properties for
+    both themes (**they resolve**) but **zero** `*-brand` utility classes and **zero** `--color-brand`
+    mappings (`@theme inline` emits a utility's CSS only when used) → no rendered byte changes.
+  - route `/dashboard/[projectId]` is **6.83 kB — byte-identical with vs without the token block**
+    (measured both ways: stash the change → rebuild → 6.83 kB; restore → rebuild → 6.83 kB). *(Aside: the
+    route Size had already drifted from the "5.26 kB" last recorded in Move #2 — a pre-existing baseline
+    change, unrelated to Phase 0; First Load 119 kB still matches.)*
+- **No new tests — correct for this phase.** Phase 0 ships **no JS logic** (only CSS variables), so there
+  is nothing the node-only suite can unit-test; the AA "test" is the numeric verification above plus the
+  compiled-CSS assertions. The **83-test suite is unchanged and green** (not weakened). *(Contrast: Move #2
+  Phase 0 added +8 because it shipped `lib/motion.ts` pure functions — this phase ships none.)*
+- **Verification:** 83 tests · typecheck · lint · production build all green. No new dependency;
+  server-first; dark-first; monochrome base intact (the accent is **defined, not applied**); deltas stay
+  green/red; the live dot stays emerald; the sparkline stays neutral. Files: `globals.css` (only).
+- **Next:** **Phase A — Hero data series accent (`ONE-57`)** — the Overview hero `TrendChart` current-
+  period **value line** `stroke-foreground → stroke-brand` + the area fill → a `brand → transparent`
+  gradient (`from-brand/…`); the **previous-period ghost line stays neutral/muted** (comparison ≠
+  protagonist); **the sparkline stays neutral** (standing decision); keep the Move #2 draw-in, the branded
+  tooltip, the correct scaling, and `non-scaling-stroke` intact. One component (`trend-chart.tsx`);
+  `BarChart` + every other surface untouched. AA-recheck the series visibility on dark + light.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
