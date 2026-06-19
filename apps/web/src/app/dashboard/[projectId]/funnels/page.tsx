@@ -6,6 +6,8 @@ import { getOwnedProject, listProjects } from "@/server/queries/projects";
 import { listFunnels } from "@/server/queries/funnels";
 import { ProjectHeader } from "@/components/dashboard/project-header";
 import { CreateFunnelForm } from "@/components/dashboard/create-funnel-form";
+import { EmptyState } from "@/components/dashboard/empty-state";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -67,10 +69,18 @@ export default async function FunnelsPage({
           ))}
         </ul>
       ) : (
-        <p className="text-muted-foreground text-sm">No funnels yet.</p>
+        <EmptyState
+          title="No funnels created"
+          description="Create your first funnel to understand where users drop off."
+          action={
+            <a href="#new-funnel" className={buttonVariants()}>
+              Create funnel
+            </a>
+          }
+        />
       )}
 
-      <Card className="max-w-xl">
+      <Card id="new-funnel" className="max-w-xl">
         <CardHeader>
           <CardTitle className="text-base">New funnel</CardTitle>
           <CardDescription>

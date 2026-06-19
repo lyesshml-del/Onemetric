@@ -1270,6 +1270,39 @@ untouched. The GitHub/Vercel settings convention (a "General" rename section abo
 - **What remained unchanged:** the ONE-63 delete flow + dialog/toast; analytics + every query; routes +
   dashboard layout; Moves #1/#2/#3. **On approval:** `ONE-64` → Done. **Not pushed.**
 
+**✅ ONE-65 — First-event onboarding & empty states (2026-06-19). Committed locally → In Review.** Turned
+empty dashboards into guided onboarding across six surfaces. Instruction over emptiness; no fake/demo data;
+server-first; no new dependency; dark-first; additive; Moves #1/#2/#3 + the delete/rename flows untouched.
+
+- **`components/dashboard/empty-state.tsx` (new, server):** one neutral `rounded-xl bg-card border` empty
+  card — optional icon, title, description, optional action. Used by Funnels / Revenue / Project list.
+- **`components/dashboard/first-event-onboarding.tsx` (new, client):** the Overview empty state — "No events
+  yet" + the install description + the tracking snippet with a "Copy snippet" button → **"Snippet copied"
+  toast**, then a 3-step plan (add snippet → visit site → return) in `rounded-xl` cards. Replaces the Move #1
+  "waiting for your first pageview" pulse panel (neutral now). Overview `page.tsx` renders it when
+  `metrics.sessions === 0`.
+- **`trend-chart.tsx`:** when `data` is empty/all-zero, an early return renders an icon + "Your traffic will
+  appear here" at the **same height** (no layout jump) instead of an empty chart. Hooks run before the
+  branch (no conditional-hook issue); the populated render is byte-identical, so the Move #1 hero (gated by
+  `hasData`) and the event-detail trend (always has occurrences) never hit it — a safety net.
+- **Funnels list:** "No funnels created" + "Create your first funnel…" + a Create-funnel CTA (anchors to the
+  on-page builder, `id="new-funnel"`). **Project list:** "Create your first project" + CTA (`id="new-project"`).
+  **Revenue:** when connected with `summary.count === 0`, an `EmptyState` ("No revenue events yet" + …)
+  replaces the zero metric cards / empty breakdowns / empty recent table (no fake numbers); the webhook +
+  disconnect card stays. **Events list:** title → "No events recorded" + "Custom events will appear here
+  automatically." (kept the `CustomEventsDoc` below — instruction).
+- **Design:** neutral; no destructive colours; no new accent zone (the primary CTAs use the default Button
+  *styling* via `buttonVariants` on a link); no illustrations/images; simple typography.
+- **Verified:** 83 tests · typecheck · lint · build green (18 routes). **Bundle note (investigated):**
+  `/dashboard` + `/funnels` First Load rose **117 → 189 kB**. Isolated via `git stash` + a control: the cause
+  is importing `buttonVariants` from `ui/button` into these **server** pages — `button.tsx` imports the
+  `radix-ui` umbrella, which pulls a ~72 kB chunk into any server page that imports it (the same cost the
+  marketing pages, `/revenue`, `/reports`, `/funnels-detail` already pay at 179–189; it's cheap when Button
+  is reached via a client component, which is why the rich Overview stays 121 kB). **No new dependency.** A
+  future app-wide optimization (out of scope here) is to import `Slot` from `@radix-ui/react-slot` directly
+  in `button.tsx` so server pages stop pulling the umbrella. Kept the spec'd default-Button CTA + documented
+  the trade-off rather than dropping it. **On approval:** `ONE-65` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

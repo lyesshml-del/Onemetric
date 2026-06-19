@@ -12,6 +12,7 @@ import { CustomEventsDoc } from "@/components/dashboard/custom-events-doc";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -58,7 +59,10 @@ export default async function EventsPage({
       {events.length === 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">No custom events yet</CardTitle>
+            <CardTitle className="text-base">No events recorded</CardTitle>
+            <CardDescription>
+              Custom events will appear here automatically.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <CustomEventsDoc />

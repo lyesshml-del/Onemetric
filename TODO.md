@@ -738,6 +738,23 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       dependency; ONE-63 delete flow + analytics + routes untouched. Verified: 83 tests, typecheck · lint ·
       build green. Files: +`dashboard/rename-project-form.tsx`, `server/actions/projects.ts`,
       `dashboard/[projectId]/settings/page.tsx`.
+- [x] **ONE-65 — First-event onboarding & empty states ✅ implemented (2026-06-19), in review.** Empty
+      dashboards became guided onboarding (instruction over emptiness; no fake data; server-first; no new
+      dependency; dark-first). **Overview** (no sessions): a `FirstEventOnboarding` card — "No events yet" +
+      the tracking snippet (copy → "Snippet copied" toast) + a 3-step plan (supersedes the Move #1 "waiting"
+      panel). **TrendChart**: an icon + "Your traffic will appear here" placeholder at the same height when
+      data is empty/all-zero (safety net; current callers never hit it). A shared **`EmptyState`** card
+      (`rounded-xl bg-card border`, neutral) on **Funnels** ("No funnels created" + Create-funnel CTA),
+      **Revenue** ("No revenue events yet" — instead of zero metric cards when connected + no revenue), and
+      the **Project list** ("Create your first project" + CTA); **Events** empty → "No events recorded" +
+      "Custom events will appear here automatically." Primary CTAs use the default Button styling
+      (`buttonVariants` on a link); no new accent zone, no destructive colours, no illustrations. Verified:
+      83 tests, typecheck · lint · build green. **Bundle note:** `/dashboard` + `/funnels` First Load 117 →
+      189 kB — the empty-state CTA imports `buttonVariants` from `ui/button`, which pulls the `radix-ui`
+      umbrella chunk that server pages already pay (marketing / revenue / reports are 179–189); **no new
+      dependency**. Future app-wide fix: import `Slot` from `@radix-ui/react-slot` directly in `button.tsx`.
+      Move #1/#2/#3 + delete + rename flows untouched. Files: +`empty-state.tsx`,
+      +`first-event-onboarding.tsx`, `trend-chart.tsx`, Overview/funnels/events/revenue/project-list pages.
 
 ---
 

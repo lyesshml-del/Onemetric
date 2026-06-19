@@ -16,6 +16,7 @@ import { ProjectHeader } from "@/components/dashboard/project-header";
 import { RangeSelect } from "@/components/dashboard/range-select";
 import { MetricCard } from "@/components/dashboard/metric-card";
 import { BreakdownCard } from "@/components/dashboard/breakdown-card";
+import { EmptyState } from "@/components/dashboard/empty-state";
 import { ConnectPayPalForm } from "@/components/dashboard/connect-paypal-form";
 import { InstallSnippet } from "@/components/dashboard/install-snippet";
 import { Button } from "@/components/ui/button";
@@ -134,6 +135,13 @@ async function ConnectedRevenue({
 
   return (
     <div className="space-y-8">
+      {summary.count === 0 ? (
+        <EmptyState
+          title="No revenue events yet"
+          description="Track purchases and subscriptions to measure revenue."
+        />
+      ) : (
+        <>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
         <MetricCard label="Total revenue" value={money(summary.total)} />
         <MetricCard label="Payments" value={formatNumber(summary.count)} />
@@ -196,6 +204,8 @@ async function ConnectedRevenue({
           )}
         </CardContent>
       </Card>
+        </>
+      )}
 
       <Card>
         <CardHeader>

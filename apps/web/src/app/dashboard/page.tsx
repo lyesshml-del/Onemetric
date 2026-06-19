@@ -4,6 +4,8 @@ import { requireUser } from "@/lib/auth";
 import { listProjects } from "@/server/queries/projects";
 import { CreateProjectForm } from "@/components/dashboard/create-project-form";
 import { DeletedToast } from "@/components/dashboard/deleted-toast";
+import { EmptyState } from "@/components/dashboard/empty-state";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -52,10 +54,18 @@ export default async function DashboardPage({
           ))}
         </ul>
       ) : (
-        <p className="text-muted-foreground text-sm">No projects yet.</p>
+        <EmptyState
+          title="Create your first project"
+          description="Add a website, install the snippet, and your analytics start flowing."
+          action={
+            <a href="#new-project" className={buttonVariants()}>
+              Create project
+            </a>
+          }
+        />
       )}
 
-      <Card className="max-w-md">
+      <Card id="new-project" className="max-w-md">
         <CardHeader>
           <CardTitle className="text-base">New project</CardTitle>
           <CardDescription>Add a website to start tracking.</CardDescription>

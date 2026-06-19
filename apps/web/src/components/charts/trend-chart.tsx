@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import { LineChart } from "lucide-react";
 import { formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -59,6 +60,33 @@ export function TrendChart({
   // The series colour: the accent for the hero (default), neutral foreground for
   // every other consumer — so the accent never creeps beyond the hero series.
   const seriesColor = accent ? "var(--brand)" : "var(--foreground)";
+
+  // ONE-65 — no data: a calm placeholder at the same height instead of an empty
+  // chart (no layout jump). Current callers gate this off (the Overview shows its
+  // own onboarding when there are no sessions; an event-detail trend always has
+  // occurrences), so it's a safety net that doesn't fire today.
+  const isEmpty = data.length === 0 || data.every((d) => d.value === 0);
+  if (isEmpty) {
+    return (
+      <div
+        className={cn("relative w-full", heightClassName)}
+        style={heightClassName ? undefined : { height }}
+        role="img"
+        aria-label={ariaLabel}
+      >
+        <div className="text-muted-foreground flex h-full flex-col items-center justify-center px-6 text-center">
+          <LineChart className="mb-2 size-6" aria-hidden />
+          <p className="text-foreground text-sm font-medium">
+            Your traffic will appear here
+          </p>
+          <p className="mt-1 max-w-xs text-xs">
+            When visitors reach your website, this chart will begin updating
+            automatically.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const n = data.length;
   const W = 1000;

@@ -31,7 +31,7 @@ import { AudienceCard } from "@/components/dashboard/audience-card";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
 import { Lede } from "@/components/dashboard/lede";
-import { InstallSnippet } from "@/components/dashboard/install-snippet";
+import { FirstEventOnboarding } from "@/components/dashboard/first-event-onboarding";
 import { OverviewSkeleton } from "@/components/dashboard/overview-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -173,30 +173,13 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
           content is passed as children, so the page stays a server component. */}
       <OverviewShell range={range}>
         {!hasData ? (
-        // Single focused empty state (spec §7): a live pulse + the copyable
-        // install snippet — not a generic "no data" card. Phase J.
-        <Card>
-          <CardContent className="flex flex-col items-center py-12 text-center">
-            <span className="relative mb-4 flex size-3" aria-hidden>
-              <span className="bg-emerald-500/60 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 motion-reduce:animate-none" />
-              <span className="bg-emerald-500 relative inline-flex size-3 rounded-full" />
-            </span>
-            <p className="text-lg font-medium">Waiting for your first pageview</p>
-            <p className="text-muted-foreground mt-1 max-w-md text-sm">
-              Add the snippet to your site&apos;s <code>&lt;head&gt;</code> and your
-              analytics appear here automatically — it takes less than a minute.
-            </p>
-            <div className="mt-6 w-full max-w-xl text-left">
-              <InstallSnippet snippet={installSnippet} />
-            </div>
-            <Link
-              href={`/dashboard/${project.id}/settings`}
-              className="text-muted-foreground hover:text-foreground mt-4 inline-block text-xs underline-offset-4 hover:underline"
-            >
-              Full setup &amp; verification →
-            </Link>
-          </CardContent>
-        </Card>
+        // ONE-65 — first-event onboarding (replaces the Phase J "waiting" panel):
+        // the tracking snippet to copy + three plain steps, so a new project
+        // always shows what to do next.
+        <FirstEventOnboarding
+          snippet={installSnippet}
+          settingsHref={`/dashboard/${project.id}/settings`}
+        />
       ) : (
         <>
           {/* Lede — the briefing sentence (Move #1 / Phase B). */}
