@@ -31,9 +31,10 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Move #3 — Identity & Craft is APPROVED and UNDERWAY** (the final design move). `MOVE-3-SPEC.md` +
   `MOVE-3-IMPLEMENTATION-PLAN.md` define the single restrained **violet accent** applied sparingly +
   craft (one card/number/chart spec, a logomark, favicon/flag polish; phases 0 + A–F). **Phase 0
-  (`ONE-56`) — accent token foundations — is implemented + verified + committed locally → In Review**
-  (the `--brand` / `--brand-foreground` / `--brand-text` tokens defined in `globals.css` for dark +
-  light, AA-verified, **applied to nothing** — zero visual change). Phases A–F (`ONE-57…62`) Backlog;
+  (`ONE-56`) — accent token foundations — is implemented, verified, committed locally
+  (`7ff0804`) → Done (approved 2026-06-19)** (the `--brand` / `--brand-foreground` / `--brand-text`
+  tokens defined in `globals.css` for dark + light, AA-verified, **applied to nothing** — zero visual
+  change). Phases A–F (`ONE-57…62`) Backlog;
   `ONE-46` canceled → folded into Phase D (`ONE-60`). The accent is introduced ONLY in Move #3.
 
 ## 3. Completed phases
@@ -53,13 +54,13 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Moves #1 & #2 are COMPLETE & APPROVED** (both Linear projects Completed). **Move #3 — Identity &
   Craft is APPROVED and UNDERWAY** — `MOVE-3-SPEC.md` + `MOVE-3-IMPLEMENTATION-PLAN.md` (the single
   restrained violet accent, ~285 hue, applied sparingly + craft; phases 0 + A–F). **Phase 0 (`ONE-56`)
-  is DONE locally → In Review:** `--brand` `oklch(0.56 0.18 285)` dark / `oklch(0.52 0.2 285)` light,
+  is approved & Done (2026-06-19; commit `7ff0804`):** `--brand` `oklch(0.56 0.18 285)` dark / `oklch(0.52 0.2 285)` light,
   `--brand-foreground`, `--brand-text` (lighter text-on-bg) defined in `globals.css` + mapped to
   `bg-brand`/`text-brand`/`ring-brand`/`from-brand`/… utilities, **WCAG-AA verified** (button 4.76/5.73,
   series 4.00/5.98, text 7.15/5.98), **applied to nothing** (zero visual change, proven by grep +
   compiled-CSS + byte-identical route size). `--ring` kept neutral; no `--brand-muted`. Phases A–F
   Backlog; `ONE-46` canceled → folded into Phase D.
-- **Next exact step:** await approval of Phase 0, then implement **Phase A — Hero data series accent
+- **Next exact step:** Phase 0 is approved (ONE-56 Done). Implement **Phase A — Hero data series accent
   (`ONE-57`) only** — the hero `TrendChart` value line `stroke-foreground → stroke-brand` + a
   `brand → transparent` area gradient; the previous-period ghost line stays neutral; **the sparkline
   stays neutral** (standing decision); keep the Move #2 draw-in / tooltip / scaling intact; AA-recheck

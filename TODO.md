@@ -612,8 +612,8 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 - [ ] Phase E — Logomark + favicon / identity marks (`ONE-61`).
 - [ ] Phase F — Coherence, contrast & a11y pass (`ONE-62`) — completes Move #3.
 
-> **Spec + plan APPROVED. Phase 0 (`ONE-56`) implemented + verified, committed locally → In Review,
-> awaiting approval.** Next: **Phase A — Hero data series accent (`ONE-57`)** (TrendChart value line →
+> **Spec + plan APPROVED. Phase 0 (`ONE-56`) implemented, verified, committed locally (`7ff0804`) → **Done
+> (approved 2026-06-19)**. Next: **Phase A — Hero data series accent (`ONE-57`)** (TrendChart value line →
 > `stroke-brand` + `brand → transparent` area gradient; prev-period ghost line stays neutral; **sparkline
 > stays neutral**; AA-recheck on dark + light). Each phase is its own approval-gated, additive commit. No
 > new dependency; server-first; dark-first + WCAG-AA. Deltas stay semantic green/red; the live dot stays
