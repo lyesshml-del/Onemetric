@@ -1157,9 +1157,9 @@ touched.
   changed** → identical to the Phase E green build). No new dependency; server-first; additive; dark-first.
 - **What remained unchanged:** literally all `apps/web` source (docs-only phase); all data/queries; Moves
   #1/#2/#3 behaviour; the 83-test suite.
-- **MOVE #3 BUILD COMPLETE** (Phases 0, A–F). The accent + craft read as one designed system. **On approval
-  of Phase F:** mark `ONE-62` → Done + the "Move #3 — Identity & Craft" Linear project → Completed (NOT done
-  this turn — awaiting approval, per the workflow). **Nothing pushed** — every Move #1/#2/#3 commit is local
+- **MOVE #3 COMPLETE & APPROVED** (Phases 0, A–F). The accent + craft read as one designed system.
+  **Approved 2026-06-19 (close-out session):** `ONE-62` marked **Done**, the "Move #3 — Identity & Craft"
+  Linear project marked **Completed**, and the umbrella `ONE-44` closed (`ONE-46` was folded into D earlier). **Nothing pushed** — every Move #1/#2/#3 commit is local
   on `main`; pushing (→ a Vercel prod deploy) is its own approved step (`ONE-24`).
 
 ## Context notes (from chat — easy to miss otherwise)

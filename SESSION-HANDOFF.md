@@ -28,16 +28,15 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   project **Completed**. The whole app feels instant + alive (skeleton, optimistic range + section
   switching, count-up, chart draw-in, hover/press, view transitions), reduced-motion-first,
   server-first, no new dependency.
-- **Move #3 — Identity & Craft is APPROVED and UNDERWAY** (the final design move). `MOVE-3-SPEC.md` +
+- **Move #3 — Identity & Craft is COMPLETE & APPROVED** (the final design move). `MOVE-3-SPEC.md` +
   `MOVE-3-IMPLEMENTATION-PLAN.md` define the single restrained **violet accent** applied sparingly +
   craft (one card/number/chart spec, a logomark, favicon/flag polish; phases 0 + A–F). **Phase 0
   (`ONE-56`) — accent token foundations — is implemented, verified, committed locally
   (`7ff0804`) → Done (approved 2026-06-19)** (the `--brand` / `--brand-foreground` / `--brand-text`
   tokens defined in `globals.css` for dark + light, AA-verified, **applied to nothing** — zero visual
-  change). **Phases A (`ONE-57`), B (`ONE-58`), C (`ONE-59`), D (`ONE-60`), E (`ONE-61`) are Done (approved); Phase F
-  (`ONE-62`) — the coherence/contrast/a11y audit pass (docs-only; no defect found, zero code change) — is
-  implemented + committed locally → In Review.** `ONE-46` canceled/closed → folded into Phase D. **MOVE #3
-  BUILD COMPLETE** (0, A–F): the accent lives in its four sanctioned zones (hero series · active state ·
+  change). **Phases A (`ONE-57`), B (`ONE-58`), C (`ONE-59`), D (`ONE-60`), E (`ONE-61`), F (`ONE-62`) are all Done
+  (approved); the Move #3 Linear project is Completed (close-out 2026-06-19) and the umbrella `ONE-44` is
+  closed (`ONE-46` was folded into Phase D). **MOVE #3 COMPLETE & APPROVED** (0, A–F): the accent lives in its four sanctioned zones (hero series · active state ·
   primary action · Lede-link hover) + the logomark identity; one card/number/chart spec everywhere; a quiet
   identity (logomark + favicon + OG); WCAG-AA dark + light. The accent is introduced ONLY in Move #3. **On
   approval of Phase F:** `ONE-62` → Done + the Move #3 Linear project → Completed (not done yet).
@@ -57,7 +56,7 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 
 ## 4. Current phase & exact next step
 - **Moves #1 & #2 are COMPLETE & APPROVED** (both Linear projects Completed). **Move #3 — Identity &
-  Craft is APPROVED and UNDERWAY** — `MOVE-3-SPEC.md` + `MOVE-3-IMPLEMENTATION-PLAN.md` (the single
+  Craft is COMPLETE & APPROVED** — `MOVE-3-SPEC.md` + `MOVE-3-IMPLEMENTATION-PLAN.md` (the single
   restrained violet accent, ~285 hue, applied sparingly + craft; phases 0 + A–F). **Phase 0 (`ONE-56`)
   is approved & Done (2026-06-19; commit `7ff0804`):** `--brand` `oklch(0.56 0.18 285)` dark / `oklch(0.52 0.2 285)` light,
   `--brand-foreground`, `--brand-text` (lighter text-on-bg) defined in `globals.css` + mapped to
@@ -105,7 +104,7 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (text/layout unchanged). No new dependency; no accent creep (the mark's accent bar is identity, sanctioned).
   `/icon.svg` is a static route; app route sizes unchanged. Files: +`logomark.tsx`, +`icon.svg`,
   `(marketing)/layout.tsx`, `dashboard/layout.tsx`, `opengraph-image.tsx`, `DESIGN-SYSTEM.md`.
-- **Phase F (`ONE-62`) is implemented, verified, committed locally → In Review:** the final coherence/
+- **Phase F (`ONE-62`) is Done (approved 2026-06-19):** the final coherence/
   contrast/a11y pass — **docs-only (the audit found no defect → zero code change).** Confirmed (grep): the
   accent lives in exactly the four sanctioned zones + the logomark (no creep); `rounded-lg` → zero; every
   data metric is `tabular-nums`; `TrendChart` is the one chart language (`BarChart` drift stays `ONE-45`).
@@ -113,11 +112,12 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   segment 4.76/5.73); accent never the sole signal; `--ring` neutral; deltas green/red; live dot emerald;
   sparkline neutral. `MOVE-3-SPEC.md` §8: all 5 criteria ✅. Files: docs only (`MOVE-3-SPEC.md`,
   `DESIGN-AUDIT.md`, `DESIGN-SYSTEM.md`, `TODO.md`, `HANDOFF.md`, `SESSION-HANDOFF.md`).
-- **Next exact step — Move #3 is build-complete; await approval of Phase F.** On approval: mark `ONE-62` →
-  Done **and** the "Move #3 — Identity & Craft" Linear project → Completed (do NOT do either before
-  approval). After that there is **no open Move #3 work**; remaining backlog is `ONE-45` (BarChart rewrite)
-  + the non-Move launch items. **Nothing has been pushed** — every Move #1/#2/#3 commit is local on `main`;
-  a push triggers a Vercel prod deploy and is its own approved step (`ONE-24`). Keep one-phase-per-turn.
+- **Next exact step — all three design Moves are COMPLETE & APPROVED.** Phase F approved 2026-06-19;
+  `ONE-62` is Done, the "Move #3 — Identity & Craft" project is Completed, and the umbrella `ONE-44` is
+  closed. There is **no open Move #1/#2/#3 work.** Remaining backlog is **outside the Moves**: `ONE-24`
+  (push the **34** local `main` commits → triggers a Vercel prod deploy) and `ONE-45` (BarChart rewrite).
+  **Nothing has been pushed** — every Move #1/#2/#3 commit is local on `main`; pushing is its own approved
+  step (`ONE-24`). Keep one-phase-per-turn discipline for any future work.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -134,7 +134,7 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 | `MOVE-2-SPEC.md` | Move #2 "instant + alive" design spec — **done & approved** |
 | `MOVE-2-IMPLEMENTATION-PLAN.md` | Move #2 phased build plan (0 + A–G) — **done & approved** |
 | `MOVE-3-SPEC.md` | Move #3 "one signature" accent + craft spec — **shipped; §8 all met (Phase F audit)** |
-| `MOVE-3-IMPLEMENTATION-PLAN.md` | Move #3 phased build plan (0 + A–F) — **build COMPLETE; Phase F in review** |
+| `MOVE-3-IMPLEMENTATION-PLAN.md` | Move #3 phased build plan (0 + A–F) — **COMPLETE & APPROVED; project Completed** |
 | `DESIGN-SYSTEM.md` | How it should feel + tokens/patterns |
 | `ENGINEERING-STANDARDS.md` | How we build |
 | `DECISIONS.md` | Why the big choices were made (ADRs) |

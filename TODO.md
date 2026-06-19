@@ -580,7 +580,7 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 
 ---
 
-## Move #3 — Identity & Craft (APPROVED — build COMPLETE: Phases 0–E done; Phase F in review → closes the move)
+## Move #3 — Identity & Craft ✅ COMPLETE & APPROVED (Phases 0, A–F done; Linear project Completed 2026-06-19)
 
 > Design source of truth: **`MOVE-3-SPEC.md`** (the single signature accent + craft) +
 > **`MOVE-3-IMPLEMENTATION-PLAN.md`** (phases 0 + A–F). Planning-only session **2026-06-18** — no code.
@@ -695,14 +695,14 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       shipped), `DESIGN-SYSTEM.md` (accent shipped; Future sections retired). Verified: 83 tests, typecheck ·
       lint · build green (docs-only — no code touched). Files: docs only.
 
-> **Move #3 — Identity & Craft: BUILD COMPLETE (2026-06-19).** Phases 0 (`ONE-56`), A (`ONE-57`), B
-> (`ONE-58`), C (`ONE-59`), D (`ONE-60`), E (`ONE-61`) **Done (approved)**; Phase F (`ONE-62`) implemented
-> (docs-only audit pass), committed locally → **In Review**. The signature accent lives in its four
-> sanctioned zones + the logomark; one card/number/chart spec everywhere; a quiet identity (logomark +
-> favicon + OG); WCAG-AA dark + light; nothing from Moves #1/#2 regressed. `ONE-46` folded/closed; the
-> `BarChart` rewrite remains `ONE-45`. **On approval of Phase F:** `ONE-62` → Done + the "Move #3 — Identity
-> & Craft" Linear project → Completed (not done this turn). **Nothing pushed** — all Move #1/#2/#3 commits
-> are local on `main` (see `ONE-24`: push + prod-deploy is its own approved step).
+> **Move #3 — Identity & Craft: ✅ COMPLETE & APPROVED (2026-06-19).** All phases Done — 0 (`ONE-56`),
+> A (`ONE-57`), B (`ONE-58`), C (`ONE-59`), D (`ONE-60`), E (`ONE-61`), F (`ONE-62`); the **Move #3 Linear
+> project is Completed** and the umbrella `ONE-44` is closed (`ONE-46` was folded into Phase D). The
+> signature accent lives in its four sanctioned zones + the logomark; one card/number/chart spec everywhere;
+> a quiet identity (logomark + favicon + OG); WCAG-AA dark + light; nothing from Moves #1/#2 regressed.
+> **All three design Moves (#1, #2, #3) are now COMPLETE & APPROVED.** Remaining work is **outside** the
+> Moves: `ONE-24` (push the local commits → Vercel prod deploy) and `ONE-45` (BarChart rewrite). **Nothing
+> pushed** — all Move #1/#2/#3 commits are local on `main`.
 
 ---
 
