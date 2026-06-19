@@ -153,11 +153,26 @@ converts / earns) are promoted above raw tables. The page answers six questions 
   marketing-voice microcopy; native browser tooltips; third-party favicon services (privacy —
   use monogram avatars, decision D1).
 
+## Identity / logomark (Move #3 / Phase E)
+- **The mark:** three ascending rounded bars (a metric rising); the tallest is the signature `--brand`
+  accent, the other two stay `foreground`. Hand-built SVG, dependency-free, no text inside, recognizable at
+  16px. `components/brand/logomark.tsx` (server-safe; `aria-hidden`, paired with the wordmark).
+- **Lockup:** mark + "OneMetric" wordmark in the marketing + dashboard headers (degrade to the wordmark
+  where a mark doesn't fit). Layouts unchanged — the mark slots beside the existing wordmark.
+- **Favicon:** `app/icon.svg` — the same mark on a dark rounded tile (self-contained → legible on any tab,
+  dark or light); the legacy `favicon.ico` stays as a fallback. **Open Graph:** the mark is prepended to
+  `opengraph-image.tsx` above the existing eyebrow (typography/layout unchanged).
+- **One mark everywhere** — header, favicon, OG share identical geometry; the favicon adds a tile only for
+  standalone legibility. The accent in the mark is identity (sanctioned), not accent creep.
+
 ## Signature elements (what makes it "OneMetric")
 - **The Lede** — a calm one-sentence briefing at the top of the Overview.
 - **The hero** — one protagonist trend with period-over-period comparison.
 - **Monochrome + Geist + tabular numerals** — a quiet, instrument-like feel.
-- (Coming in Move #3) **one restrained signature accent** + craft details (avatars, flags).
+- **One restrained signature accent** (Move #3) — the hero series, active state, primary action, and
+  Lede-link hover; nowhere else.
+- **The logomark** (Move #3 / Phase E) — three ascending bars, the tallest in the accent ("the *one* metric
+  that matters"); the quiet face of the product.
 
 ## Future Move #2 considerations (speed + "alive")
 Optimistic range/section switching, route view-transitions, skeletons, number count-up, chart

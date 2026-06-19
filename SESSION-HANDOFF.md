@@ -34,9 +34,9 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (`ONE-56`) — accent token foundations — is implemented, verified, committed locally
   (`7ff0804`) → Done (approved 2026-06-19)** (the `--brand` / `--brand-foreground` / `--brand-text`
   tokens defined in `globals.css` for dark + light, AA-verified, **applied to nothing** — zero visual
-  change). **Phases A (`ONE-57`), B (`ONE-58`), C (`ONE-59`) are Done (approved); Phase D (`ONE-60`) — the
-  card/number spec unification (retire the last `MetricCard`/`rounded-lg` drift; pure craft, no accent) — is
-  implemented + committed locally → In Review;** E–F (`ONE-61…62`) Backlog; `ONE-46` canceled/closed →
+  change). **Phases A (`ONE-57`), B (`ONE-58`), C (`ONE-59`), D (`ONE-60`) are Done (approved); Phase E (`ONE-61`) —
+  the logomark + favicon + OG identity layer (hand-built SVG, no new dependency) — is implemented +
+  committed locally → In Review;** F (`ONE-62`) Backlog; `ONE-46` canceled/closed →
   folded into Phase D. The accent covers all four sanctioned zones (hero series · active state · primary
   action · Lede-link hover); Phase D added no accent. The accent is introduced ONLY in Move #3.
 
@@ -84,7 +84,7 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   **`--ring` left NEUTRAL** (standing decision). Accent footprint now = the four sanctioned zones only
   (hero series · active tab/segment · primary button · Lede hover). Route `/dashboard/[projectId]` 6.95 kB.
   Files: `button.tsx`, `lede.tsx`.
-- **Phase D (`ONE-60`) is implemented, verified, committed locally → In Review:** the card/number spec
+- **Phase D (`ONE-60`) is Done (approved 2026-06-19):** the card/number spec
   unification (pure craft, **no accent, no data/query change** — restyle only, numbers identical).
   `MetricCard` restyled onto the `StatCard` spec (`rounded-lg → rounded-xl`, value `+tabular-nums`, label
   `text-sm → text-xs`) → the same card chrome as `StatCard` (kept as the label·value·`hint` card, **not
@@ -95,12 +95,21 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   `TrendChart`. DoD: grep `rounded-lg` → **zero matches**; the 3 pages on the canonical spec; numbers
   identical. `ONE-46` closed (folded here). Files: `metric-card.tsx`, `funnel-chart.tsx`,
   `events/[name]/page.tsx`, `revenue/page.tsx`, `DESIGN-SYSTEM.md`.
-- **Next exact step:** Phases A–C approved; Phase D in review. On approval of Phase D, implement **Phase E —
-  Logomark + favicon / identity marks (`ONE-61`) only** — a hand-built SVG logomark in `--brand` + neutrals
-  for the app top bar + marketing header (replacing wordmark-only), then derive the favicon + refresh
-  `opengraph-image`. Dependency-free; degrade to the wordmark where a mark doesn't fit. Then stop for
-  approval. One phase per turn; additive; no new dependency; server-first; **Moves #1 & #2 behaviour must
-  not change**; deltas stay semantic green/red; the live dot stays emerald; `--ring` + sparkline stay neutral.
+- **Phase E (`ONE-61`) is implemented, verified, committed locally → In Review:** the identity layer — a
+  hand-built SVG **logomark** (`components/brand/logomark.tsx`: three ascending bars, tallest = `--brand`
+  accent, others `fill-foreground`; no text, `aria-hidden`, 16px-legible) added beside the wordmark in the
+  marketing + dashboard headers; the **favicon** `app/icon.svg` (same mark on a dark tile → legible on any
+  tab; legacy `favicon.ico` kept as fallback); and the **OG** mark prepended to `opengraph-image.tsx`
+  (text/layout unchanged). No new dependency; no accent creep (the mark's accent bar is identity, sanctioned).
+  `/icon.svg` is a static route; app route sizes unchanged. Files: +`logomark.tsx`, +`icon.svg`,
+  `(marketing)/layout.tsx`, `dashboard/layout.tsx`, `opengraph-image.tsx`, `DESIGN-SYSTEM.md`.
+- **Next exact step:** Phases A–D approved; Phase E in review. On approval of Phase E, implement **Phase F —
+  Coherence, contrast & a11y pass (`ONE-62`) only** — the final Move #3 pass: grep that the accent appears
+  only in sanctioned zones (no creep), a full WCAG-AA audit (dark + light), reconcile the `MOVE-3-SPEC.md` §8
+  success criteria, and update `DESIGN-SYSTEM.md` (accent shipped) + the `DESIGN-AUDIT.md` scorecard.
+  **Completes Move #3.** Then stop for approval. One phase per turn; additive; no new dependency;
+  server-first; **Moves #1 & #2 behaviour must not change**; deltas stay semantic green/red; the live dot
+  stays emerald; `--ring` + sparkline stay neutral.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -116,8 +125,8 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 | `MOVE-1-IMPLEMENTATION-PLAN.md` | Approved phased build plan (0 + A–J) — **Move #1 done** |
 | `MOVE-2-SPEC.md` | Move #2 "instant + alive" design spec — **done & approved** |
 | `MOVE-2-IMPLEMENTATION-PLAN.md` | Move #2 phased build plan (0 + A–G) — **done & approved** |
-| `MOVE-3-SPEC.md` | Move #3 "one signature" accent + craft spec — **approved; Phases 0/A/B/C done, D in review** |
-| `MOVE-3-IMPLEMENTATION-PLAN.md` | Move #3 phased build plan (0 + A–F) — **approved; Phase E next** |
+| `MOVE-3-SPEC.md` | Move #3 "one signature" accent + craft spec — **approved; Phases 0/A/B/C/D done, E in review** |
+| `MOVE-3-IMPLEMENTATION-PLAN.md` | Move #3 phased build plan (0 + A–F) — **approved; Phase F next (last)** |
 | `DESIGN-SYSTEM.md` | How it should feel + tokens/patterns |
 | `ENGINEERING-STANDARDS.md` | How we build |
 | `DECISIONS.md` | Why the big choices were made (ADRs) |

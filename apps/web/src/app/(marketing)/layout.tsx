@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Logomark } from "@/components/brand/logomark";
 
 export default function MarketingLayout({
   children,
@@ -8,7 +9,11 @@ export default function MarketingLayout({
     <div className="flex min-h-screen flex-col">
       <header className="border-border/60 sticky top-0 z-10 border-b backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/" className="font-semibold tracking-tight">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-semibold tracking-tight"
+          >
+            <Logomark className="size-5" />
             OneMetric
           </Link>
           <nav className="flex items-center gap-2 sm:gap-4">

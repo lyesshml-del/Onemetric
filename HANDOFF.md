@@ -1069,6 +1069,50 @@ drift is retired — one card spec, one number spec on every page.** Implemented
   `--brand` + neutrals for the app/marketing header, derive the favicon + refresh `opengraph-image`. Then
   **Phase F** (`ONE-62`) — coherence/contrast/a11y, completes Move #3. **Await approval before starting.**
 
+**✅ Move #3 / Phase E — Logomark + favicon / identity marks (2026-06-19). The product has a quiet face.**
+Implemented `ONE-61`. Additive, **no new dependency** (hand-built SVG), no layout/behaviour change.
+
+- **The mark (concept):** three ascending rounded bars — the tallest is the signature `--brand` accent
+  ("the *one* metric that matters"), the other two stay monochrome `foreground`. Geometric, no text,
+  recognizable at 16px; ties to the product name + the Move #3 "one signature" thesis. One geometry drives
+  all three surfaces (header, favicon, OG) → consistent identity.
+- **`components/brand/logomark.tsx` (new):** server-safe React SVG, `viewBox 0 0 32 32`, bars at x=5/13/21
+  (w=6, heights 9/14/20, baseline y=26, rx=2). Neutral bars `fill-foreground`, accent bar `fill-brand`
+  (theme-adaptive via tokens → flips correctly dark/light). `aria-hidden` + `focusable="false"` (it's
+  paired with the "OneMetric" wordmark, which carries the accessible name). Accepts `className` for sizing.
+- **Headers (lockup):** `(marketing)/layout.tsx` + `dashboard/layout.tsx` brand link → `<Logomark
+  className="size-5" />` **beside** the existing "OneMetric" wordmark (the link became `flex items-center
+  gap-2`). Wordmark stays (degrade-to-wordmark honoured); nav, hrefs, structure unchanged. No sidebar
+  exists — headers are the only brand lockup spots; auth pages have no lockup.
+- **Favicon `app/icon.svg` (new, static):** the same mark on a **dark rounded tile** (`#0a0a0a`, rx=7) with
+  white bars + the accent bar (`#6e5dd8`, the dark-mode `--brand` hex; standalone SVG can't read CSS vars).
+  The tile makes it **self-contained → legible on any tab, dark or light** (solves the tab-bg problem
+  without a fragile `prefers-color-scheme` swap). Next picks it up → `/icon.svg` static route + the
+  `<link rel="icon" type="image/svg+xml">`. **Legacy `favicon.ico` kept** (additive/preserve-routes) as the
+  old-browser fallback; modern browsers prefer the SVG mark. (A raster `apple-icon`/regenerated `.ico` would
+  need a raster tool = a dependency → out of scope; optional follow-up.)
+- **Open Graph `opengraph-image.tsx`:** the mark **prepended** above the existing eyebrow — three bars as
+  Satori `<div>`s (`alignItems:flex-end`, widths 18, heights 27/42/60 — the 9:14:20 mark ratio ×3; neutrals
+  `#fafafa`, accent `#6e5dd8`). Satori-safe (divs, not SVG). The eyebrow/headline/sub **typography + text
+  unchanged**; the mark just sits above them on the same dark canvas.
+- **Accent rules intact (no creep):** grep `*-brand` adds exactly one new applied utility — `logomark.tsx`
+  `fill-brand` (the mark's accent bar). The mark using the accent is **identity** (`MOVE-3-SPEC.md` §5.4),
+  the sanctioned use — not creep. A/B/C zones unchanged; deltas green/red, live dot emerald, sparkline +
+  `--ring` neutral.
+- **Verification:** 83 tests · typecheck · lint · production build green. `/icon.svg` now a static route
+  (**18 pages, was 17**); `/opengraph-image` still renders; **app route sizes unchanged** (the logomark is
+  a zero-JS server SVG; headers gained inline SVG only). No new dependency; server-first; additive;
+  dark-first. The dark/light + 16px legibility was also confirmed by a rendered preview of the exact
+  geometry (favicon at 64/32/16px + the header lockup on dark and light) shown to the user.
+- **What remained unchanged:** all navigation/links/destinations; both layouts' structure; the OG text +
+  typography; the metadata (`layout.tsx` icons inferred from `icon.svg`/`favicon.ico`, no manual change);
+  Moves #1 & #2; the 83-test suite (no new pure logic — SVG markup; a render test would need jsdom =
+  forbidden dependency, same call as Phases A–C).
+- **Next:** **Phase F — Coherence, contrast & a11y pass (`ONE-62`)** — the final Move #3 pass: grep the
+  accent appears only in sanctioned zones (no creep), full WCAG-AA audit dark + light, reconcile the
+  `MOVE-3-SPEC.md` §8 success criteria, update `DESIGN-SYSTEM.md` (accent shipped) + the `DESIGN-AUDIT.md`
+  scorecard. **Await approval before starting. Completes Move #3.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

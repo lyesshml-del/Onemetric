@@ -580,7 +580,7 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 
 ---
 
-## Move #3 — Identity & Craft (APPROVED — in progress: Phase 0, A, B, C done; Phase D in review)
+## Move #3 — Identity & Craft (APPROVED — in progress: Phases 0, A, B, C, D done; Phase E in review)
 
 > Design source of truth: **`MOVE-3-SPEC.md`** (the single signature accent + craft) +
 > **`MOVE-3-IMPLEMENTATION-PLAN.md`** (phases 0 + A–F). Planning-only session **2026-06-18** — no code.
@@ -669,20 +669,32 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       detail-page routes unchanged (CSS-only, zero new JS). Docs: `DESIGN-SYSTEM.md` (one card system done;
       `BarChart` consumer corrected). Files: `metric-card.tsx`, `funnel-chart.tsx`, `events/[name]/page.tsx`,
       `revenue/page.tsx`, `DESIGN-SYSTEM.md`.
-- [ ] Phase E — Logomark + favicon / identity marks (`ONE-61`).
+- [x] **Phase E — Logomark + favicon / identity marks ✅ (2026-06-19)** (`ONE-61`) — the product has a quiet
+      face. **Hand-built SVG logomark** (`components/brand/logomark.tsx`): three ascending bars, the tallest
+      in the `--brand` accent ("the *one* metric that matters"), the other two `fill-foreground`; no text,
+      `aria-hidden`, server-safe, legible at 16px, theme-adaptive. **Lockup** (mark + "OneMetric" wordmark)
+      added to the marketing + dashboard headers (`size-5`, beside the existing wordmark; layouts/nav
+      unchanged). **Favicon** `app/icon.svg` — the same mark on a dark rounded tile (self-contained → legible
+      on any tab, dark/light); legacy `favicon.ico` kept as fallback. **OG** — the mark prepended to
+      `opengraph-image.tsx` (bars as Satori divs) above the existing eyebrow; typography/layout unchanged.
+      **No new dependency; no accent creep** (the mark's accent bar is identity, sanctioned; grep `*-brand`
+      adds only `logomark.tsx`). Verified: 83 tests, typecheck · lint · build green; `/icon.svg` picked up as
+      a static route (18 pages, was 17); `/opengraph-image` renders; app route sizes unchanged (zero new JS).
+      Docs: `DESIGN-SYSTEM.md` (Identity/logomark section). Files: +`logomark.tsx`, +`icon.svg`,
+      `(marketing)/layout.tsx`, `dashboard/layout.tsx`, `opengraph-image.tsx`, `DESIGN-SYSTEM.md`.
 - [ ] Phase F — Coherence, contrast & a11y pass (`ONE-62`) — completes Move #3.
 
-> **Spec + plan APPROVED. Phases 0 (`ONE-56`), A (`ONE-57`), B (`ONE-58`), C (`ONE-59`) Done (approved).
-> Phase D (`ONE-60`) implemented, verified, committed locally → In Review.** The accent covers all four
-> sanctioned zones (hero series · active tab/segment · primary action · Lede-link hover); Phase D is **pure
-> craft** — the last `MetricCard`/`rounded-lg` drift retired, one card + one number spec on every page (no
-> accent). `ONE-46` folded/closed; the `BarChart` rewrite stays as `ONE-45` (its only consumer is
-> Events-detail). Next: **Phase E — Logomark + favicon / identity marks (`ONE-61`)** — a hand-built SVG
-> logomark in `--brand` + neutrals for the app/marketing header + derived favicon/opengraph; then **Phase F
-> (`ONE-62`)** coherence/contrast/a11y completes Move #3. **`--ring` stays NEUTRAL** (standing decision —
-> never brand the focus ring). Each phase is its own approval-gated, additive commit. No new dependency;
-> server-first; dark-first + WCAG-AA. Deltas stay semantic green/red; the live dot stays emerald; the
-> sparkline stays neutral — never the accent.
+> **Spec + plan APPROVED. Phases 0 (`ONE-56`), A (`ONE-57`), B (`ONE-58`), C (`ONE-59`), D (`ONE-60`) Done
+> (approved). Phase E (`ONE-61`) implemented, verified, committed locally → In Review.** The accent covers
+> the four sanctioned zones (hero series · active tab/segment · primary action · Lede-link hover); the
+> identity layer is now in place (logomark + favicon + OG — the mark's accent bar is identity, not creep).
+> Next — and last — **Phase F (`ONE-62`) — Coherence, contrast & a11y pass** completes Move #3: confirm the
+> accent appears only in sanctioned zones (grep), full WCAG-AA audit (dark + light), reconcile the
+> `MOVE-3-SPEC.md` §8 success criteria, update `DESIGN-SYSTEM.md` (accent shipped) + the `DESIGN-AUDIT.md`
+> scorecard. `ONE-46` folded/closed; the `BarChart` rewrite stays as `ONE-45`. **`--ring` stays NEUTRAL**
+> (standing decision — never brand the focus ring). Each phase is its own approval-gated, additive commit.
+> No new dependency; server-first; dark-first + WCAG-AA. Deltas stay semantic green/red; the live dot stays
+> emerald; the sparkline stays neutral — never the accent.
 
 ---
 

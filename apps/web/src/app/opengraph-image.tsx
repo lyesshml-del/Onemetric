@@ -22,6 +22,25 @@ export default function OpengraphImage() {
       >
         <div
           style={{
+            display: "flex",
+            alignItems: "flex-end",
+            gap: 6,
+            height: 60,
+            marginBottom: 32,
+          }}
+        >
+          <div
+            style={{ width: 18, height: 27, borderRadius: 5, backgroundColor: "#fafafa" }}
+          />
+          <div
+            style={{ width: 18, height: 42, borderRadius: 5, backgroundColor: "#fafafa" }}
+          />
+          <div
+            style={{ width: 18, height: 60, borderRadius: 5, backgroundColor: "#6e5dd8" }}
+          />
+        </div>
+        <div
+          style={{
             fontSize: 28,
             letterSpacing: 4,
             textTransform: "uppercase",
