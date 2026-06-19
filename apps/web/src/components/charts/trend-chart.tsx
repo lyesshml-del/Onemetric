@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -17,8 +17,12 @@ export type TrendPoint = {
  * Dependency-free area + line with a ghosted previous-period comparison line and
  * a branded hover tooltip. The lines/area live in a stretch-to-fit SVG (crisp via
  * `vector-effect="non-scaling-stroke"`); the crosshair, dot, and tooltip are HTML
- * overlays so non-uniform scaling never distorts them. Monochrome by design —
- * the accent color is Move #3.
+ * overlays so non-uniform scaling never distorts them.
+ *
+ * Move #3 / Phase A — the signature accent: the CURRENT-period value line
+ * (`stroke-brand`) and the area fill (a `--brand` → transparent gradient) carry the
+ * accent — "this is the data." The previous-period comparison line, gridlines,
+ * crosshair, hover dot, and tooltip stay NEUTRAL (accent = the line + fill only).
  */
 export function TrendChart({
   data,
@@ -39,6 +43,8 @@ export function TrendChart({
   ariaLabel?: string;
 }) {
   const [hover, setHover] = useState<number | null>(null);
+  // Unique gradient id; useId()'s colons are stripped so `url(#id)` is valid.
+  const gradientId = `trend-area-${useId().replace(/:/g, "")}`;
 
   const n = data.length;
   const W = 1000;
@@ -94,6 +100,14 @@ export function TrendChart({
         preserveAspectRatio="none"
         className="h-full w-full"
       >
+        {/* Move #3 / Phase A — accent area fill: --brand fading to transparent.
+            stopColor uses var(--brand) via style so it resolves per theme (dark/light). */}
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" style={{ stopColor: "var(--brand)", stopOpacity: 0.25 }} />
+            <stop offset="100%" style={{ stopColor: "var(--brand)", stopOpacity: 0 }} />
+          </linearGradient>
+        </defs>
         {[0, 0.5, 1].map((g) => (
           <line
             key={g}
@@ -106,7 +120,7 @@ export function TrendChart({
             vectorEffect="non-scaling-stroke"
           />
         ))}
-        <path d={area} className="fill-foreground/10" />
+        <path d={area} fill={`url(#${gradientId})`} />
         {hasPrev ? (
           <path
             d={line("prev") ?? ""}
@@ -124,7 +138,7 @@ export function TrendChart({
         <path
           d={line("value") ?? ""}
           fill="none"
-          className="stroke-foreground animate-draw-in"
+          className="stroke-brand animate-draw-in"
           strokeWidth={1.5}
           vectorEffect="non-scaling-stroke"
           pathLength={1}

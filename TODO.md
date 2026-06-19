@@ -580,7 +580,7 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 
 ---
 
-## Move #3 — Identity & Craft (PLANNED — awaiting approval)
+## Move #3 — Identity & Craft (APPROVED — in progress: Phase 0 done, Phase A in review)
 
 > Design source of truth: **`MOVE-3-SPEC.md`** (the single signature accent + craft) +
 > **`MOVE-3-IMPLEMENTATION-PLAN.md`** (phases 0 + A–F). Planning-only session **2026-06-18** — no code.
@@ -605,19 +605,38 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       **6.83 kB byte-identical** with vs without the tokens. No new tests (no JS logic; 83 unchanged &
       green). Verified: **83 tests**, typecheck · lint · build green. No new dependency; server-first;
       deltas green/red; live dot emerald; sparkline neutral. Files: `globals.css`.
-- [ ] Phase A — Hero data series accent (`ONE-57`) — TrendChart line + gradient → accent.
+- [x] **Phase A — Hero data series accent ✅ (2026-06-19)** (`ONE-57`) — the Overview hero `TrendChart`
+      current-period **value line** `stroke-foreground → stroke-brand` + the **area fill** → a `--brand`
+      → transparent SVG gradient (vertical `<linearGradient>`, stops `var(--brand)` @ 0.25 → 0 via inline
+      style so it resolves per theme; unique `useId()` gradient id, colons stripped for a valid `url(#…)`).
+      **"This is the data."** The **previous-period ghost line stays neutral** (`stroke-muted-foreground/40`
+      dashed); gridlines, crosshair, hover **dot**, tooltip, and the hero **number + delta** stay
+      neutral/semantic (**accent = the line + fill only**). Move #2 behaviour intact: the **draw-in**
+      (`pathLength=1` + `animate-draw-in`), branded HTML tooltip, correct non-distorting scaling,
+      `non-scaling-stroke`. **Sparkline untouched** (stays neutral — standing decision). **WCAG AA /
+      visibility** (line = `--brand` on `--background`, from Phase 0): **4.00:1 dark / 5.98:1 light** —
+      ≥3:1 graphical-object, clearly distinguishable (the gradient is decorative, not a contrast surface).
+      **Accent scope proven:** the only applied `*-brand` utility is `trend-chart.tsx:141` (`stroke-brand`);
+      `TrendChart` has a single consumer (the hero) → `BarChart` + every other surface unaffected.
+      Verified: **83 tests** (unchanged — no JS logic to add; node-only suite, no jsdom), typecheck · lint ·
+      build green; route `/dashboard/[projectId]` 6.83 → **6.95 kB** (+0.12 for `useId` + gradient markup).
+      No new dependency; server-first; additive; deltas green/red; live dot emerald. Files:
+      `trend-chart.tsx` (only). No browser in env → the dark/light visual is reasoned from valid SVG/CSS +
+      the AA numbers + the green build.
 - [ ] Phase B — Active / selected states (`ONE-58`) — tab underline / range / segmented active → accent.
 - [ ] Phase C — Primary action + Lede link hover + focus ring (`ONE-59`) — Button `default` variant → accent.
 - [ ] Phase D — Card/number/chart spec unification (`ONE-60`) — retire `MetricCard` drift (folds in `ONE-46`).
 - [ ] Phase E — Logomark + favicon / identity marks (`ONE-61`).
 - [ ] Phase F — Coherence, contrast & a11y pass (`ONE-62`) — completes Move #3.
 
-> **Spec + plan APPROVED. Phase 0 (`ONE-56`) implemented, verified, committed locally (`7ff0804`) → **Done
-> (approved 2026-06-19)**. Next: **Phase A — Hero data series accent (`ONE-57`)** (TrendChart value line →
-> `stroke-brand` + `brand → transparent` area gradient; prev-period ghost line stays neutral; **sparkline
-> stays neutral**; AA-recheck on dark + light). Each phase is its own approval-gated, additive commit. No
-> new dependency; server-first; dark-first + WCAG-AA. Deltas stay semantic green/red; the live dot stays
-> emerald; `--ring` stays neutral — never the accent.
+> **Spec + plan APPROVED. Phase 0 (`ONE-56`) Done (approved 2026-06-19). Phase A (`ONE-57`) implemented,
+> verified, committed locally → In Review.** Next: **Phase B — Active / selected states (`ONE-58`)** — the
+> active section-tab underline (`TabNav`: `border-foreground → border-brand`), the active segmented-control
+> segment (`AudienceCard`), and the active range state adopt the accent; keep Move #2 optimistic behaviour
+> (`pendingKey`, transitions); `TabNav` is shared by 6 pages → re-verify all six. Each phase is its own
+> approval-gated, additive commit. No new dependency; server-first; dark-first + WCAG-AA. Deltas stay
+> semantic green/red; the live dot stays emerald; `--ring` stays neutral; the sparkline stays neutral —
+> never the accent.
 
 ---
 

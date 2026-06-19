@@ -888,6 +888,52 @@ ZERO visual change** (the Move #1/#2 Phase-0 pattern). Implemented `ONE-56`. CSS
   tooltip, the correct scaling, and `non-scaling-stroke` intact. One component (`trend-chart.tsx`);
   `BarChart` + every other surface untouched. AA-recheck the series visibility on dark + light.
 
+**✅ Move #3 / Phase A — Hero data series accent (2026-06-19). The flagship accent moment — Overview hero
+only.** Implemented `ONE-57`. One component (`components/charts/trend-chart.tsx`); `page.tsx` untouched
+(no API change).
+
+- **What changed (`trend-chart.tsx`):**
+  - The **current-period value line**: `stroke-foreground → stroke-brand`. The Move #2 draw-in
+    (`pathLength=1` + `strokeDasharray=1` + `animate-draw-in`) and `non-scaling-stroke` are kept — the dash
+    reveal is colour-agnostic, so recolouring the stroke to the accent doesn't affect it.
+  - The **area fill**: the flat `fill-foreground/10` → a **`--brand` → transparent** vertical SVG
+    `<linearGradient>` (in `<defs>`, stops `var(--brand)` at `stopOpacity 0.25 → 0`, set via inline `style`
+    so the CSS var resolves per theme — a plain `stop-color="var(…)"` attribute would NOT resolve). The
+    gradient id comes from `useId()` with colons stripped (`trend-area-…`) so `fill="url(#id)"` is valid +
+    unique.
+- **Stays NEUTRAL (accent = the line + fill only):** the **previous-period ghost line**
+  (`stroke-muted-foreground/40`, dashed), gridlines (`stroke-border`), crosshair (`bg-border`), the hover
+  **dot** (`bg-foreground`), the branded tooltip, the y-axis labels — and (in `page.tsx`, untouched) the
+  hero **number** (`CountUp`, foreground) + the **delta** (semantic green/red).
+- **Sparkline: untouched, stays neutral** (the standing decision — restraint). `sparkline.tsx` not opened.
+- **Gradient alpha:** chose top `0.25` → `0` (was a flat `0.10` white). Anchored under the line, fading to
+  nothing — reads as "the data" without shouting. The fill is decorative (not a contrast surface), so no AA
+  requirement applies to it.
+- **WCAG AA / visibility (recorded):** the accent **line** is `--brand` on `--background`; from the Phase 0
+  computation that pair is **4.00:1 (dark) / 5.98:1 (light)** — both ≥ 3:1 (the graphical-object / non-text
+  threshold), so the series is clearly distinguishable in both themes (same `--brand`/`--background` pair
+  Phase 0 measured — no colour re-pick).
+- **Accent scope proven:** grep for `*-brand` utilities finds the only *applied* one at
+  `trend-chart.tsx:141` (`stroke-brand`); the gradient uses `var(--brand)` in the same file. `TrendChart`
+  has a **single consumer** (`page.tsx:225`, the Overview hero), so the accent lands on the hero series
+  **and nowhere else** — `BarChart` (marketing + event-detail), the sparkline, KPIs, cards, tables, and
+  every other page are unaffected.
+- **Verification:** 83 tests · typecheck · lint · production build all green. Route
+  `/dashboard/[projectId]` **6.83 → 6.95 kB** (+~0.12 kB: the `useId` hook + the `<defs>`/gradient markup;
+  First Load 119 → 120 kB). No new dependency; server-first (the chart was already a client leaf);
+  additive; dark-first. No browser in env → the dark/light accent render + draw-in are reasoned from valid
+  SVG/CSS + the recorded AA numbers + the green build (a deploy-preview visual pass on the hero is
+  recommended, especially the gradient on the dark surface).
+- **What remained unchanged:** chart scaling / branded tooltip / comparison line / draw-in; the hero number
+  + delta; `BarChart` + every other surface; all data + queries + layout; Moves #1 & #2 behaviour; the
+  83-test suite (no JS logic added — the change is presentational SVG/CSS; the node-only suite has no jsdom).
+- **Next:** **Phase B — Active / selected states (`ONE-58`)** — the active section-tab underline (`TabNav`:
+  `border-foreground → border-brand`, optionally `text-brand`), the active segmented-control segment
+  (`AudienceCard`), and the active range state adopt the accent (one active indicator per control). **Keep
+  the Move #2 optimistic behaviour** (`pendingKey`, transitions) — only the *active colour* changes.
+  `TabNav` is shared by all 6 project pages → re-verify all six. Deltas / live-dot / sparkline / `--ring`
+  stay neutral.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

@@ -34,8 +34,9 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (`ONE-56`) — accent token foundations — is implemented, verified, committed locally
   (`7ff0804`) → Done (approved 2026-06-19)** (the `--brand` / `--brand-foreground` / `--brand-text`
   tokens defined in `globals.css` for dark + light, AA-verified, **applied to nothing** — zero visual
-  change). Phases A–F (`ONE-57…62`) Backlog;
-  `ONE-46` canceled → folded into Phase D (`ONE-60`). The accent is introduced ONLY in Move #3.
+  change). **Phase A (`ONE-57`) — the hero `TrendChart` series accent — is implemented + committed
+  locally → In Review;** B–F (`ONE-58…62`) Backlog; `ONE-46` canceled → folded into Phase D (`ONE-60`).
+  The accent is introduced ONLY in Move #3.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -58,15 +59,21 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   `--brand-foreground`, `--brand-text` (lighter text-on-bg) defined in `globals.css` + mapped to
   `bg-brand`/`text-brand`/`ring-brand`/`from-brand`/… utilities, **WCAG-AA verified** (button 4.76/5.73,
   series 4.00/5.98, text 7.15/5.98), **applied to nothing** (zero visual change, proven by grep +
-  compiled-CSS + byte-identical route size). `--ring` kept neutral; no `--brand-muted`. Phases A–F
-  Backlog; `ONE-46` canceled → folded into Phase D.
-- **Next exact step:** Phase 0 is approved (ONE-56 Done). Implement **Phase A — Hero data series accent
-  (`ONE-57`) only** — the hero `TrendChart` value line `stroke-foreground → stroke-brand` + a
-  `brand → transparent` area gradient; the previous-period ghost line stays neutral; **the sparkline
-  stays neutral** (standing decision); keep the Move #2 draw-in / tooltip / scaling intact; AA-recheck
-  on dark + light — then stop for approval. One phase per turn; additive; no new dependency;
-  server-first; **Moves #1 & #2 behaviour must not change**; deltas stay semantic green/red; the live
-  dot stays emerald; `--ring` stays neutral.
+  compiled-CSS + byte-identical route size). `--ring` kept neutral; no `--brand-muted`.
+- **Phase A (`ONE-57`) is implemented, verified, committed locally → In Review:** the hero `TrendChart`
+  current-period value line `stroke-foreground → stroke-brand` + the area fill → a `--brand`→transparent
+  SVG gradient; the previous-period ghost line, crosshair, dot, tooltip, and the hero number + delta stay
+  neutral; the sparkline stays neutral; the Move #2 draw-in / tooltip / scaling are intact. Line-on-
+  `--background` AA: **4.00 dark / 5.98 light**. Only `trend-chart.tsx` changed (single consumer →
+  `BarChart` + other pages unaffected). B–F (`ONE-58…62`) Backlog; `ONE-46` canceled → folded into Phase D.
+- **Next exact step:** Phase A is in review. On its approval, implement **Phase B — Active / selected
+  states (`ONE-58`) only** — the active section-tab underline (`TabNav`: `border-foreground →
+  border-brand`, optionally `text-brand`), the active segmented-control segment (`AudienceCard`), and the
+  active range state adopt the accent (one active indicator per control). **Keep the Move #2 optimistic
+  behaviour** (`pendingKey`, transitions) — only the active colour changes. `TabNav` is shared by all 6
+  project pages → re-verify all six. Then stop for approval. One phase per turn; additive; no new
+  dependency; server-first; **Moves #1 & #2 behaviour must not change**; deltas stay semantic green/red;
+  the live dot stays emerald; `--ring` + sparkline stay neutral.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
