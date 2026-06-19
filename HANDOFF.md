@@ -1190,6 +1190,25 @@ post-Move-3 design-debt follow-up (not a Move phase). Additive; committed locall
   `events/[name]/page.tsx` (swap), `bar-chart.tsx` (deleted). **On approval:** `ONE-45` → Done; then the
   only remaining backlog item is `ONE-24` (push + deploy).
 
+**✅ ONE-24 — Push accumulated commits + production deploy (2026-06-19). Repository == GitHub; live in prod.**
+The session's local backlog is now shipped. Explicitly authorized push (ONE-24 is the one task where pushing
+is sanctioned).
+
+- **Pushed:** `git push -u origin main` → `232861c..449757a main -> main` (exit 0). **36 commits** (all of
+  Move #1, #2, #3 + ONE-45 + the close-out docs) went from local-only to `origin/main`; upstream tracking
+  now set. **origin/main == local main == `449757a`; zero unpushed; tree clean.**
+- **Production deploy READY:** the push auto-triggered Vercel → `dpl_AeT56nQ8LDZJtkTw1tFbUdxBVAC1`, target
+  **production**, **state READY**, `githubCommitSha 449757a`, repo visibility public (no BLOCK; author
+  `himranelyess@gmail.com` matches GitHub → no author-block). Production now serves Moves #1/#2/#3 + ONE-45
+  (prior prod was `232861c`). Inspector:
+  https://vercel.com/one-metric-s-projects/onemetric-web/AeT56nQ8LDZJtkTw1tFbUdxBVAC1
+- **No code changed** (push only — no rebase/squash/history rewrite). After the push, this docs-sync entry +
+  the TODO/SESSION updates were committed and pushed too, so the repo stays in sync (a root-docs commit
+  doesn't trigger a Vercel build — expected/fine).
+- **State:** all three Moves Completed & approved; `ONE-45` + `ONE-24` Done; the design line is fully
+  shipped and synchronized (Repository == Linear == GitHub == production). Remaining workspace backlog is
+  separate, pre-existing product work (marketing / onboarding / Paddle go-live).
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

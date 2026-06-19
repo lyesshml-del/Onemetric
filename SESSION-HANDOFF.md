@@ -114,11 +114,13 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   `DESIGN-AUDIT.md`, `DESIGN-SYSTEM.md`, `TODO.md`, `HANDOFF.md`, `SESSION-HANDOFF.md`).
 - **Next exact step — all three design Moves are COMPLETE & APPROVED.** Phase F approved 2026-06-19;
   `ONE-62` is Done, the "Move #3 — Identity & Craft" project is Completed, and the umbrella `ONE-44` is
-  closed. There is **no open Move #1/#2/#3 work.** **`ONE-45` (retire the distorting BarChart) is Done (in
-  review)** — events-detail migrated to the neutral crafted `TrendChart`; the legacy `BarChart` is deleted
-  (one chart language everywhere). The only open backlog item is **`ONE-24`** — push the accumulated local
-  `main` commits → triggers a Vercel prod deploy. **Nothing has been pushed**; pushing is its own approved
-  step. Keep one-phase-per-turn discipline for any future work.
+  closed. There is **no open Move #1/#2/#3 work.** **`ONE-45`** (retire the distorting BarChart) is **Done**
+  — events-detail uses the neutral crafted `TrendChart`; one chart language everywhere. **`ONE-24` (push +
+  deploy) is Done (2026-06-19):** the 36 local commits were pushed to `origin/main` (`449757a`) and the
+  Vercel **production deploy is READY** (commit `449757a`, target production). **origin/main == local main;
+  zero unpushed; tree clean.** Repository, Linear, GitHub, and production are fully synchronized; the design
+  line has no open items. The broader product backlog (marketing / onboarding / Paddle go-live) is separate,
+  pre-existing work — keep one-phase-per-turn discipline if it's picked up later.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -202,9 +204,10 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. Recent Move #1 work is committed as **one local commit per phase**, several
-  **not yet pushed** (network was intermittent during the session). Pushing triggers a Vercel
-  production deploy.
+- Branch **`main`**, **pushed to `origin/main` (2026-06-19; `ONE-24`).** `origin/main == local main ==
+  449757a`; **zero unpushed commits**; working tree clean. The push (36 commits: Move #1/#2/#3 + ONE-45)
+  triggered the Vercel **production deploy → READY** (`dpl_AeT56nQ8…`, commit `449757a`). Future pushes to
+  `main` still trigger a production deploy — get explicit go-ahead first.
 - **Verification baseline:** `83 tests` pass; `typecheck`, `lint`, and production `build` green.
   Run all four before finishing any phase (`cd apps/web && npm run test && npm run typecheck &&
   npm run lint && npm run build`).

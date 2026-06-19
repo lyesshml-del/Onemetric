@@ -700,11 +700,14 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 > project is Completed** and the umbrella `ONE-44` is closed (`ONE-46` was folded into Phase D). The
 > signature accent lives in its four sanctioned zones + the logomark; one card/number/chart spec everywhere;
 > a quiet identity (logomark + favicon + OG); WCAG-AA dark + light; nothing from Moves #1/#2 regressed.
-> **All three design Moves (#1, #2, #3) are now COMPLETE & APPROVED.** Post-Move follow-up **`ONE-45`
-> (retire the distorting BarChart) — Done (in review):** the events-detail trend now uses the neutral
-> crafted `TrendChart` and the legacy `BarChart` is deleted — one chart language everywhere. The only open
-> item is **`ONE-24`** (push the accumulated local commits → Vercel prod deploy). **Nothing pushed** — all
-> commits are local on `main`.
+> **All three design Moves (#1, #2, #3) are COMPLETE & APPROVED — and shipped to production.** Post-Move
+> follow-up **`ONE-45`** (retire the distorting BarChart) is **Done** — events-detail uses the neutral
+> crafted `TrendChart`; one chart language everywhere. **`ONE-24` (push + deploy) is Done (2026-06-19):**
+> the 36 accumulated local commits were pushed to `origin/main` (`449757a`) and the Vercel **production
+> deployment is READY** (`dpl_AeT56nQ8…`, commit `449757a`, target production). **origin/main == local main;
+> zero unpushed commits; working tree clean.** Repository, Linear, GitHub, and production are fully
+> synchronized. No open items remain in the design line; the broader product backlog
+> (marketing / onboarding / Paddle go-live) is separate, pre-existing work.
 
 ---
 
