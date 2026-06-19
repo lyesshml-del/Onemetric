@@ -21,7 +21,10 @@ import type { BreakdownRow } from "@/server/queries/analytics";
  * fetched server-side, so switching just re-renders a different array (no new
  * request, no animation beyond the existing colour transition). Reuses
  * `<SourceRow>`: flags for countries (`flagEmoji`), monochrome device glyphs
- * (lucide, already a dependency), monograms for browsers. Accent is Move #3.
+ * (lucide, already a dependency), monograms for browsers.
+ *
+ * Move #3 / Phase B — the SELECTED segment is the accent (a filled `bg-brand`
+ * pill with `text-brand-foreground`); non-selected segments stay neutral.
  */
 type Segment = "countries" | "devices" | "browsers";
 const SEGMENTS: Segment[] = ["countries", "devices", "browsers"];
@@ -101,7 +104,7 @@ export function AudienceCard({
                 // --motion-micro token. Focus-visible ring preserved.
                 "rounded px-2 py-1 capitalize transition duration-[var(--motion-micro)] ease-soft outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-[0.97] motion-reduce:active:scale-100",
                 segment === s
-                  ? "bg-background text-foreground"
+                  ? "bg-brand text-brand-foreground"
                   : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
               )}
             >

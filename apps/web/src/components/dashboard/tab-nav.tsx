@@ -25,8 +25,9 @@ export type Tab =
  * re-syncs with the URL. No `router.push` / `useTransition` / data library.
  *
  * Reduced-motion-safe (colour/opacity only; the global guard makes the transition
- * instant). The **default (non-pending) render is identical to the old server nav**,
- * so the 6 project pages that share `<ProjectHeader>` are otherwise unchanged.
+ * instant). The default (non-pending) render matches the old server nav except the
+ * active tab UNDERLINE is now the accent (Move #3 / Phase B); the 6 project pages
+ * that share `<ProjectHeader>` are otherwise unchanged.
  */
 export function TabNav({ projectId, active }: { projectId: string; active: Tab }) {
   const tabs: { key: Tab; label: string; href: string }[] = [
@@ -64,8 +65,12 @@ export function TabNav({ projectId, active }: { projectId: string; active: Tab }
             aria-current={isActive ? "page" : undefined}
             className={cn(
               "border-b-2 px-1 pb-2 text-sm transition-colors duration-[var(--motion-micro)] ease-soft",
+              // Move #3 / Phase B — the accent marks the active tab via the UNDERLINE
+              // only (border-brand). The label stays text-foreground: text-brand would
+              // be 4.00:1 on --background (fails AA 4.5 at 14px), and two accent signals
+              // would overdo it — one active indicator per control.
               isActive
-                ? "border-foreground text-foreground"
+                ? "border-brand text-foreground"
                 : "text-muted-foreground hover:text-foreground border-transparent",
               isPending && "opacity-70",
             )}

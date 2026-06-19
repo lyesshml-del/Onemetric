@@ -934,6 +934,51 @@ only.** Implemented `ONE-57`. One component (`components/charts/trend-chart.tsx`
   `TabNav` is shared by all 6 project pages → re-verify all six. Deltas / live-dot / sparkline / `--ring`
   stay neutral.
 
+**✅ Move #3 / Phase B — Active / selected states (2026-06-19). The accent marks "the current thing."**
+Implemented `ONE-58`. Two components (`tab-nav.tsx`, `audience-card.tsx`); `overview-shell.tsx` untouched.
+
+- **Provenance note (important):** the Phase B edits were found **already in the working tree, uncommitted**
+  — a prior run had moved `ONE-58` to In Progress and edited the two files but never committed or finished
+  the bookkeeping (the session's tree was dirty from the start). The diff was reviewed (minimal, exactly
+  in-spec, written in-house style), fully verified, and **adopted** as the Phase B commit (rather than
+  reverting and rewriting identical code). The user approved the adopt-and-commit path. Tree clean after.
+- **`tab-nav.tsx` — active section-tab underline:** `border-foreground → border-brand` on the active tab.
+  The **label stays `text-foreground`** (deliberate: `text-brand` is 4.00:1 on `--background` → fails AA
+  4.5 for 14px text; two accent signals on one control would overdo it → one active indicator = the
+  underline). Default / hover / focus-visible / pending styling unchanged.
+- **`audience-card.tsx` — selected segment:** `bg-background text-foreground → bg-brand text-brand-foreground`
+  (a filled accent pill). Non-selected segments, the press scale, hover bg, and the focus-visible ring are
+  unchanged.
+- **Range control left NEUTRAL (`overview-shell.tsx` untouched):** it's a native `<select>` — a single
+  selected `<option>` can't be branded reliably across browsers, and the Overview has no range *pill* to
+  mark. Leaving it neutral honours "one active indicator per control" without a fragile hack. (The spec's
+  "active range pill" doesn't map onto this native select.)
+- **Move #2 behaviour intact:** the `TabNav` optimistic `pendingKey` flip + pending dim + native `<Link>`
+  (prefetch, modifier-click guard, `aria-current`) and the `AudienceCard` client toggle are unchanged —
+  **only the active colour changed.**
+- **Shared `TabNav` → all 6 project pages:** Overview / Events / Funnels / Revenue / Reports / Settings all
+  render the same `<TabNav>`, so every page's active-tab underline is now the accent. The change is a single
+  class swap on the active branch → the non-active render is byte-identical → no per-page regression
+  (uniform by construction; no browser here to screenshot all six — reasoned from the shared component +
+  green build).
+- **WCAG AA (recorded):** tab underline `border-brand` (a 2px graphical object) on `--background` =
+  **4.00:1 dark / 5.98:1 light** (≥3:1 graphical ✓); the segment pill text `text-brand-foreground` on
+  `bg-brand` = **4.76:1 dark / 5.73:1 light** (≥4.5 text ✓). Values from the Phase 0 token computation — no
+  re-pick.
+- **Accent footprint (grep):** applied `*-brand` utilities = `trend-chart.tsx` (Phase A line + gradient) +
+  `tab-nav.tsx` (`border-brand`) + `audience-card.tsx` (`bg-brand text-brand-foreground`). Exactly the
+  sanctioned zones — no creep; `BarChart`, the sparkline, deltas, the live dot, and `--ring` stay neutral.
+- **Verification:** 83 tests · typecheck · lint · production build green. Route `/dashboard/[projectId]`
+  **6.95 → 6.96 kB** (+~0.01 kB — class swaps only). No new dependency; server-first; additive; dark-first.
+- **What remained unchanged:** every page's nav behaviour + destinations; the optimistic switching + pending
+  hint; non-active / hover / focus styling; the range control; all data / queries / layout; Moves #1 & #2;
+  the 83-test suite (no JS logic added — presentational class swaps; node-only suite, no jsdom).
+- **Next:** **Phase C — Primary action + Lede link hover (`ONE-59`)** — the shadcn `Button` `default`
+  variant → accent (`bg-brand text-brand-foreground hover:bg-brand/90`); secondary/outline/ghost/link
+  neutral; destructive stays red. The Lede drill-links tint to `--brand-text` **on hover/focus only** (rest
+  = foreground). **Audit every `Button` call site** so only primary CTAs change. **`--ring` stays NEUTRAL**
+  (standing decision — do NOT brand the focus ring, despite the ONE-59 title's "+ focus ring").
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

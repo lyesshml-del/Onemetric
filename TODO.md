@@ -580,7 +580,7 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 
 ---
 
-## Move #3 — Identity & Craft (APPROVED — in progress: Phase 0 done, Phase A in review)
+## Move #3 — Identity & Craft (APPROVED — in progress: Phase 0 + A done, Phase B in review)
 
 > Design source of truth: **`MOVE-3-SPEC.md`** (the single signature accent + craft) +
 > **`MOVE-3-IMPLEMENTATION-PLAN.md`** (phases 0 + A–F). Planning-only session **2026-06-18** — no code.
@@ -623,20 +623,36 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       No new dependency; server-first; additive; deltas green/red; live dot emerald. Files:
       `trend-chart.tsx` (only). No browser in env → the dark/light visual is reasoned from valid SVG/CSS +
       the AA numbers + the green build.
-- [ ] Phase B — Active / selected states (`ONE-58`) — tab underline / range / segmented active → accent.
+- [x] **Phase B — Active / selected states ✅ (2026-06-19)** (`ONE-58`) — the accent now marks "the current
+      thing." **`TabNav`** active tab: underline `border-foreground → border-brand` (label stays
+      `text-foreground` — `text-brand` is 4.00:1 on `--background`, fails AA 4.5 at 14px; also one accent
+      signal per control). **`AudienceCard`** selected segment: `bg-background text-foreground →
+      bg-brand text-brand-foreground` (filled pill). **Range select left neutral** (`overview-shell.tsx`
+      untouched) — native `<select>`; a single selected `<option>` can't be branded reliably, and there's
+      no range *pill* to mark. **Move #2 optimistic behaviour intact** (`pendingKey`, transitions,
+      `useTransition`) — only the active *colour* changed; non-active/hover/focus-visible/pending unchanged.
+      `TabNav` is shared by all 6 project pages → every page's active-tab underline is now branded (uniform
+      single-class swap; default render otherwise byte-identical → no per-page regression). **WCAG AA:** tab
+      underline `border-brand` (2px graphical) on `--background` **4.00:1 dark / 5.98:1 light** (≥3:1);
+      segment `text-brand-foreground` on `bg-brand` **4.76:1 dark / 5.73:1 light** (≥4.5). Verified:
+      **83 tests**, typecheck · lint · build green; route `/dashboard/[projectId]` **6.96 kB** (+~0.01). No
+      new dependency; server-first; additive; deltas green/red; live dot emerald; sparkline + `--ring`
+      neutral. Files: `tab-nav.tsx`, `audience-card.tsx`. *(Edits were found already in the working tree
+      uncommitted — reviewed, verified, and adopted rather than rewriting identical code.)*
 - [ ] Phase C — Primary action + Lede link hover + focus ring (`ONE-59`) — Button `default` variant → accent.
 - [ ] Phase D — Card/number/chart spec unification (`ONE-60`) — retire `MetricCard` drift (folds in `ONE-46`).
 - [ ] Phase E — Logomark + favicon / identity marks (`ONE-61`).
 - [ ] Phase F — Coherence, contrast & a11y pass (`ONE-62`) — completes Move #3.
 
-> **Spec + plan APPROVED. Phase 0 (`ONE-56`) Done (approved 2026-06-19). Phase A (`ONE-57`) implemented,
-> verified, committed locally → In Review.** Next: **Phase B — Active / selected states (`ONE-58`)** — the
-> active section-tab underline (`TabNav`: `border-foreground → border-brand`), the active segmented-control
-> segment (`AudienceCard`), and the active range state adopt the accent; keep Move #2 optimistic behaviour
-> (`pendingKey`, transitions); `TabNav` is shared by 6 pages → re-verify all six. Each phase is its own
-> approval-gated, additive commit. No new dependency; server-first; dark-first + WCAG-AA. Deltas stay
-> semantic green/red; the live dot stays emerald; `--ring` stays neutral; the sparkline stays neutral —
-> never the accent.
+> **Spec + plan APPROVED. Phases 0 (`ONE-56`) + A (`ONE-57`) Done (approved). Phase B (`ONE-58`)
+> implemented, verified, committed locally → In Review.** Next: **Phase C — Primary action + Lede link
+> hover (`ONE-59`)** — the shadcn `Button` **`default` variant** → accent (`bg-brand text-brand-foreground
+> hover:bg-brand/90`; secondary/outline/ghost/link stay neutral; destructive stays red); the Lede
+> drill-links tint to `--brand-text` **on hover/focus only**; audit every `Button` call site so only
+> primary CTAs change. **Per the standing decision, `--ring` stays NEUTRAL — do NOT brand the focus ring**
+> (despite the ONE-59 title's "+ focus ring"). Each phase is its own approval-gated, additive commit. No
+> new dependency; server-first; dark-first + WCAG-AA. Deltas stay semantic green/red; the live dot stays
+> emerald; the sparkline stays neutral — never the accent.
 
 ---
 

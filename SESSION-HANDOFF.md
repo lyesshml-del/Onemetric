@@ -34,8 +34,9 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (`ONE-56`) — accent token foundations — is implemented, verified, committed locally
   (`7ff0804`) → Done (approved 2026-06-19)** (the `--brand` / `--brand-foreground` / `--brand-text`
   tokens defined in `globals.css` for dark + light, AA-verified, **applied to nothing** — zero visual
-  change). **Phase A (`ONE-57`) — the hero `TrendChart` series accent — is implemented + committed
-  locally → In Review;** B–F (`ONE-58…62`) Backlog; `ONE-46` canceled → folded into Phase D (`ONE-60`).
+  change). **Phase A (`ONE-57`) is Done (approved); Phase B (`ONE-58`) — the active tab underline +
+  selected segment accent — is implemented + committed locally → In Review;** C–F (`ONE-59…62`) Backlog;
+  `ONE-46` canceled → folded into Phase D (`ONE-60`).
   The accent is introduced ONLY in Move #3.
 
 ## 3. Completed phases
@@ -60,18 +61,25 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   `bg-brand`/`text-brand`/`ring-brand`/`from-brand`/… utilities, **WCAG-AA verified** (button 4.76/5.73,
   series 4.00/5.98, text 7.15/5.98), **applied to nothing** (zero visual change, proven by grep +
   compiled-CSS + byte-identical route size). `--ring` kept neutral; no `--brand-muted`.
-- **Phase A (`ONE-57`) is implemented, verified, committed locally → In Review:** the hero `TrendChart`
+- **Phase A (`ONE-57`) is Done (approved 2026-06-19):** the hero `TrendChart`
   current-period value line `stroke-foreground → stroke-brand` + the area fill → a `--brand`→transparent
   SVG gradient; the previous-period ghost line, crosshair, dot, tooltip, and the hero number + delta stay
   neutral; the sparkline stays neutral; the Move #2 draw-in / tooltip / scaling are intact. Line-on-
   `--background` AA: **4.00 dark / 5.98 light**. Only `trend-chart.tsx` changed (single consumer →
-  `BarChart` + other pages unaffected). B–F (`ONE-58…62`) Backlog; `ONE-46` canceled → folded into Phase D.
-- **Next exact step:** Phase A is in review. On its approval, implement **Phase B — Active / selected
-  states (`ONE-58`) only** — the active section-tab underline (`TabNav`: `border-foreground →
-  border-brand`, optionally `text-brand`), the active segmented-control segment (`AudienceCard`), and the
-  active range state adopt the accent (one active indicator per control). **Keep the Move #2 optimistic
-  behaviour** (`pendingKey`, transitions) — only the active colour changes. `TabNav` is shared by all 6
-  project pages → re-verify all six. Then stop for approval. One phase per turn; additive; no new
+  `BarChart` + other pages unaffected).
+- **Phase B (`ONE-58`) is implemented, verified, committed locally → In Review:** the active section-tab
+  underline (`TabNav`: `border-foreground → border-brand`; label stays `text-foreground` for AA) + the
+  selected segmented-control segment (`AudienceCard`: `bg-brand text-brand-foreground`). The range select is
+  left neutral (native `<select>`). Move #2 optimistic logic intact; only the active colour changed. AA:
+  underline 4.00/5.98 (graphical ≥3); segment text 4.76/5.73 (≥4.5). Shared `TabNav` → all 6 pages' active
+  underline branded; non-active render byte-identical. C–F (`ONE-59…62`) Backlog; `ONE-46` canceled →
+  folded into Phase D.
+- **Next exact step:** Phase A approved; Phase B in review. On approval of Phase B, implement **Phase C —
+  Primary action + Lede link hover (`ONE-59`) only** — the shadcn `Button` `default` variant → accent
+  (`bg-brand text-brand-foreground hover:bg-brand/90`; secondary/outline/ghost/link neutral; destructive
+  stays red); the Lede drill-links tint to `--brand-text` on hover/focus only; **audit every `Button` call
+  site** so only primary CTAs change. **`--ring` stays NEUTRAL — do NOT brand the focus ring** (standing
+  decision, despite the ONE-59 title). Then stop for approval. One phase per turn; additive; no new
   dependency; server-first; **Moves #1 & #2 behaviour must not change**; deltas stay semantic green/red;
   the live dot stays emerald; `--ring` + sparkline stay neutral.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
