@@ -1303,6 +1303,31 @@ server-first; no new dependency; dark-first; additive; Moves #1/#2/#3 + the dele
   in `button.tsx` so server pages stop pulling the umbrella. Kept the spec'd default-Button CTA + documented
   the trade-off rather than dropping it. **On approval:** `ONE-65` → Done. **Not pushed.**
 
+**✅ ONE-66 — Onboarding checklist (activation) (2026-06-19). Committed locally → In Review.** A "Getting
+started" checklist on the Overview that shows activation progress and disappears once complete. Additive; no
+new dependency; server-first; dark-first; Moves #1/#2/#3 + the delete/rename/empty-state flows untouched.
+
+- **`components/dashboard/onboarding-checklist.tsx` (new, client):** a `rounded-xl bg-card` card — title
+  "Getting started", subtitle, an "N / 5 completed" progress, and 5 rows. Completed = green `Check` (emerald,
+  the existing success semantic); pending = neutral `Circle`; the **current** (first pending) row is
+  emphasized (`bg-muted/50` + `font-medium`). CTAs use the default Button styling: step 2 "Copy snippet"
+  (outline) → **"Snippet copied"** toast; step 4 "Create funnel" + step 5 "View revenue docs" (default,
+  shown only while pending) link to those tabs. Returns `null` when all five are done (also guarded
+  server-side).
+- **Step conditions — real data only (no new queries):** 1 create project = always ✓; 2 install tracking
+  script = the tracking key (always exists) ✓; 3 first pageview = `metrics.sessions > 0`; 4 funnel =
+  `primaryFunnel !== null`; 5 revenue = `revenueSummary.count > 0`. All already fetched by the Overview.
+- **`dashboard/[projectId]/page.tsx`:** computes `hasFunnel` / `hasRevenue` / `fullyActivated` (steps 1–3 are
+  done once there's data, so `fullyActivated = hasFunnel && hasRevenue`) and renders the checklist **above
+  the KPI strip** in the `hasData` branch when `!fullyActivated`. The `sessions === 0` branch still shows the
+  ONE-65 `FirstEventOnboarding` (empty state unchanged) — the two onboarding stages don't overlap.
+- **Updates without refresh:** the Overview is dynamic, so navigating back after creating a funnel / getting
+  revenue re-renders with fresh data → the checklist advances / hides. No client polling, no fake progress.
+- **Bundle:** it's a **client** component, so Button is reached via the client boundary (cheap) — Overview
+  First Load **121 → 122 kB** (no `radix-ui` umbrella server-page hit like the ONE-65 list CTAs).
+- **Verified:** 83 tests · typecheck · lint · build green; grep `*-brand` on the new file = none (no accent
+  creep). **On approval:** `ONE-66` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

@@ -119,11 +119,13 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   deploy) is Done (2026-06-19):** the 36 local commits were pushed to `origin/main` (`449757a`) and the
   Vercel **production deploy is READY** (commit `449757a`, target production). **origin/main == local main;
   zero unpushed; tree clean.** Repository, Linear, GitHub, and production are fully synchronized; the design
-  line has no open items. **Three post-Move features are implemented + committed locally → In Review:**
+  line has no open items. **Four post-Move features are implemented + committed locally → In Review:**
   **`ONE-63`** (project deletion — Danger Zone, type-to-confirm; cascade verified on the live DB → no
   orphans), **`ONE-64`** (project rename — a "General" card; `Project.name` only, owner-scoped, 1–60 chars),
   and **`ONE-65`** (first-event onboarding & empty states — Overview "No events yet" snippet + 3 steps, a
-  TrendChart no-data placeholder, and a shared `EmptyState` across Funnels / Revenue / Events / Project-list).
+  TrendChart no-data placeholder, and a shared `EmptyState` across Funnels / Revenue / Events / Project-list),
+  and **`ONE-66`** (a "Getting started" activation checklist on the Overview, above the metric cards — five
+  steps derived from real data, hides when fully activated; a client component, +1 kB).
   All reuse the existing design system + `radix-ui` — **no new dependency**. (Bundle note: ONE-65 raised
   `/dashboard` + `/funnels` First Load 117 → 189 kB — the empty-state CTA imports `buttonVariants`, pulling
   the `radix-ui` umbrella chunk other server pages already pay; future fix = import `Slot` from

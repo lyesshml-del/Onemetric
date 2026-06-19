@@ -32,6 +32,7 @@ import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
 import { Lede } from "@/components/dashboard/lede";
 import { FirstEventOnboarding } from "@/components/dashboard/first-event-onboarding";
+import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 import { OverviewSkeleton } from "@/components/dashboard/overview-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -106,6 +107,13 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
   // Settings, kept Overview-local so the Settings page stays untouched.
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
   const installSnippet = `<script defer src="${appUrl}/onemetric.js" data-public-key="${project.publicKey}"></script>`;
+
+  // ONE-66 — activation checklist state (no new queries; reuses the Overview's
+  // existing data). Steps 1–3 (project / tracking key / first pageview) are done
+  // once there's data; the checklist drives funnel + revenue, then hides.
+  const hasFunnel = primaryFunnel !== null;
+  const hasRevenue = revenueSummary.count > 0;
+  const fullyActivated = hasFunnel && hasRevenue;
 
   // Primary funnel (Phase E, decision E1 = oldest funnel). Compute conversion for
   // the current + previous windows so the KPI can show a delta. Reuses getFunnelResults.
@@ -214,6 +222,19 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
               </div>
             </CardContent>
           </Card>
+
+          {/* ONE-66 — activation checklist, above the metric cards; hides once the
+              project is fully activated (a funnel + revenue both exist). */}
+          {!fullyActivated ? (
+            <OnboardingChecklist
+              hasSession
+              hasFunnel={hasFunnel}
+              hasRevenue={hasRevenue}
+              snippet={installSnippet}
+              funnelsHref={`/dashboard/${project.id}/funnels`}
+              revenueHref={`/dashboard/${project.id}/revenue`}
+            />
+          ) : null}
 
           {/* KPI strip (Move #1 / Phase C) — outcome metrics with delta + sparkline.
               Conversion + Revenue are placed but light up in Phases E + F. */}

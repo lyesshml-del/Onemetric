@@ -755,6 +755,18 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       dependency**. Future app-wide fix: import `Slot` from `@radix-ui/react-slot` directly in `button.tsx`.
       Move #1/#2/#3 + delete + rename flows untouched. Files: +`empty-state.tsx`,
       +`first-event-onboarding.tsx`, `trend-chart.tsx`, Overview/funnels/events/revenue/project-list pages.
+- [x] **ONE-66 — Onboarding checklist (activation) ✅ implemented (2026-06-19), in review.** A "Getting
+      started" card on the Overview **above the metric cards** that shows activation progress and **hides once
+      fully activated**. Five steps from **real data the Overview already fetches** (no new queries, no fake
+      progress): create project (always ✓) · install tracking script (key exists ✓; CTA Copy snippet →
+      "Snippet copied" toast) · receive first pageview (`sessions > 0`) · create first funnel (`primaryFunnel`;
+      CTA Create funnel) · track first revenue event (`revenueSummary.count > 0`; CTA View revenue docs).
+      Completed = green check, pending = neutral circle, current row emphasized; progress "N / 5 completed".
+      **Client** component (copy + toast) → no server-page bundle hit (Overview First Load 121 → 122 kB). No
+      new accent zone (CTAs = default Button styling), no destructive colours, no illustrations; dark-first.
+      Shown in the `hasData` branch (the `sessions === 0` empty state — ONE-65 — stays unchanged). Verified:
+      83 tests, typecheck · lint · build green. Move #1/#2/#3 + delete/rename/empty flows untouched. Files:
+      +`onboarding-checklist.tsx`, `dashboard/[projectId]/page.tsx`.
 
 ---
 
