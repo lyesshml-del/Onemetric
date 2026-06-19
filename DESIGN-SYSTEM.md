@@ -52,8 +52,10 @@ OneMetric is **dark-first** (`.dark` on `<html>`); light tokens exist for a futu
 - **Dark palette (oklch):** background `0.141 0.005 285` (near-black, *faint* violet hue),
   card/popover `0.21`, foreground `0.985` (near-white), `muted-foreground` `0.705`,
   **primary `0.92` (near-white → white buttons)**, **border `oklch(1 0 0 / 10%)` (white @ 10%)**.
-- **Only chromatic token today is `destructive` (red).** **There is no brand accent yet** — that
-  is deliberate; the single signature accent is **Move #3**.
+- **Chromatic tokens: `destructive` (red) + the `--brand` signature accent (shipped in Move #3).** The
+  accent — one indigo-violet (`oklch(0.56 0.18 285)` dark / `0.52 0.2 285` light) — is used *only* on the
+  hero data series, active state, primary action, Lede-link hover, and the logomark; everything else stays
+  neutral monochrome. AA-verified dark + light; `--ring` stays neutral; deltas stay green/red (never accent).
 - **Deltas are semantic, low-saturation:** up = restrained green (`emerald-500`), down = red,
   flat/neutral = muted. The glyph shows direction; color shows good/bad (`invert` for metrics
   where down is good, e.g. bounce/drop-off).
@@ -174,12 +176,11 @@ converts / earns) are promoted above raw tables. The page answers six questions 
 - **The logomark** (Move #3 / Phase E) — three ascending bars, the tallest in the accent ("the *one* metric
   that matters"); the quiet face of the product.
 
-## Future Move #2 considerations (speed + "alive")
-Optimistic range/section switching, route view-transitions, skeletons, number count-up, chart
-draw-in, subtle hover/press feedback. Goal: the product *feels* instant, like Linear.
-
-## Future Move #3 considerations (identity + craft)
-Introduce **one** restrained signature accent (lean into the faint violet already in the
-neutrals), apply it sparingly (primary action, active state, key data series). Finish craft:
-monogram/flag/glyph avatars, fully unified card/number/chart specs, a logomark. Quiet, but
-unmistakably *designed*.
+## Moves #2 & #3 — shipped
+- **Move #2 (Feel & Performance) ✅** — optimistic range/section switching, view transitions, skeletons,
+  number count-up, chart draw-in, hover/press feedback; reduced-motion-first. See Motion philosophy above +
+  `MOVE-2-SPEC.md`.
+- **Move #3 (Identity & Craft) ✅** — one restrained signature accent (hero series · active state · primary
+  action · Lede-link hover), one unified card/number/chart spec, and a quiet identity (logomark + favicon +
+  opengraph). See Colors, Identity/logomark, and Card system above + `MOVE-3-SPEC.md`. The three audit
+  moves (`DESIGN-AUDIT.md`) are complete.

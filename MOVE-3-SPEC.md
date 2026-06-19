@@ -179,15 +179,27 @@ plan; at minimum, document one chart language.
 
 ## 8. Success criteria (how we'll know it worked)
 
-1. **One signature is legible** — a viewer can name "the OneMetric color," and it appears in only a
-   few, deliberate places (primary action, active state, hero series, Lede-link hover) — *not* sprayed.
-2. **One system everywhere** — no `rounded-lg`/`MetricCard` drift, no non-tabular number, one chart
-   language; the detail pages match the Overview.
-3. **It has a face** — a logomark + favicon + opengraph carry the identity, quietly.
-4. **Accessible** — every accent use passes WCAG AA in dark + light; the accent is never the sole
-   signal.
-5. **Nothing regressed** — Move #1 hierarchy/narrative/data + Move #2 motion/feel are identical; no
-   new dependency; server-first intact; deltas stay semantic green/red; the test suite is green.
+> **✅ All five met — Move #3 complete (Phase F audit, 2026-06-19).** The code is the source of truth; this
+> section records *how* each criterion is satisfied.
+
+1. **One signature is legible** ✅ — one `--brand` indigo-violet, applied in exactly four deliberate zones
+   (primary action, active state, hero series, Lede-link hover) + the logomark identity; a Phase F grep of
+   every applied `*-brand` utility confirms **no creep** (only `button.tsx`, `lede.tsx`, `trend-chart.tsx`,
+   `tab-nav.tsx`, `audience-card.tsx`, `logomark.tsx`).
+2. **One system everywhere** ✅ — `rounded-lg` → **zero** matches (one card spec, `rounded-xl`); every data
+   metric is `tabular-nums` (verified at every `formatNumber/Money/Percent` site — hero, KPIs, cards,
+   tables, funnel, Lede, billing); one chart language (`TrendChart`); the legacy `BarChart` is the lone
+   remaining drift (single consumer, Events-detail), tracked separately in `ONE-45`.
+3. **It has a face** ✅ — a hand-built SVG **logomark** (`components/brand/logomark.tsx`) in the headers, a
+   **favicon** (`app/icon.svg`) on a dark tile, and the mark integrated into the **opengraph-image**.
+4. **Accessible** ✅ — every accent use passes WCAG AA, dark + light: button text on `--brand`
+   **4.76 / 5.73**; Lede-link hover (`--brand-text`) **7.15 / 5.98**; tab underline + chart series
+   (graphical) **4.00 / 5.98** (≥3:1); segment-pill text **4.76 / 5.73**. The accent is **never the sole
+   signal** (filled/largest button, underline shape + `aria-current`, filled pill, link underline, tallest
+   bar). `--ring` stays neutral.
+5. **Nothing regressed** ✅ — Move #1 hierarchy/narrative/data + Move #2 motion/feel identical; no new
+   dependency; server-first intact; deltas stay green/red, the live dot emerald, the sparkline neutral; the
+   83-test suite is green (typecheck · lint · build green).
 
 ---
 

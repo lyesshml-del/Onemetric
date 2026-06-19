@@ -1113,6 +1113,55 @@ Implemented `ONE-61`. Additive, **no new dependency** (hand-built SVG), no layou
   `MOVE-3-SPEC.md` §8 success criteria, update `DESIGN-SYSTEM.md` (accent shipped) + the `DESIGN-AUDIT.md`
   scorecard. **Await approval before starting. Completes Move #3.**
 
+**✅ Move #3 / Phase F — Coherence, contrast & a11y pass (2026-06-19). The final pass — completes the Move #3
+build.** Implemented `ONE-62`. **Docs-only: the audit found no defect, so ZERO code changed** (the phase's
+"prefer zero code changes" path). The `.md` source-of-truth files were reconciled; no `apps/web` source was
+touched.
+
+- **Accent footprint (grep every applied `*-brand` utility):** exactly six call sites, one per sanctioned
+  zone — `trend-chart.tsx` (A: hero line + gradient), `tab-nav.tsx` `border-brand` (B: active tab),
+  `audience-card.tsx` `bg-brand text-brand-foreground` (B: selected segment), `button.tsx` (C: primary
+  action), `lede.tsx` `hover:text-brand-text` (C: link hover), `logomark.tsx` `fill-brand` (E: identity).
+  **No creep** — nothing on body text, headings, the hero number, cards, table rows, or other charts.
+- **One system everywhere:** `rounded-lg` → **zero matches** in `src/**`. Every **data metric** is
+  `tabular-nums` — verified at every `formatNumber/Money/Percent` site: hero "vs N last period"
+  (`page.tsx:221`), engagement line (`:289`), KPIs/`StatCard`, `MetricCard`, `BreakdownCard`, `FunnelChart`,
+  the Revenue + Events tables, the Lede, and billing usage. (The only non-tabular `formatNumber` uses are
+  marketing/pricing/billing **prose** — "50,000 events/month" in a sentence — correctly not treated as
+  metrics.) One chart language = `TrendChart`; the legacy `BarChart` (`preserveAspectRatio="none"`) is the
+  lone drift, single consumer (Events-detail), tracked in **`ONE-45`** — deliberately out of Move #3.
+- **WCAG-AA contrast (computed sRGB→luminance, dark / light), every accent surface:**
+  | Surface | Pair | Dark | Light | Min | Pass |
+  |---|---|---|---|---|---|
+  | Primary button text | `--brand-foreground` on `--brand` | 4.76 | 5.73 | 4.5 | ✅ |
+  | Lede-link hover | `--brand-text` on `--background` | 7.15 | 5.98 | 4.5 | ✅ |
+  | Active tab underline (2px) | `--brand` on `--background` | 4.00 | 5.98 | 3.0 | ✅ |
+  | Selected segment text | `--brand-foreground` on `--brand` | 4.76 | 5.73 | 4.5 | ✅ |
+  | Hero chart series (line) | `--brand` on `--background` | 4.00 | 5.98 | 3.0 | ✅ |
+  | Logomark accent bar | `--brand` on bg / on dark tile | 4.00 | 5.98 | 3.0 | ✅ |
+  (Values from the Phase 0 token computation — no re-pick.) **Accent never the sole signal:** primary button
+  = filled + largest; active tab = underline shape + `aria-current`; segment = filled pill; Lede link =
+  `hover:underline`; hero series = the only solid line (ghost prev is dashed/muted); logomark accent = the
+  tallest bar. Colour-blind users lose nothing.
+- **Non-accent invariants reconfirmed:** `--ring` neutral (not remapped; `--color-ring: var(--ring)`);
+  deltas `text-emerald-500`/red (`delta.tsx`); live dot `bg-emerald-500` (page / `stat-card` / settings);
+  sparkline neutral (`stroke-foreground`). Brand tokens present in `globals.css` (dark + light) + mapped in
+  `@theme inline`.
+- **`MOVE-3-SPEC.md` §8 — all 5 criteria ✅** (legible signature · one system · it has a face · accessible ·
+  nothing regressed); each ticked in the spec with how it's met.
+- **Docs reconciled (the only files changed this phase):** `MOVE-3-SPEC.md` §8 (criteria ticked + AA table),
+  `DESIGN-AUDIT.md` (status banner under the scorecard: Moves #1–3 shipped, #9 Color → done; the "three
+  moves" list marked ✅), `DESIGN-SYSTEM.md` (Colors: accent shipped; the two "Future Move #2/#3" sections
+  retired → "shipped"), `TODO.md`, `HANDOFF.md`, `SESSION-HANDOFF.md`.
+- **Verification:** 83 tests · typecheck · lint · production build green (re-run for the record; **no code
+  changed** → identical to the Phase E green build). No new dependency; server-first; additive; dark-first.
+- **What remained unchanged:** literally all `apps/web` source (docs-only phase); all data/queries; Moves
+  #1/#2/#3 behaviour; the 83-test suite.
+- **MOVE #3 BUILD COMPLETE** (Phases 0, A–F). The accent + craft read as one designed system. **On approval
+  of Phase F:** mark `ONE-62` → Done + the "Move #3 — Identity & Craft" Linear project → Completed (NOT done
+  this turn — awaiting approval, per the workflow). **Nothing pushed** — every Move #1/#2/#3 commit is local
+  on `main`; pushing (→ a Vercel prod deploy) is its own approved step (`ONE-24`).
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

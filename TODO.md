@@ -580,7 +580,7 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 
 ---
 
-## Move #3 — Identity & Craft (APPROVED — in progress: Phases 0, A, B, C, D done; Phase E in review)
+## Move #3 — Identity & Craft (APPROVED — build COMPLETE: Phases 0–E done; Phase F in review → closes the move)
 
 > Design source of truth: **`MOVE-3-SPEC.md`** (the single signature accent + craft) +
 > **`MOVE-3-IMPLEMENTATION-PLAN.md`** (phases 0 + A–F). Planning-only session **2026-06-18** — no code.
@@ -682,19 +682,27 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       a static route (18 pages, was 17); `/opengraph-image` renders; app route sizes unchanged (zero new JS).
       Docs: `DESIGN-SYSTEM.md` (Identity/logomark section). Files: +`logomark.tsx`, +`icon.svg`,
       `(marketing)/layout.tsx`, `dashboard/layout.tsx`, `opengraph-image.tsx`, `DESIGN-SYSTEM.md`.
-- [ ] Phase F — Coherence, contrast & a11y pass (`ONE-62`) — completes Move #3.
+- [x] **Phase F — Coherence, contrast & a11y pass ✅ (2026-06-19)** (`ONE-62`) — the final Move #3 pass.
+      **Audit (zero code change — no defect found):** grep of every applied `*-brand` utility → the accent
+      lives in exactly the four sanctioned zones (A hero series · B active tab + segment · C primary button
+      + Lede hover) + the E logomark identity — **no creep**. `rounded-lg` → **zero**; every data metric
+      `tabular-nums` (verified at every `formatNumber/Money/Percent` site incl. billing); one chart language
+      (`TrendChart`; the lone `BarChart` drift stays `ONE-45`, single consumer). **WCAG AA (dark / light):**
+      button 4.76/5.73 · Lede-hover (`--brand-text`) 7.15/5.98 · tab underline + series (graphical) 4.00/5.98
+      · segment 4.76/5.73 — all pass; accent never the sole signal (fill/size/underline/pill/height);
+      `--ring` neutral; deltas green/red; live dot emerald; sparkline neutral. **`MOVE-3-SPEC.md` §8: all 5
+      criteria ✅.** Docs reconciled: `MOVE-3-SPEC.md` §8, `DESIGN-AUDIT.md` (scorecard status + 3 moves
+      shipped), `DESIGN-SYSTEM.md` (accent shipped; Future sections retired). Verified: 83 tests, typecheck ·
+      lint · build green (docs-only — no code touched). Files: docs only.
 
-> **Spec + plan APPROVED. Phases 0 (`ONE-56`), A (`ONE-57`), B (`ONE-58`), C (`ONE-59`), D (`ONE-60`) Done
-> (approved). Phase E (`ONE-61`) implemented, verified, committed locally → In Review.** The accent covers
-> the four sanctioned zones (hero series · active tab/segment · primary action · Lede-link hover); the
-> identity layer is now in place (logomark + favicon + OG — the mark's accent bar is identity, not creep).
-> Next — and last — **Phase F (`ONE-62`) — Coherence, contrast & a11y pass** completes Move #3: confirm the
-> accent appears only in sanctioned zones (grep), full WCAG-AA audit (dark + light), reconcile the
-> `MOVE-3-SPEC.md` §8 success criteria, update `DESIGN-SYSTEM.md` (accent shipped) + the `DESIGN-AUDIT.md`
-> scorecard. `ONE-46` folded/closed; the `BarChart` rewrite stays as `ONE-45`. **`--ring` stays NEUTRAL**
-> (standing decision — never brand the focus ring). Each phase is its own approval-gated, additive commit.
-> No new dependency; server-first; dark-first + WCAG-AA. Deltas stay semantic green/red; the live dot stays
-> emerald; the sparkline stays neutral — never the accent.
+> **Move #3 — Identity & Craft: BUILD COMPLETE (2026-06-19).** Phases 0 (`ONE-56`), A (`ONE-57`), B
+> (`ONE-58`), C (`ONE-59`), D (`ONE-60`), E (`ONE-61`) **Done (approved)**; Phase F (`ONE-62`) implemented
+> (docs-only audit pass), committed locally → **In Review**. The signature accent lives in its four
+> sanctioned zones + the logomark; one card/number/chart spec everywhere; a quiet identity (logomark +
+> favicon + OG); WCAG-AA dark + light; nothing from Moves #1/#2 regressed. `ONE-46` folded/closed; the
+> `BarChart` rewrite remains `ONE-45`. **On approval of Phase F:** `ONE-62` → Done + the "Move #3 — Identity
+> & Craft" Linear project → Completed (not done this turn). **Nothing pushed** — all Move #1/#2/#3 commits
+> are local on `main` (see `ONE-24`: push + prod-deploy is its own approved step).
 
 ---
 

@@ -51,6 +51,15 @@ Overall: **~5/10 today → 9–10 world-class.** The gap is not features. It's e
 | 11 | Cognitive load | 6 | 9 | Mostly fine; funnel builder is the heavy spot |
 | 12 | Design-system consistency | 5 | 9 | Two card radii/paddings; otherwise shadcn-consistent |
 
+> **Status — 2026-06-19: all three leverage moves shipped (the scorecard above is the original audit
+> baseline, kept for the record).** **Move #1 — Opinionated Overview** closed cats 1/3/4 (hierarchy,
+> density, dashboard philosophy); **Move #2 — Feel & Performance** closed cats 5/6/10 (interaction,
+> perceived performance, motion); **Move #3 — Identity & Craft** closed cats 7/8/9/12 (component system,
+> typography/tabular, **color system**, design-system consistency). **#9 Color system → done:** one
+> restrained `--brand` indigo-violet, used only on the hero data series, active state, primary action, and
+> Lede-link hover, plus the logomark/favicon/OG identity — monochrome everywhere else, AA-verified dark +
+> light. (The distorting `BarChart` is the one remaining component-system item, tracked in `ONE-45`.)
+
 ---
 
 ## 1. Information hierarchy — 5 → 9
@@ -222,14 +231,14 @@ documented as tokens — and the whole thing snaps to "one system."
 ## How to become "The Linear of analytics" (not "another dashboard")
 Three moves, in order of leverage:
 
-1. **Have an opinion (hierarchy + narrative).** Replace the uniform grid with one default view
-   that answers all six questions at a glance and *says one sentence* about what changed —
-   traffic, source, funnel, money — then lets people drill. This is 70% of the perceived jump.
-2. **Make it feel instant + alive (speed + motion).** Optimistic range/section changes, view
-   transitions, skeletons, count-up, a chart that draws. Linear is loved for *feel*, not features.
-3. **Give it one signature (identity + craft).** One restrained accent, one unified card + number
-   + chart spec, and the craft details (favicons, flags, glyphs, branded tooltips). Quiet, but
-   unmistakably *designed*.
+1. **✅ Have an opinion (hierarchy + narrative).** *(Move #1 — shipped.)* Replaced the uniform grid with one
+   default view that answers all six questions at a glance and *says one sentence* about what changed —
+   traffic, source, funnel, money — then lets people drill. This was 70% of the perceived jump.
+2. **✅ Make it feel instant + alive (speed + motion).** *(Move #2 — shipped.)* Optimistic range/section
+   changes, view transitions, skeletons, count-up, a chart that draws. Linear is loved for *feel*.
+3. **✅ Give it one signature (identity + craft).** *(Move #3 — shipped.)* One restrained accent, one unified
+   card + number + chart spec, and the craft details (avatars, flags, glyphs, branded tooltips, logomark +
+   favicon). Quiet, but unmistakably *designed*.
 
 Everything else in this audit is in service of those three. The product is already honest and
 fast — the work now is **editorial and craft**, not more features.
