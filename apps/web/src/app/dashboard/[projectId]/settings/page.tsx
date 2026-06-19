@@ -11,6 +11,7 @@ import { InstallSnippet } from "@/components/dashboard/install-snippet";
 import { RefreshButton } from "@/components/dashboard/refresh-button";
 import { CustomEventsDoc } from "@/components/dashboard/custom-events-doc";
 import { DeleteProjectDialog } from "@/components/dashboard/delete-project-dialog";
+import { RenameProjectForm } from "@/components/dashboard/rename-project-form";
 import {
   Card,
   CardContent,
@@ -109,6 +110,21 @@ export default async function ProjectSettingsPage({
         </CardHeader>
         <CardContent>
           <CustomEventsDoc />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">General</CardTitle>
+          <CardDescription>
+            Rename this project. Your analytics and existing data are unaffected.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <RenameProjectForm
+            projectId={project.id}
+            projectName={project.name}
+          />
         </CardContent>
       </Card>
 

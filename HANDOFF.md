@@ -1243,6 +1243,33 @@ feature; committed locally → In Review.** A safe permanent project delete foll
   new components use destructive + neutral tokens, **not** `*-brand` — grep-confirmed, no creep); the route
   structure (Settings already existed). **On approval:** `ONE-63` → Done. **Not pushed.**
 
+**✅ ONE-64 — Rename project (Settings → General) (2026-06-19). Committed locally → In Review.** Lets the
+owner rename a project from Settings; `Project.name` only — no schema/migration, no new project, analytics
+untouched. The GitHub/Vercel settings convention (a "General" rename section above the "Danger Zone").
+
+- **Settings page:** a new "General" `Card` (`rounded-xl bg-card border` — the default Card) placed
+  **directly above** the Danger Zone; renders `<RenameProjectForm projectId projectName />`. The other
+  settings cards (Install / Verification / Custom events) + the Danger Zone are unchanged.
+- **`components/dashboard/rename-project-form.tsx` (new, client):** a controlled name `Input` (pre-filled,
+  `maxLength=60`) + a **default (primary) Button** "Save changes". `disabled = pending || trimmed === "" ||
+  trimmed === savedName` (the unchanged/empty/loading rules); shows "Saving…" while pending. On success it
+  updates the local baseline (so the button re-disables) + shows a **calm neutral toast** (emerald check,
+  auto-dismiss); errors render inline (`text-destructive`). Calls the action via `useTransition` — no
+  navigation, no refresh.
+- **`renameProject(projectId, newName)` server action** (`server/actions/projects.ts`): `requireUser` →
+  owner-scoped `getOwnedProject` (tenancy) → trim + validate (1–60, non-empty) returning a **friendly error
+  string** (not a throw) → `prisma.project.update({ data: { name } })` → `revalidatePath` `/dashboard` + the
+  project + settings routes → `{ ok: true }`. No-op when unchanged. Reuses the imports ONE-63 added
+  (`revalidatePath`, `getOwnedProject`) — no new imports/deps.
+- **No accent creep:** grep `*-brand` on the new form = none; the default Button is the sanctioned
+  primary-action accent (Phase C — one primary CTA per screen). Error text uses the destructive/error
+  semantic (standard form validation); the toast is neutral.
+- **Verified:** 83 tests · typecheck · lint · build green. `/dashboard/[projectId]/settings` 4.22 → 4.73 kB
+  (+0.5 kB for the rename form; First Load 129 kB unchanged — the Dialog primitive was already there). No new
+  dependency; server-first; type-safe; dark-first.
+- **What remained unchanged:** the ONE-63 delete flow + dialog/toast; analytics + every query; routes +
+  dashboard layout; Moves #1/#2/#3. **On approval:** `ONE-64` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

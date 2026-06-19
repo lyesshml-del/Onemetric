@@ -86,3 +86,44 @@ export async function deleteProject(formData: FormData): Promise<void> {
   revalidatePath("/dashboard");
   redirect(`/dashboard?deleted=${encodeURIComponent(project.name)}`);
 }
+
+export type RenameProjectState = { ok?: boolean; error?: string };
+
+/**
+ * Rename a project the user owns — `Project.name` only, nothing else touched.
+ *
+ * Owner-scoped (tenancy); the name is trimmed and must be 1–60 characters.
+ * Returns a friendly error instead of throwing so the Settings form can show it
+ * inline. No schema/migration, no new project; analytics, routes, and the
+ * delete flow (ONE-63) are unaffected.
+ */
+export async function renameProject(
+  projectId: string,
+  newName: string,
+): Promise<RenameProjectState> {
+  const { user } = await requireUser();
+
+  const name = newName.trim();
+  if (!projectId) return { error: "Something went wrong — please try again." };
+  if (name.length === 0) return { error: "Project name can't be empty." };
+  if (name.length > 60) {
+    return { error: "Project name must be 60 characters or fewer." };
+  }
+
+  const project = await getOwnedProject(user.id, projectId);
+  if (!project) return { error: "Project not found." };
+
+  // No-op if unchanged (the form's Save button is disabled in this case anyway).
+  if (name === project.name) return { ok: true };
+
+  await prisma.project.update({
+    where: { id: project.id },
+    data: { name },
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath(`/dashboard/${project.id}`);
+  revalidatePath(`/dashboard/${project.id}/settings`);
+
+  return { ok: true };
+}

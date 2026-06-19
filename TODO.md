@@ -727,6 +727,17 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       no accent creep. Verified: 83 tests, typecheck · lint · build green. Files: +`ui/dialog.tsx`,
       +`dashboard/delete-project-dialog.tsx`, +`dashboard/deleted-toast.tsx`, `server/actions/projects.ts`,
       `dashboard/[projectId]/settings/page.tsx`, `dashboard/page.tsx`.
+- [x] **ONE-64 — Rename project (Settings → General) ✅ implemented (2026-06-19), in review.** A "General"
+      `Card` (`rounded-xl bg-card border`) **above** the Danger Zone: a pre-filled project-name `Input` + a
+      default (primary) **Save changes** button, disabled when the value is unchanged / empty / saving, with
+      a "Saving…" loading state. The `renameProject(projectId, newName)` **server action** (owner-only; trim;
+      1–60 chars; friendly inline errors; type-safe) updates **`Project.name` only** (no schema / migration /
+      new project), then `revalidatePath`s `/dashboard` + the project + settings routes → the header/list
+      update with **no page refresh** (called via `useTransition`); a calm neutral success **toast** confirms
+      it. No accent creep (the default Button is the sanctioned primary-action accent); dark-first; no new
+      dependency; ONE-63 delete flow + analytics + routes untouched. Verified: 83 tests, typecheck · lint ·
+      build green. Files: +`dashboard/rename-project-form.tsx`, `server/actions/projects.ts`,
+      `dashboard/[projectId]/settings/page.tsx`.
 
 ---
 
