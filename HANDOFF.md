@@ -1027,6 +1027,48 @@ action + the data-noun links on hover.** Implemented `ONE-59`. Two files (`butto
   detail pages (Events-detail / Funnels-detail / Revenue), then retire/alias it; resolve the `BarChart`
   chart-language drift. Pure craft (no accent). **Await approval before starting.**
 
+**✅ Move #3 / Phase D — Card/number/chart spec unification (2026-06-19). The last `MetricCard`/`rounded-lg`
+drift is retired — one card spec, one number spec on every page.** Implemented `ONE-60` (folds in/closes
+`ONE-46`). Pure craft, **no accent, no data/query change** — restyle only, numbers byte-identical.
+
+- **`metric-card.tsx` — unified onto the `StatCard` card spec:** `rounded-lg → rounded-xl`, the value gains
+  `tabular-nums`, the label `text-sm → text-xs` (matching `StatCard`). The card chrome
+  (`bg-card rounded-xl border p-4`, `text-xs` muted label, `text-2xl font-semibold tracking-tight
+  tabular-nums` value) is now **identical** to `StatCard`'s non-delta/spark form. **Restyle-in-place** (the
+  plan's "simplest, one file" option), NOT delete: `MetricCard` has 5 live usages across the 3 detail pages
+  and an optional `hint` line that `StatCard` doesn't have — so it stays as the "label·value·hint" card
+  (`StatCard` = the "KPI with delta/sparkline/live" card; **same card chrome, two content shapes**). The
+  drift is retired without churning 3 pages. `ONE-46` is closed (it was already Canceled → folded here).
+- **`tabular-nums` swept across the 3 detail pages (one number spec):** the `MetricCard` values (all 3
+  pages) + the `FunnelChart` "↓ N dropped" line (its sibling count·conversion was already tabular) + the
+  Revenue **Recent payments** Date column + the Events-detail **Recent occurrences** Time column + the
+  Events-detail BarChart min/max date labels. Already-tabular before (unchanged): `BreakdownCard` values,
+  `FunnelChart` count·conversion, the Revenue Amount column. **Every number on the 3 pages is now tabular.**
+- **`BarChart` chart-language drift — decided + documented, rewrite deferred to `ONE-45`.** Finding: the
+  `BarChart` component's **only consumer is the Events-detail trend** — the marketing page imports the
+  **lucide `BarChart3` icon**, not this component (the old "marketing + event-detail" note was wrong; fixed
+  in `DESIGN-SYSTEM.md`). The chart language is **`TrendChart`** (correct, undistorted scaling); `BarChart`'s
+  `preserveAspectRatio="none"` distortion is the last chart drift. Its rewrite/migration is its **own
+  single-concern change** (`ONE-45`, already a distinct Move #3 issue) — bundling a chart rewrite into this
+  card/number PR would violate "one phase = one reviewable concern," and it's **not** in this DoD. So Phase D
+  documents the decision and leaves the `BarChart` SVG untouched.
+- **DoD met (grep):** `rounded-lg` → **zero matches anywhere** in `src/**`; `MetricCard` is now `rounded-xl`
+  + `tabular-nums` (no drift). The 3 detail pages match the canonical spec. **Numbers identical** (only CSS
+  classes added; `formatNumber`/`formatMoney`/`formatPercent` outputs unchanged).
+- **Docs:** `DESIGN-SYSTEM.md` updated — the Border-radius + Card-system sections now say "one card system,
+  fully resolved (Phase D)"; the Chart-philosophy section corrects the `BarChart` consumer + records the
+  `ONE-45` deferral.
+- **Verification:** 83 tests · typecheck · lint · production build green. Detail-page routes **unchanged**
+  (events/[name] 1.04 kB · funnels/[funnelId] 1.4 kB · revenue 3.39 kB — CSS-only, server-rendered, zero new
+  JS). No new dependency; server-first; additive; monochrome (no accent in this phase). No browser in env →
+  the restyle is reasoned from the class diffs (identical chrome to the verified `StatCard`) + green build.
+- **What remained unchanged:** all data + every query (no schema/query change); the analytics numbers
+  (identical values, restyled only); the Overview (already unified); the `BarChart` SVG (→ `ONE-45`);
+  `BreakdownCard` + its Revenue usage; Moves #1 & #2; the 83-test suite.
+- **Next:** **Phase E — Logomark + favicon / identity marks (`ONE-61`)** — a hand-built SVG logomark in
+  `--brand` + neutrals for the app/marketing header, derive the favicon + refresh `opengraph-image`. Then
+  **Phase F** (`ONE-62`) — coherence/contrast/a11y, completes Move #3. **Await approval before starting.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

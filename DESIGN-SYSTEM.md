@@ -66,20 +66,22 @@ OneMetric is **dark-first** (`.dark` on `<html>`); light tokens exist for a futu
 
 ## Border radius
 - Token ladder: `sm` 6px · `md` 8px · `lg` 10px · `xl` 14px.
-- **One card radius across the Overview: `rounded-xl` (14px)** — hero `Card`, `StatCard`, and the
-  `SourcesCard`/`TopPagesCard`/`AudienceCard` (all `Card`-based) use it. The legacy `MetricCard`
-  (`rounded-lg`) is **still used by the Events-detail / Funnels-detail / Revenue pages** (Phase J
-  grep found 3 importers, so it was **not** deleted); the Overview no longer uses it. Unifying it
-  onto `rounded-xl` is deferred to **Move #3**; do not introduce new `rounded-lg` cards.
+- **One card radius everywhere: `rounded-xl` (14px)** — hero `Card`, `StatCard`, the
+  `SourcesCard`/`TopPagesCard`/`AudienceCard` (all `Card`-based), and `MetricCard` all use it.
+  **Move #3 / Phase D (`ONE-60`)** unified the legacy `MetricCard` (was `rounded-lg`) onto the spec
+  (`rounded-xl` + `tabular-nums`), so the Events-detail / Funnels-detail / Revenue pages now match
+  the Overview. **No `rounded-lg` card remains anywhere** (grep-confirmed); do not introduce one.
 
 ## Card system (ONE system)
 - Canonical card: `rounded-xl border bg-card` (shadcn `Card` = `py-6 px-6 shadow-sm`; compact
   variants like `StatCard` use `p-4`). Same radius/border/background everywhere.
 - `StatCard` (Phase C) is the unified KPI card: label · value · optional `<Delta>` · optional
   `<Sparkline>` · optional live dot · `pending` (dimmed "—" placeholder for later-phase data).
-- **Avoid a second card system.** The two-card-system inconsistency flagged in `DESIGN-AUDIT.md`
-  is resolved **on the Overview** (only `Card` / `StatCard`); `MetricCard` (`rounded-lg`) remains
-  on the three detail pages and unifying it is a **Move #3** item.
+- **One card system (no second system).** The two-card-system inconsistency flagged in
+  `DESIGN-AUDIT.md` is **fully resolved** (Move #3 / Phase D): `MetricCard` was restyled onto the
+  canonical `rounded-xl` + `tabular-nums` spec (it adds an optional `hint`; `StatCard` adds
+  delta/sparkline/live — the same card chrome), so the Overview and all three detail pages share one
+  card spec. `BreakdownCard` (still used by Revenue) is also `Card`-based (`rounded-xl`).
 
 ## Information hierarchy (the Overview, per `OVERVIEW-SPEC.md`)
 Loudest → quietest: **Lede → Hero → KPI strip → Outcomes triad (Sources / Funnel / Revenue) →
@@ -113,10 +115,13 @@ converts / earns) are promoted above raw tables. The page answers six questions 
     `vector-effect="non-scaling-stroke"`, **HTML-overlay** crosshair/dot/tooltip so non-uniform
     scaling never distorts decorations. Correct, undistorted scaling.
   - `Sparkline`: tiny area+line, static, `aria-hidden` (the value+delta carry meaning).
-  - `BarChart` (legacy, used by marketing + event-detail): note it uses
-    `preserveAspectRatio="none"` which distorts bars — **do not reuse it on the Overview**;
-    prefer `TrendChart`.
-- Quiet axes, low-contrast gridlines, monochrome series (accent = Move #3).
+  - `BarChart` (legacy, **only consumer = the Events-detail trend**; the marketing page uses the
+    lucide `BarChart3` *icon*, not this component): it uses `preserveAspectRatio="none"` which
+    distorts bars — **do not reuse it**; prefer `TrendChart`. **One chart language = `TrendChart`**
+    (correct, undistorted scaling). Move #3 / Phase D ruled the `BarChart` rewrite its own
+    single-concern change, tracked in **`ONE-45`** (kept out of the Phase D card/number PR).
+- Quiet axes, low-contrast gridlines, monochrome series — except the hero `TrendChart` series, which
+  is the signature accent (Move #3 / Phase A); breakdown bars stay `bg-foreground/5`.
 
 ## Tooltip philosophy
 - **Branded, never native.** Tooltips use theme tokens (`bg-popover`, `border`, `shadow-md`),

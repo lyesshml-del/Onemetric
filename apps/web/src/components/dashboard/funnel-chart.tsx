@@ -30,7 +30,7 @@ export function FunnelChart({ steps }: { steps: FunnelStepResult[] }) {
             />
           </div>
           {i > 0 && step.dropFromPrev > 0 ? (
-            <p className="text-muted-foreground text-xs">
+            <p className="text-muted-foreground text-xs tabular-nums">
               ↓ {formatNumber(step.dropFromPrev)} dropped
             </p>
           ) : null}

@@ -580,7 +580,7 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 
 ---
 
-## Move #3 — Identity & Craft (APPROVED — in progress: Phase 0, A, B done; Phase C in review)
+## Move #3 — Identity & Craft (APPROVED — in progress: Phase 0, A, B, C done; Phase D in review)
 
 > Design source of truth: **`MOVE-3-SPEC.md`** (the single signature accent + craft) +
 > **`MOVE-3-IMPLEMENTATION-PLAN.md`** (phases 0 + A–F). Planning-only session **2026-06-18** — no code.
@@ -653,20 +653,36 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       green; route `/dashboard/[projectId]` **6.95 kB** (class swaps, zero new JS). No new dependency;
       server-first; additive; deltas green/red; live dot emerald; sparkline + `--ring` neutral. Files:
       `button.tsx`, `lede.tsx`.
-- [ ] Phase D — Card/number/chart spec unification (`ONE-60`) — retire `MetricCard` drift (folds in `ONE-46`).
+- [x] **Phase D — Card/number/chart spec unification ✅ (2026-06-19)** (`ONE-60`, folds in/closes `ONE-46`)
+      — the last `MetricCard`/`rounded-lg` drift is retired; one card spec + one number spec on every page.
+      **Pure craft, no accent, no data/query change** (restyle only; numbers byte-identical). **`MetricCard`
+      restyled in place** onto the `StatCard` spec: `rounded-lg → rounded-xl`, value `+tabular-nums`, label
+      `text-sm → text-xs` → card chrome now identical to `StatCard` (kept as the label·value·`hint` card; not
+      deleted — 5 live usages + `hint` that `StatCard` lacks; the plan's "simplest, one file" path).
+      **`tabular-nums` swept** across the 3 detail pages: `MetricCard` values + `FunnelChart` "↓ N dropped" +
+      Revenue Recent-payments Date + Events Recent-occurrences Time + Events BarChart min/max labels
+      (`BreakdownCard` / `FunnelChart` count·conv / Revenue Amount were already tabular). **`BarChart` drift:
+      decided + documented** — its only consumer is Events-detail (marketing uses the lucide `BarChart3`
+      *icon*, not the component); the chart language is `TrendChart`; the `BarChart` rewrite stays its own
+      single-concern issue (`ONE-45`), out of this card/number PR. DoD: grep `rounded-lg` → **zero matches**;
+      3 pages on the canonical spec; numbers identical. Verified: 83 tests, typecheck · lint · build green;
+      detail-page routes unchanged (CSS-only, zero new JS). Docs: `DESIGN-SYSTEM.md` (one card system done;
+      `BarChart` consumer corrected). Files: `metric-card.tsx`, `funnel-chart.tsx`, `events/[name]/page.tsx`,
+      `revenue/page.tsx`, `DESIGN-SYSTEM.md`.
 - [ ] Phase E — Logomark + favicon / identity marks (`ONE-61`).
 - [ ] Phase F — Coherence, contrast & a11y pass (`ONE-62`) — completes Move #3.
 
-> **Spec + plan APPROVED. Phases 0 (`ONE-56`), A (`ONE-57`), B (`ONE-58`) Done (approved). Phase C
-> (`ONE-59`) implemented, verified, committed locally → In Review.** The accent now covers all four
-> sanctioned zones: hero data series (A) · active tab underline + selected segment (B) · **primary action
-> (`Button` default) + Lede-link hover (C)**. Next: **Phase D — Card/number/chart spec unification
-> (`ONE-60`, folds in `ONE-46`)** — unify the legacy `MetricCard` (`rounded-lg`) onto the `StatCard` /
-> `rounded-xl` + `tabular-nums` spec across the 3 detail pages, then retire/alias it; resolve the `BarChart`
-> chart-language drift. **Pure craft (no accent).** **`--ring` stays NEUTRAL** (standing decision — never
-> brand the focus ring, despite the ONE-59 title). Each phase is its own approval-gated, additive commit.
-> No new dependency; server-first; dark-first + WCAG-AA. Deltas stay semantic green/red; the live dot stays
-> emerald; the sparkline stays neutral — never the accent.
+> **Spec + plan APPROVED. Phases 0 (`ONE-56`), A (`ONE-57`), B (`ONE-58`), C (`ONE-59`) Done (approved).
+> Phase D (`ONE-60`) implemented, verified, committed locally → In Review.** The accent covers all four
+> sanctioned zones (hero series · active tab/segment · primary action · Lede-link hover); Phase D is **pure
+> craft** — the last `MetricCard`/`rounded-lg` drift retired, one card + one number spec on every page (no
+> accent). `ONE-46` folded/closed; the `BarChart` rewrite stays as `ONE-45` (its only consumer is
+> Events-detail). Next: **Phase E — Logomark + favicon / identity marks (`ONE-61`)** — a hand-built SVG
+> logomark in `--brand` + neutrals for the app/marketing header + derived favicon/opengraph; then **Phase F
+> (`ONE-62`)** coherence/contrast/a11y completes Move #3. **`--ring` stays NEUTRAL** (standing decision —
+> never brand the focus ring). Each phase is its own approval-gated, additive commit. No new dependency;
+> server-first; dark-first + WCAG-AA. Deltas stay semantic green/red; the live dot stays emerald; the
+> sparkline stays neutral — never the accent.
 
 ---
 

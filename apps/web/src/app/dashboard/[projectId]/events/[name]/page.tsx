@@ -78,7 +78,7 @@ export default async function EventDetailPage({
           <BarChart
             data={detail.trend.map((p) => ({ label: p.date, value: p.count }))}
           />
-          <div className="text-muted-foreground mt-2 flex justify-between text-xs">
+          <div className="text-muted-foreground mt-2 flex justify-between text-xs tabular-nums">
             <span>{detail.trend[0]?.date}</span>
             <span>{detail.trend[detail.trend.length - 1]?.date}</span>
           </div>
@@ -106,7 +106,7 @@ export default async function EventDetailPage({
               <tbody>
                 {detail.recent.map((o) => (
                   <tr key={o.id} className="border-b last:border-0 align-top">
-                    <td className="text-muted-foreground px-4 py-3 whitespace-nowrap">
+                    <td className="text-muted-foreground px-4 py-3 whitespace-nowrap tabular-nums">
                       {o.createdAt.toISOString().slice(0, 19).replace("T", " ")}
                     </td>
                     <td className="px-4 py-3">{o.path ?? "—"}</td>

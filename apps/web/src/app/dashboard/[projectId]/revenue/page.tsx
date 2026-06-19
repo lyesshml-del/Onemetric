@@ -181,7 +181,7 @@ async function ConnectedRevenue({
               <tbody>
                 {recent.map((p) => (
                   <tr key={p.id} className="border-b last:border-0">
-                    <td className="text-muted-foreground px-4 py-3 whitespace-nowrap">
+                    <td className="text-muted-foreground px-4 py-3 whitespace-nowrap tabular-nums">
                       {p.occurredAt.toISOString().slice(0, 10)}
                     </td>
                     <td className="px-4 py-3">{p.utmSource ?? "—"}</td>

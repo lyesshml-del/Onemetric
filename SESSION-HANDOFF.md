@@ -34,11 +34,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   (`ONE-56`) — accent token foundations — is implemented, verified, committed locally
   (`7ff0804`) → Done (approved 2026-06-19)** (the `--brand` / `--brand-foreground` / `--brand-text`
   tokens defined in `globals.css` for dark + light, AA-verified, **applied to nothing** — zero visual
-  change). **Phases A (`ONE-57`) + B (`ONE-58`) are Done (approved); Phase C (`ONE-59`) — the primary
-  action (`Button` default → accent) + the Lede drill-link hover tint — is implemented + committed locally
-  → In Review;** D–F (`ONE-60…62`) Backlog; `ONE-46` canceled → folded into Phase D (`ONE-60`). The accent
-  now covers all four sanctioned zones (hero series · active state · primary action · Lede-link hover).
-  The accent is introduced ONLY in Move #3.
+  change). **Phases A (`ONE-57`), B (`ONE-58`), C (`ONE-59`) are Done (approved); Phase D (`ONE-60`) — the
+  card/number spec unification (retire the last `MetricCard`/`rounded-lg` drift; pure craft, no accent) — is
+  implemented + committed locally → In Review;** E–F (`ONE-61…62`) Backlog; `ONE-46` canceled/closed →
+  folded into Phase D. The accent covers all four sanctioned zones (hero series · active state · primary
+  action · Lede-link hover); Phase D added no accent. The accent is introduced ONLY in Move #3.
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -74,7 +74,7 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   neutral (native `<select>`). Move #2 optimistic logic intact; only the active colour changed. AA:
   underline 4.00/5.98 (graphical ≥3); segment text 4.76/5.73 (≥4.5). Shared `TabNav` → all 6 pages' active
   underline branded; non-active render byte-identical.
-- **Phase C (`ONE-59`) is implemented, verified, committed locally → In Review:** the **primary action** —
+- **Phase C (`ONE-59`) is Done (approved 2026-06-19):** the **primary action** —
   shadcn `Button` `default` variant `bg-primary… → bg-brand text-brand-foreground hover:bg-brand/90`
   (destructive/outline/secondary/ghost/link unchanged) — and the **Lede drill-links** tint to `--brand-text`
   on hover/focus only (`hover:text-brand-text focus-visible:text-brand-text`; at rest = `text-foreground`).
@@ -83,14 +83,24 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   `outline` → **zero demotions**. AA: button 4.76/5.73, Lede hover 7.15/5.98 (both ≥4.5); never colour-only.
   **`--ring` left NEUTRAL** (standing decision). Accent footprint now = the four sanctioned zones only
   (hero series · active tab/segment · primary button · Lede hover). Route `/dashboard/[projectId]` 6.95 kB.
-  Files: `button.tsx`, `lede.tsx`. D–F (`ONE-60…62`) Backlog; `ONE-46` canceled → folded into Phase D.
-- **Next exact step:** Phases A–C approved/in-review. On approval of Phase C, implement **Phase D —
-  Card/number/chart spec unification (`ONE-60`, folds in `ONE-46`) only** — unify the legacy `MetricCard`
-  (`rounded-lg`) onto the `StatCard` / `rounded-xl` + `tabular-nums` spec across the 3 detail pages
-  (Events-detail / Funnels-detail / Revenue), then retire/alias it; resolve the `BarChart` chart-language
-  drift. **Pure craft (no accent).** Then stop for approval. One phase per turn; additive; no new
-  dependency; server-first; **Moves #1 & #2 behaviour must not change**; deltas stay semantic green/red;
-  the live dot stays emerald; `--ring` + sparkline stay neutral.
+  Files: `button.tsx`, `lede.tsx`.
+- **Phase D (`ONE-60`) is implemented, verified, committed locally → In Review:** the card/number spec
+  unification (pure craft, **no accent, no data/query change** — restyle only, numbers identical).
+  `MetricCard` restyled onto the `StatCard` spec (`rounded-lg → rounded-xl`, value `+tabular-nums`, label
+  `text-sm → text-xs`) → the same card chrome as `StatCard` (kept as the label·value·`hint` card, **not
+  deleted** — 5 live usages + a `hint` `StatCard` lacks; the plan's "simplest, one file" path). `tabular-nums`
+  swept across the 3 detail pages (`MetricCard` values · `FunnelChart` "↓ N dropped" · Revenue Date col ·
+  Events Time col + BarChart min/max labels). **`BarChart` rewrite deferred to `ONE-45`** (its only consumer
+  is Events-detail — marketing uses the lucide `BarChart3` *icon*, not the component); chart language =
+  `TrendChart`. DoD: grep `rounded-lg` → **zero matches**; the 3 pages on the canonical spec; numbers
+  identical. `ONE-46` closed (folded here). Files: `metric-card.tsx`, `funnel-chart.tsx`,
+  `events/[name]/page.tsx`, `revenue/page.tsx`, `DESIGN-SYSTEM.md`.
+- **Next exact step:** Phases A–C approved; Phase D in review. On approval of Phase D, implement **Phase E —
+  Logomark + favicon / identity marks (`ONE-61`) only** — a hand-built SVG logomark in `--brand` + neutrals
+  for the app top bar + marketing header (replacing wordmark-only), then derive the favicon + refresh
+  `opengraph-image`. Dependency-free; degrade to the wordmark where a mark doesn't fit. Then stop for
+  approval. One phase per turn; additive; no new dependency; server-first; **Moves #1 & #2 behaviour must
+  not change**; deltas stay semantic green/red; the live dot stays emerald; `--ring` + sparkline stay neutral.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -106,8 +116,8 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 | `MOVE-1-IMPLEMENTATION-PLAN.md` | Approved phased build plan (0 + A–J) — **Move #1 done** |
 | `MOVE-2-SPEC.md` | Move #2 "instant + alive" design spec — **done & approved** |
 | `MOVE-2-IMPLEMENTATION-PLAN.md` | Move #2 phased build plan (0 + A–G) — **done & approved** |
-| `MOVE-3-SPEC.md` | Move #3 "one signature" accent + craft spec — **approved; Phases 0/A/B done, C in review** |
-| `MOVE-3-IMPLEMENTATION-PLAN.md` | Move #3 phased build plan (0 + A–F) — **approved; Phase D next** |
+| `MOVE-3-SPEC.md` | Move #3 "one signature" accent + craft spec — **approved; Phases 0/A/B/C done, D in review** |
+| `MOVE-3-IMPLEMENTATION-PLAN.md` | Move #3 phased build plan (0 + A–F) — **approved; Phase E next** |
 | `DESIGN-SYSTEM.md` | How it should feel + tokens/patterns |
 | `ENGINEERING-STANDARDS.md` | How we build |
 | `DECISIONS.md` | Why the big choices were made (ADRs) |
@@ -164,8 +174,9 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 ## 11. Things intentionally deferred / temporary states
 - **Move #1 transitional states — resolved (Phase J):** the redundant "Overview" `<h2>` and the
   hero min/max date labels were removed; the focused empty state shipped. `MetricCard` was **not**
-  deletable (grep: 3 importers on the Events-detail / Funnels-detail / Revenue pages) — it stays,
-  and unifying it onto the `rounded-xl` spec is a **Move #3** item.
+  deletable (grep: 3 importers on the Events-detail / Funnels-detail / Revenue pages) — it stays.
+  **Resolved in Move #3 / Phase D (`ONE-60`, 2026-06-19):** `MetricCard` was restyled in place onto the
+  `rounded-xl` + `tabular-nums` `StatCard` spec (still used by the 3 detail pages, now on one card system).
 - **Drill links** in the Lede / cards are absent until their target views exist (D/E/F).
 - **Motion/perceived-speed** is now **Move #2 — planned** (`MOVE-2-SPEC.md` + plan written, awaiting
   approval; `ONE-47` Phase 0 Todo). **Accent/identity** remains **Move #3** (separate future plan).
