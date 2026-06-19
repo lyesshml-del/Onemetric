@@ -711,6 +711,25 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 
 ---
 
+## Post-launch features (beyond Moves #1–#3)
+
+- [x] **ONE-63 — Project deletion (Settings → Danger Zone) ✅ implemented (2026-06-19), in review.** A
+      safe, type-to-confirm permanent delete. The **Settings page** gains a "Danger Zone" `Card`
+      (`border-destructive/40`, `rounded-xl`) → destructive **Delete project** button → confirmation
+      **Dialog** (new `components/ui/dialog.tsx`, built on the already-installed `radix-ui` — **no new dep**).
+      The Delete button stays **disabled until the typed name === the project name**; the `deleteProject`
+      **server action** re-checks ownership + the exact name (defense in depth), then `prisma.project.delete`
+      **cascades** to every dependent row (sessions, events, funnels + steps, integration, revenue, report
+      subs — all `onDelete: Cascade`; **verified on the live DB**: all Project-child FKs = CASCADE → no
+      orphans). After: `revalidatePath("/dashboard")` + redirect to `/dashboard?deleted=<name>` (RSC soft-nav
+      → the list updates, no manual refresh) + a calm neutral success **toast** (`deleted-toast.tsx`;
+      destructive colour stays on the delete action only). Owner-scoped; dark-first; Moves #1/#2/#3 untouched;
+      no accent creep. Verified: 83 tests, typecheck · lint · build green. Files: +`ui/dialog.tsx`,
+      +`dashboard/delete-project-dialog.tsx`, +`dashboard/deleted-toast.tsx`, `server/actions/projects.ts`,
+      `dashboard/[projectId]/settings/page.tsx`, `dashboard/page.tsx`.
+
+---
+
 ## Excluded from V1 (ROADMAP only — never implement)
 
 Session replay · heatmaps · A/B testing · feature flags · AI reports ·

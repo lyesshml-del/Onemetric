@@ -3,6 +3,7 @@ import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { listProjects } from "@/server/queries/projects";
 import { CreateProjectForm } from "@/components/dashboard/create-project-form";
+import { DeletedToast } from "@/components/dashboard/deleted-toast";
 import {
   Card,
   CardContent,
@@ -15,12 +16,18 @@ export const metadata: Metadata = {
   title: "Dashboard — OneMetric",
 };
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ deleted?: string }>;
+}) {
   const { user } = await requireUser();
+  const { deleted } = await searchParams;
   const projects = await listProjects(user.id);
 
   return (
     <div className="space-y-8">
+      {deleted ? <DeletedToast name={deleted} /> : null}
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Projects</h1>
         <p className="text-muted-foreground">

@@ -119,8 +119,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   deploy) is Done (2026-06-19):** the 36 local commits were pushed to `origin/main` (`449757a`) and the
   Vercel **production deploy is READY** (commit `449757a`, target production). **origin/main == local main;
   zero unpushed; tree clean.** Repository, Linear, GitHub, and production are fully synchronized; the design
-  line has no open items. The broader product backlog (marketing / onboarding / Paddle go-live) is separate,
-  pre-existing work — keep one-phase-per-turn discipline if it's picked up later.
+  line has no open items. **First post-Move feature `ONE-63` (project deletion — Settings → Danger Zone,
+  type-to-confirm) is implemented + committed locally → In Review** (cascade delete verified on the live DB:
+  all Project-child FKs CASCADE → no orphans; success toast + redirect to `/dashboard`; new `Dialog` built
+  on the existing `radix-ui` — no new dep). The broader product backlog (marketing / onboarding / Paddle
+  go-live) is separate, pre-existing work — keep one-phase-per-turn discipline if it's picked up later.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 

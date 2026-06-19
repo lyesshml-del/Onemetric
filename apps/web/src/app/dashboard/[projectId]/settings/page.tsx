@@ -10,6 +10,7 @@ import { ProjectHeader } from "@/components/dashboard/project-header";
 import { InstallSnippet } from "@/components/dashboard/install-snippet";
 import { RefreshButton } from "@/components/dashboard/refresh-button";
 import { CustomEventsDoc } from "@/components/dashboard/custom-events-doc";
+import { DeleteProjectDialog } from "@/components/dashboard/delete-project-dialog";
 import {
   Card,
   CardContent,
@@ -108,6 +109,22 @@ export default async function ProjectSettingsPage({
         </CardHeader>
         <CardContent>
           <CustomEventsDoc />
+        </CardContent>
+      </Card>
+
+      <Card className="border-destructive/40">
+        <CardHeader>
+          <CardTitle className="text-base">Danger Zone</CardTitle>
+          <CardDescription>
+            Deleting a project permanently removes all analytics and associated
+            data.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DeleteProjectDialog
+            projectId={project.id}
+            projectName={project.name}
+          />
         </CardContent>
       </Card>
     </div>

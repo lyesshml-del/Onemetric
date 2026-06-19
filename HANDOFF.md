@@ -1209,6 +1209,40 @@ is sanctioned).
   shipped and synchronized (Repository == Linear == GitHub == production). Remaining workspace backlog is
   separate, pre-existing product work (marketing / onboarding / Paddle go-live).
 
+**✅ ONE-63 — Project deletion (Settings → Danger Zone, type-to-confirm) (2026-06-19). First post-Move
+feature; committed locally → In Review.** A safe permanent project delete following the GitHub/Vercel/Stripe
+"Danger Zone + type the name" convention. No new dependency; server-first; dark-first; Moves #1/#2/#3 untouched.
+
+- **Settings page** (`dashboard/[projectId]/settings/page.tsx`): a new "Danger Zone" `Card`
+  (`border-destructive/40`, `rounded-xl`) — title "Danger Zone", the required description, and a destructive
+  **Delete project** button (server-rendered chrome; only the interactive bit is a client child).
+- **`components/ui/dialog.tsx` (new):** a shadcn-style Dialog built on the already-installed `radix-ui`
+  umbrella (`import { Dialog as DialogPrimitive } from "radix-ui"`) — **no new dependency**. `bg-card`,
+  `rounded-xl`, quiet overlay, reduced-motion-safe (the Move #2 global guard zeroes the enter/leave anims).
+- **`components/dashboard/delete-project-dialog.tsx` (new, client):** the destructive trigger + confirm
+  dialog. Body = the required "This action cannot be undone…" copy. A controlled `Input` requires typing the
+  **exact project name**; the Delete button is `disabled={confirm !== projectName}` (the safety gate).
+  Submits to the server action; Cancel via `DialogClose`; resets the input on close.
+- **`deleteProject` server action** (`server/actions/projects.ts`): `requireUser` → owner-scoped
+  `getOwnedProject` (tenancy) → **server-side exact-name re-check** (defense in depth; mismatch → redirect
+  back, no delete) → `prisma.project.delete` (one statement; FK cascades remove every dependent row) →
+  `revalidatePath("/dashboard")` → `redirect("/dashboard?deleted=<name>")`.
+- **Cascade / no orphans — verified on the LIVE DB (read-only):** queried `pg_constraint` — every
+  Project-child FK is ON DELETE CASCADE (Session/Event/Funnel/Integration/RevenueEvent/ReportSubscription),
+  plus FunnelStep→Funnel and Event→Session. RevenueEvent→Session is SET NULL, but RevenueEvent→Project is
+  CASCADE, so a project delete still removes it. Read-only — DataFast data untouched.
+- **After delete:** the action's `redirect` is a soft RSC navigation → `/dashboard` re-renders with the
+  revalidated list (deleted project gone) **without a manual refresh**; a calm neutral **toast**
+  (`deleted-toast.tsx`: `?deleted=<name>` flash, emerald check, auto-dismiss, `history.replaceState` cleans
+  the URL) confirms it. Destructive colour stays on the delete action only; the toast is neutral.
+- **Verified:** 83 tests · typecheck · lint · production build green. `/dashboard` 3.52 → 4.22 kB (+toast);
+  `/dashboard/[projectId]/settings` First Load 116 → 129 kB (+~13 kB for the Dialog primitive, settings-route
+  only). No new dependency; server-first; type-safe; dark-first. No browser here → the dialog/toast visuals
+  are reasoned from the shadcn-on-radix markup + the green build.
+- **What remained unchanged:** all analytics behaviour + queries; Moves #1/#2/#3; the accent footprint (the
+  new components use destructive + neutral tokens, **not** `*-brand` — grep-confirmed, no creep); the route
+  structure (Settings already existed). **On approval:** `ONE-63` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
