@@ -771,6 +771,17 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
       Shown in the `hasData` branch (the `sessions === 0` empty state — ONE-65 — stays unchanged). Verified:
       83 tests, typecheck · lint · build green. Move #1/#2/#3 + delete/rename/empty flows untouched. Files:
       +`onboarding-checklist.tsx`, `dashboard/[projectId]/page.tsx`.
+- [x] **ONE-67 — Project list UX cleanup ✅ implemented (2026-06-20), in review.** Decluttered the Projects
+      page: removed the always-visible inline create form; **create via a dialog** (new
+      `create-project-dialog.tsx` — reuses the ONE-63 `Dialog` + the existing `CreateProjectForm` /
+      `createProject` action + validation; trigger = default Button, "New project" in the header / "Create
+      project" in the empty state). **Quick delete** — a small trash-icon on each card opens the **existing**
+      ONE-63 `DeleteProjectDialog` (added `triggerVariant="icon"`; Settings usage byte-identical; same
+      `deleteProject` action — no duplicated logic; the trash sits outside the card `Link` so it doesn't
+      navigate). No schema/query/analytics change; server-first; no new dependency; no accent creep; dark-first.
+      **Bundle win:** `/dashboard` First Load **189 → 129 kB** (dropped the server-page `buttonVariants`
+      umbrella import). Verified: 83 tests, typecheck · lint · build green. Files: +`create-project-dialog.tsx`,
+      `delete-project-dialog.tsx` (icon trigger), `dashboard/page.tsx`.
 
 ---
 

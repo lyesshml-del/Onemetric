@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Trash2 } from "lucide-react";
 import { deleteProject } from "@/server/actions/projects";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,9 +29,13 @@ import {
 export function DeleteProjectDialog({
   projectId,
   projectName,
+  triggerVariant = "button",
 }: {
   projectId: string;
   projectName: string;
+  /** "button" (default) = the Settings Danger Zone CTA; "icon" = a quiet trash
+   *  trigger for the Projects-page cards (ONE-67). Same dialog + server action. */
+  triggerVariant?: "button" | "icon";
 }) {
   const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState("");
@@ -44,7 +49,18 @@ export function DeleteProjectDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="destructive">Delete project</Button>
+        {triggerVariant === "icon" ? (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="text-muted-foreground hover:text-destructive"
+            aria-label={`Delete ${projectName}`}
+          >
+            <Trash2 />
+          </Button>
+        ) : (
+          <Button variant="destructive">Delete project</Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

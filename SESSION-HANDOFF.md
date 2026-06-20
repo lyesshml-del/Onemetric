@@ -129,8 +129,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   All reuse the existing design system + `radix-ui` — **no new dependency**. (Bundle note: ONE-65 raised
   `/dashboard` + `/funnels` First Load 117 → 189 kB — the empty-state CTA imports `buttonVariants`, pulling
   the `radix-ui` umbrella chunk other server pages already pay; future fix = import `Slot` from
-  `@radix-ui/react-slot` directly in `button.tsx`.) The broader product backlog (marketing / onboarding /
-  Paddle go-live) is separate, pre-existing work — keep one-phase-per-turn discipline if it's picked up later.
+  `@radix-ui/react-slot` directly in `button.tsx`.) **`ONE-67`** (Projects page UX cleanup — dialog-based
+  create + per-card quick-delete; inline form removed) is implemented + committed locally → **In Review**
+  (1 unpushed; `/dashboard` First Load dropped **189 → 129 kB** by removing the server-page `buttonVariants`
+  import). The broader product backlog (marketing / onboarding / Paddle go-live) is separate, pre-existing
+  work — keep one-phase-per-turn discipline if it's picked up later.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 

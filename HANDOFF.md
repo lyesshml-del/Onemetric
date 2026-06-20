@@ -1337,6 +1337,28 @@ commit). Repository == Linear == GitHub == production. No open Move/feature work
 broader Launch/Onboarding backlog (e.g. `ONE-18` DB cleanup, `ONE-39` first-run flow, `ONE-23` retention
 cron, Paddle go-live) is separate, pre-existing.
 
+**✅ ONE-67 — Project list UX cleanup (2026-06-20). Committed locally → In Review.** Decluttered the Projects
+page: dialog-based create + per-card quick-delete, no inline form. Additive; no new dependency; server-first;
+dark-first; reuses the ONE-63 Dialog + delete flow.
+
+- **`components/dashboard/create-project-dialog.tsx` (new, client):** a default Button ("New project" /
+  "Create project") opens a `Dialog` (ONE-63) containing the existing `CreateProjectForm` (unchanged — same
+  `createProject` action + validation; redirect-on-success closes the dialog with the navigation).
+- **`delete-project-dialog.tsx` (ONE-63) — additive `triggerVariant` prop:** default `"button"` keeps the
+  Settings Danger-Zone CTA byte-identical; `"icon"` renders a quiet ghost trash button
+  (`text-muted-foreground hover:text-destructive`, `Trash2`) for the project cards. Same dialog + same
+  `deleteProject` server action — no duplicated deletion logic.
+- **`dashboard/page.tsx` (rewrite):** header = "Projects" + a `CreateProjectDialog` button (when projects
+  exist); a cards-only grid with the quick-delete trash positioned **outside the card `Link`** (`absolute`,
+  so it opens the delete dialog without navigating); empty state = the ONE-65 `EmptyState` whose CTA is a
+  `CreateProjectDialog`. **Removed** the always-visible inline form card + the `buttonVariants` /
+  `CreateProjectForm` / `CardContent` imports.
+- **Bundle win:** dropping the server-page `buttonVariants` import (the ONE-65 umbrella culprit) took
+  `/dashboard` First Load **189 → 129 kB** — lighter *and* cleaner.
+- **Verified:** 83 tests · typecheck · lint · build green; grep `*-brand` on the new dialog = none (no accent
+  creep). No schema/query/analytics change; the Settings delete flow is unchanged. **On approval:**
+  `ONE-67` → Done. **Not pushed** (1 unpushed).
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
