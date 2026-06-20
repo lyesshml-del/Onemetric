@@ -713,6 +713,10 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 
 ## Post-launch features (beyond Moves #1–#3)
 
+> **🚢 Shipped 2026-06-20 — `ONE-63`, `ONE-64`, `ONE-65`, `ONE-66` are Done and live in production.**
+> Pushed `79badb8..5ef6850` (4 commits) → `origin/main`; Vercel prod deploy `dpl_Gw5r3jf8…` **READY** at
+> commit `5ef6850` (https://onemetric.sbs). The "implemented, in review" notes below are the build records.
+
 - [x] **ONE-63 — Project deletion (Settings → Danger Zone) ✅ implemented (2026-06-19), in review.** A
       safe, type-to-confirm permanent delete. The **Settings page** gains a "Danger Zone" `Card`
       (`border-destructive/40`, `rounded-xl`) → destructive **Delete project** button → confirmation

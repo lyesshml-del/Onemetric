@@ -119,7 +119,7 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   deploy) is Done (2026-06-19):** the 36 local commits were pushed to `origin/main` (`449757a`) and the
   Vercel **production deploy is READY** (commit `449757a`, target production). **origin/main == local main;
   zero unpushed; tree clean.** Repository, Linear, GitHub, and production are fully synchronized; the design
-  line has no open items. **Four post-Move features are implemented + committed locally → In Review:**
+  line has no open items. **Four post-Move features are Done & live in production (shipped 2026-06-20):**
   **`ONE-63`** (project deletion — Danger Zone, type-to-confirm; cascade verified on the live DB → no
   orphans), **`ONE-64`** (project rename — a "General" card; `Project.name` only, owner-scoped, 1–60 chars),
   and **`ONE-65`** (first-event onboarding & empty states — Overview "No events yet" snippet + 3 steps, a
@@ -214,10 +214,12 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**, **pushed to `origin/main` (2026-06-19; `ONE-24`).** `origin/main == local main ==
-  449757a`; **zero unpushed commits**; working tree clean. The push (36 commits: Move #1/#2/#3 + ONE-45)
-  triggered the Vercel **production deploy → READY** (`dpl_AeT56nQ8…`, commit `449757a`). Future pushes to
-  `main` still trigger a production deploy — get explicit go-ahead first.
+- Branch **`main`**, **fully pushed to `origin/main` (latest ship: 2026-06-20).** `origin/main == local
+  main`; **zero unpushed commits**; working tree clean. The 2026-06-20 ship pushed `79badb8..5ef6850`
+  (4 commits: `ONE-63` delete · `ONE-64` rename · `ONE-65` empty states · `ONE-66` checklist) → Vercel
+  **production deploy READY** (`dpl_Gw5r3jf8…`, commit `5ef6850`, https://onemetric.sbs). (The earlier
+  2026-06-19 ship — `ONE-24` — pushed Move #1/#2/#3 + `ONE-45`.) Future pushes to `main` still trigger a
+  production deploy — get explicit go-ahead first.
 - **Verification baseline:** `83 tests` pass; `typecheck`, `lint`, and production `build` green.
   Run all four before finishing any phase (`cd apps/web && npm run test && npm run typecheck &&
   npm run lint && npm run build`).

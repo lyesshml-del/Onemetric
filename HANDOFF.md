@@ -1328,6 +1328,15 @@ new dependency; server-first; dark-first; Moves #1/#2/#3 + the delete/rename/emp
 - **Verified:** 83 tests · typecheck · lint · build green; grep `*-brand` on the new file = none (no accent
   creep). **On approval:** `ONE-66` → Done. **Not pushed.**
 
+**🚢 SHIPPED — ONE-63/64/65/66 (2026-06-20).** The four post-Move features (project delete, rename,
+first-event empty states, onboarding checklist) were approved, marked **Done**, and pushed: `git push`
+`79badb8..5ef6850` (4 commits) → `origin/main`. The push triggered the Vercel **production deploy
+`dpl_Gw5r3jf8mCr6LLKgJ93wiX51qZz2` → READY** (commit `5ef6850`, target production, aliases incl.
+**https://onemetric.sbs**, built ~40s). `origin/main == local main`; zero unpushed (before this docs-sync
+commit). Repository == Linear == GitHub == production. No open Move/feature work remains in this line; the
+broader Launch/Onboarding backlog (e.g. `ONE-18` DB cleanup, `ONE-39` first-run flow, `ONE-23` retention
+cron, Paddle go-live) is separate, pre-existing.
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
