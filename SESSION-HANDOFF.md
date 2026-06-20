@@ -130,10 +130,18 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   `/dashboard` + `/funnels` First Load 117 → 189 kB — the empty-state CTA imports `buttonVariants`, pulling
   the `radix-ui` umbrella chunk other server pages already pay; future fix = import `Slot` from
   `@radix-ui/react-slot` directly in `button.tsx`.) **`ONE-67`** (Projects page UX cleanup — dialog-based
-  create + per-card quick-delete; inline form removed) is implemented + committed locally → **In Review**
-  (1 unpushed; `/dashboard` First Load dropped **189 → 129 kB** by removing the server-page `buttonVariants`
-  import). The broader product backlog (marketing / onboarding / Paddle go-live) is separate, pre-existing
-  work — keep one-phase-per-turn discipline if it's picked up later.
+  create + per-card quick-delete; inline form removed) is **Done & pushed** (`dd513f7..1fe9b6a`, 2026-06-20
+  → prod deploy triggered; `/dashboard` First Load dropped **189 → 129 kB**).
+- **Move #4 — Activation & First Experience (in progress, 2026-06-20).** New Linear project
+  (`79b97981`) optimizing the whole journey signup → first "aha": `ONE-68` welcome flow · `ONE-69` snippet
+  install experience · `ONE-70` first-event guidance · `ONE-71` first value/activation. Same discipline as
+  the Moves (sync before each issue · analyze first · reuse · server-first · dark-first · **no accent
+  creep** · preserve Moves #1–#3 · one issue at a time · one local commit · In Review + stop). **`ONE-68`
+  (welcome flow) is implemented + committed locally → In Review (1 unpushed):** the 0-project dashboard
+  entry now shows a guided welcome (`WelcomeProjects` server component — reuses `EmptyState` +
+  `CreateProjectDialog` + a 3-step journey preview in the `FirstEventOnboarding` card language); populated
+  state byte-identical; `/dashboard` 129 kB unchanged; 83 tests/typecheck/lint/build green. **Next: await
+  approval of ONE-68, then ONE-69.** The broader product backlog (marketing / Paddle go-live) is separate.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -217,12 +225,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**, **fully pushed to `origin/main` (latest ship: 2026-06-20).** `origin/main == local
-  main`; **zero unpushed commits**; working tree clean. The 2026-06-20 ship pushed `79badb8..5ef6850`
-  (4 commits: `ONE-63` delete · `ONE-64` rename · `ONE-65` empty states · `ONE-66` checklist) → Vercel
-  **production deploy READY** (`dpl_Gw5r3jf8…`, commit `5ef6850`, https://onemetric.sbs). (The earlier
-  2026-06-19 ship — `ONE-24` — pushed Move #1/#2/#3 + `ONE-45`.) Future pushes to `main` still trigger a
-  production deploy — get explicit go-ahead first.
+- Branch **`main`**. **`ONE-67` pushed 2026-06-20** (`dd513f7..1fe9b6a` → prod deploy triggered). Now
+  **1 unpushed commit** = `ONE-68` (Move #4 welcome flow), **In Review, awaiting approval**; working tree
+  otherwise clean. Earlier ships: 2026-06-20 `79badb8..5ef6850` (`ONE-63/64/65/66`); 2026-06-19 `ONE-24`
+  (Move #1/#2/#3 + `ONE-45`). Future pushes to `main` still trigger a production deploy — get explicit
+  go-ahead first.
 - **Verification baseline:** `83 tests` pass; `typecheck`, `lint`, and production `build` green.
   Run all four before finishing any phase (`cd apps/web && npm run test && npm run typecheck &&
   npm run lint && npm run build`).

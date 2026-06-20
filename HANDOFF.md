@@ -1359,6 +1359,35 @@ dark-first; reuses the ONE-63 Dialog + delete flow.
   creep). No schema/query/analytics change; the Settings delete flow is unchanged. **On approval:**
   `ONE-67` → Done. **Not pushed** (1 unpushed).
 
+## Move #4 — Activation & First Experience (signup → first "aha moment")
+
+New Linear project **Move #4 — Activation & First Experience** (`79b97981`) created 2026-06-20 with
+`ONE-68…71`: ONE-68 welcome flow · ONE-69 snippet install experience · ONE-70 first-event guidance ·
+ONE-71 first value/activation. **ONE-67 was approved + pushed** (`dd513f7..1fe9b6a`) → Done + prod deploy
+triggered, so the tree was clean before Move #4 began. Same discipline: one issue at a time, one local
+commit each, In Review + stop. Server-first · dark-first · reuse · **no accent creep** · preserve Moves #1–#3.
+
+**✅ ONE-68 — Welcome flow / project-creation onboarding (2026-06-20). Committed locally → In Review.** The
+dashboard entry for a **brand-new user (0 projects)** now reads as a guided welcome, not bare list chrome.
+
+- **`components/dashboard/welcome-projects.tsx` (new, server):** the `projects.length === 0` body. Reuses the
+  ONE-65 `EmptyState` (title "Create your first project" + the cookieless/no-PII value line + a primary
+  **Create project** CTA = the ONE-67 `CreateProjectDialog`) and adds a calm **3-step journey preview**
+  (Create a project → Install the snippet → Watch analytics flow) in the same numbered "Step N" `Card`
+  language as the Overview `FirstEventOnboarding` → one first-run system. Purely presentational.
+- **`app/dashboard/page.tsx` (zero-project branch only):** `isFirstRun = projects.length === 0`; the header
+  greets ("**Welcome to OneMetric**" + "Let's get your first site tracking — it only takes a minute.") and the
+  body renders `<WelcomeProjects/>`. The **populated state is byte-identical** (header copy, header
+  `CreateProjectDialog`, cards + quick-delete unchanged); the old standalone `EmptyState` import was removed
+  (now reached via `WelcomeProjects`).
+- **Reuse / constraints honored:** server-first; reuses `EmptyState`/`CreateProjectDialog`/`Card`; no new
+  dependency; no schema/query/analytics change; **no accent creep** (the create CTA is the existing sanctioned
+  primary-button zone; grep `*-brand` on the new file = none); dark-first; Moves #1/#2/#3 untouched.
+- **Bundle:** `/dashboard` First Load **129 kB — unchanged** (`WelcomeProjects` is server-only, reusing the
+  already-loaded create dialog). New-user path is a deterministic `length===0` branch → DataFast/live data
+  untouched; no browser in env, so the welcome visual is reasoned from the markup + the green build.
+- **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-68` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

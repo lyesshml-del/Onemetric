@@ -785,6 +785,33 @@ Overview at `app/dashboard/[projectId]/page.tsx` only.
 
 ---
 
+## Move #4 — Activation & First Experience (signup → first "aha moment")
+
+Optimize the whole journey: signup → create project → install snippet → first event → first value.
+Builds on `ONE-65/66/67`. Server-first · dark-first · reuse existing components · **no accent creep** ·
+preserve Moves #1–#3 · one issue at a time, one local commit per issue, In Review + stop for approval.
+Linear: project **Move #4 — Activation & First Experience** with `ONE-68…71`.
+
+- [x] **ONE-68 — Welcome flow / project-creation onboarding ✅ implemented (2026-06-20), in review.** The
+      dashboard entry for a **brand-new user (0 projects)** became a guided welcome instead of the bare
+      project-list chrome. The header greets ("**Welcome to OneMetric**" + "Let's get your first site
+      tracking — it only takes a minute."); the body renders a new **`WelcomeProjects`** server component =
+      the reused ONE-65 `EmptyState` (primary **Create project** CTA → the ONE-67 `CreateProjectDialog`) +
+      a calm **3-step journey preview** (Create a project → Install the snippet → Watch analytics flow) in
+      the same numbered "Step N" card language as the Overview `FirstEventOnboarding` (one system). The
+      populated project-list state is **byte-identical** (header copy, header `CreateProjectDialog`, cards +
+      quick-delete unchanged); only the `projects.length === 0` branch changed. Purely presentational,
+      server-first; reuses `EmptyState`/`CreateProjectDialog`/`Card`; no new dependency, no schema/query
+      change, no accent creep (the create CTA is the existing sanctioned primary-button zone), dark-first.
+      `/dashboard` First Load **129 kB — unchanged** (`WelcomeProjects` is server-only, reusing the already-
+      loaded create dialog). Verified: 83 tests, typecheck · lint · build green. Files:
+      +`components/dashboard/welcome-projects.tsx`, `app/dashboard/page.tsx`.
+- [ ] **ONE-69 — Snippet installation experience.** (Backlog — next after ONE-68 approval.)
+- [ ] **ONE-70 — First-event guidance.** (Backlog.)
+- [ ] **ONE-71 — First value / activation ("aha moment").** (Backlog.)
+
+---
+
 ## Excluded from V1 (ROADMAP only — never implement)
 
 Session replay · heatmaps · A/B testing · feature flags · AI reports ·

@@ -5,7 +5,7 @@ import { listProjects } from "@/server/queries/projects";
 import { CreateProjectDialog } from "@/components/dashboard/create-project-dialog";
 import { DeleteProjectDialog } from "@/components/dashboard/delete-project-dialog";
 import { DeletedToast } from "@/components/dashboard/deleted-toast";
-import { EmptyState } from "@/components/dashboard/empty-state";
+import { WelcomeProjects } from "@/components/dashboard/welcome-projects";
 import {
   Card,
   CardDescription,
@@ -25,6 +25,9 @@ export default async function DashboardPage({
   const { user } = await requireUser();
   const { deleted } = await searchParams;
   const projects = await listProjects(user.id);
+  // ONE-68 (Move #4) — a brand-new user (no projects) gets a guided welcome
+  // instead of the bare project-list chrome.
+  const isFirstRun = projects.length === 0;
 
   return (
     <div className="space-y-8">
@@ -32,18 +35,23 @@ export default async function DashboardPage({
 
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Projects</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {isFirstRun ? "Welcome to OneMetric" : "Projects"}
+          </h1>
           <p className="text-muted-foreground">
-            Create a project, install the snippet, and your analytics start
-            flowing.
+            {isFirstRun
+              ? "Let's get your first site tracking — it only takes a minute."
+              : "Create a project, install the snippet, and your analytics start flowing."}
           </p>
         </div>
-        {/* ONE-67 — header create action (shown when projects exist; the empty
-            state carries its own CTA). No inline form on the page. */}
-        {projects.length > 0 ? <CreateProjectDialog /> : null}
+        {/* ONE-67 — header create action (shown when projects exist; the
+            first-run welcome carries its own CTA). No inline form on the page. */}
+        {isFirstRun ? null : <CreateProjectDialog />}
       </div>
 
-      {projects.length > 0 ? (
+      {isFirstRun ? (
+        <WelcomeProjects />
+      ) : (
         <ul className="grid gap-4 sm:grid-cols-2">
           {projects.map((project) => (
             <li key={project.id} className="relative">
@@ -69,12 +77,6 @@ export default async function DashboardPage({
             </li>
           ))}
         </ul>
-      ) : (
-        <EmptyState
-          title="Create your first project"
-          description="Add a website, install the snippet, and your analytics start flowing."
-          action={<CreateProjectDialog triggerLabel="Create project" />}
-        />
       )}
     </div>
   );
