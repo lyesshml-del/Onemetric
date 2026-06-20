@@ -1449,6 +1449,34 @@ after snippet install guiding + reassuring instead of a bare status line.
   the green build.
 - **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-70` → Done. **Not pushed.**
 
+**✅ ONE-70 SHIPPED (2026-06-20).** Approved → pushed `a298b32..de4cb1a`; Vercel **production deploy READY**
+(`dpl_8JQAz3yTHbWuxHRnBmwoY7G1qZ4X`, commit `de4cb1a`, `onemetric.sbs`). `ONE-70` → Done. Repository ==
+Linear == GitHub == production, all at `de4cb1a`.
+
+**✅ ONE-71 — First value / activation "aha moment" (2026-06-20). Committed locally → In Review. CLOSES
+MOVE #4.** When the first data arrives, the Overview now opens with a calm, professional success moment.
+
+- **Analysis:** the empty→populated transition was silent — the Lede/Hero quantify traffic and the ONE-66
+  checklist lists next steps, but nothing *acknowledged the milestone* ("it works"). That recognition +
+  value framing was the missing "aha".
+- **`components/dashboard/first-value-banner.tsx` (new, server):** a standard `Card` — "**Your analytics are
+  live**" + the existing **emerald "live" dot** + one line: "It works — OneMetric is tracking your site …
+  privately, no cookies, no consent banner. Your live numbers are below and keep updating." Answers *it
+  works · getting traffic · why valuable*. **No animation/toast/confetti** (the "avoid noisy/gimmicky"
+  rule). Purely presentational; no props.
+- **`dashboard/[projectId]/page.tsx`:** rendered as the **first child of the `hasData` branch** (above the
+  Lede), gated `!fullyActivated` — the **same activation window as the checklist**, so banner + checklist
+  appear and **retire together** once a funnel + revenue both exist (no permanent chrome). Derived from real
+  state (`hasData && !fullyActivated`) — **no fake data, no new query**.
+- **No duplication:** the ONE-66 `OnboardingChecklist` (preserved, untouched, rendered just below the Hero)
+  keeps the next-step CTAs; the banner only celebrates + frames value. Complementary, separated by Lede+Hero.
+- **Constraints honored:** server-first; reuses `Card` + the emerald semantic; no new dependency; no
+  schema/query change; **no accent creep** (emerald = existing live/positive semantic, not the brand violet);
+  dark-first; Moves #1/#2/#3 + ONE-68/69/70 preserved. Overview route **5.82 kB / 122 kB First Load —
+  unchanged** (server-only). No browser in env → the banner is reasoned from the gated branch + green build.
+- **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-71` → Done + the **Move #4**
+  Linear project → **Completed** (all four phases done). **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

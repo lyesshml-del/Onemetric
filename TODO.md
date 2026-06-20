@@ -838,7 +838,28 @@ Linear: project **Move #4 — Activation & First Experience** with `ONE-68…71`
       links, not brand buttons). Settings route **1.91 kB / 130 kB First Load — unchanged**. Verified: 83
       tests, typecheck · lint · build green. Files: +`components/dashboard/first-event-guide.tsx`,
       `app/dashboard/[projectId]/settings/page.tsx`.
-- [ ] **ONE-71 — First value / activation ("aha moment").** (Backlog.)
+- [x] **ONE-71 — First value / activation ("aha moment") ✅ implemented (2026-06-20), in review.** Closes
+      Move #4: the moment data first arrives, the Overview opens with a calm, professional acknowledgement of
+      success. New **`FirstValueBanner`** *server* component (standard `Card`) — "**Your analytics are
+      live**" with the existing **emerald "live" dot** + one value-framing line ("It works — OneMetric is
+      tracking your site … privately, no cookies, no consent banner. Your live numbers are below and keep
+      updating"). Answers *It works · I'm getting traffic · why OneMetric is valuable*; the Lede/Hero below
+      quantify the traffic and the **ONE-66 checklist** (preserved, untouched) owns *where to go / what to
+      explore next* → **complementary, not duplicative**. Rendered as the first child of the populated
+      Overview (above the Lede), gated to the **activation window** (`hasData && !fullyActivated`) so it
+      **retires together with the checklist** once the project is fully set up — no permanent chrome.
+      **Calm by design:** no animation, no toast, no confetti, no noisy notification. Derived from **real
+      state only — no fake data**; server-first; dark-first; reuses `Card` + the emerald semantic; **no new
+      dependency**; no schema/query change; **no accent creep** (emerald is the existing live/positive
+      semantic, not the brand violet). Moves #1/#2/#3 + ONE-68/69/70 preserved. Overview route **5.82 kB /
+      122 kB First Load — unchanged** (server-only). Verified: 83 tests, typecheck · lint · build green.
+      Files: +`components/dashboard/first-value-banner.tsx`, `app/dashboard/[projectId]/page.tsx`.
+
+> **Move #4 — Activation & First Experience: all four phases implemented.** ONE-68 welcome flow (shipped) ·
+> ONE-69 snippet install experience (shipped) · ONE-70 first-event guidance (shipped) · ONE-71 first-value
+> banner (in review). The journey signup → create → install → first event → first value now has guidance,
+> progress, and a calm success moment at every step. **On ONE-71 approval:** `ONE-71` → Done + the Move #4
+> Linear project → Completed.
 
 ---
 

@@ -32,6 +32,7 @@ import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
 import { Lede } from "@/components/dashboard/lede";
 import { FirstEventOnboarding } from "@/components/dashboard/first-event-onboarding";
+import { FirstValueBanner } from "@/components/dashboard/first-value-banner";
 import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 import { OverviewSkeleton } from "@/components/dashboard/overview-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -190,6 +191,12 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
         />
       ) : (
         <>
+          {/* ONE-71 — first-value "aha" banner: a calm acknowledgement that setup
+              worked, shown only during the activation window (retires with the
+              checklist once fully activated). Celebrates + frames value; the
+              checklist below owns the next-step CTAs (no duplication). */}
+          {!fullyActivated ? <FirstValueBanner /> : null}
+
           {/* Lede — the briefing sentence (Move #1 / Phase B). */}
           <Lede tokens={ledeTokens} />
 

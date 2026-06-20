@@ -147,12 +147,16 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   **Done & shipped** (pushed `18cf117..a298b32` → prod READY `dpl_37kb…`, `onemetric.sbs`). **`ONE-70`
   (first-event guidance) is implemented + committed locally → In Review (1 unpushed):** the **Settings →
   Verification** card was reworked into a new `FirstEventGuide` *server* component (driven by the existing
-  `getProjectIngestStats`, no fake data) answering the new-user's five questions right after install —
-  waiting → "Trigger your first event" steps + "waiting is normal" reassurance + reused `RefreshButton` +
-  "your dashboard →" link; receiving → "connected, you're all set" + dashboard link. Overview
-  `FirstEventOnboarding` + the ONE-66 checklist untouched; no new query/dependency; Settings route 130 kB
-  unchanged; 83 tests/typecheck/lint/build green. **Next: await approval of ONE-70, then ONE-71 (do NOT start
-  ONE-71 early).** The broader product backlog (marketing / Paddle go-live) is separate.
+  `getProjectIngestStats`, no fake data) answering the new-user's five questions right after install; it's
+  **Done & shipped** (pushed `a298b32..de4cb1a` → prod READY `dpl_8JQA…`, `onemetric.sbs`). **`ONE-71`
+  (first value / "aha moment") is implemented + committed locally → In Review (1 unpushed) — CLOSES MOVE
+  #4:** new `FirstValueBanner` *server* component (standard `Card`, emerald "live" dot) — "Your analytics
+  are live · it works · privately, no cookies · live numbers below" — rendered atop the populated Overview,
+  gated `hasData && !fullyActivated` so it retires with the ONE-66 checklist (which, untouched, still owns
+  the next-step CTAs → no duplication). Calm by design (no animation/toast/confetti), real state only, no
+  new query/dependency, no accent creep; Overview route 122 kB unchanged; 83 tests/typecheck/lint/build
+  green. **Next: await approval of ONE-71 → then `ONE-71` Done + the Move #4 Linear project → Completed.
+  Do NOT start another issue.** The broader product backlog (marketing / Paddle go-live) is separate.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -236,12 +240,12 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. **`ONE-69` shipped 2026-06-20** (`18cf117..a298b32` → prod READY `dpl_37kb…`, commit
-  `a298b32`). Now **1 unpushed commit** = `ONE-70` (Move #4 first-event guidance), **In Review, awaiting
-  approval**; working tree otherwise clean. Earlier ships: `ONE-68` (`1fe9b6a..18cf117`); `ONE-67`
-  (`dd513f7..1fe9b6a`); 2026-06-20 `79badb8..5ef6850` (`ONE-63/64/65/66`); 2026-06-19 `ONE-24` (Move
-  #1/#2/#3 + `ONE-45`). Future pushes to `main` still trigger a production deploy — get explicit go-ahead
-  first.
+- Branch **`main`**. **`ONE-70` shipped 2026-06-20** (`a298b32..de4cb1a` → prod READY `dpl_8JQA…`, commit
+  `de4cb1a`). Now **1 unpushed commit** = `ONE-71` (Move #4 first-value banner — closes Move #4), **In
+  Review, awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-69` (`18cf117..a298b32`);
+  `ONE-68` (`1fe9b6a..18cf117`); `ONE-67` (`dd513f7..1fe9b6a`); 2026-06-20 `79badb8..5ef6850`
+  (`ONE-63/64/65/66`); 2026-06-19 `ONE-24` (Move #1/#2/#3 + `ONE-45`). Future pushes to `main` still trigger
+  a production deploy — get explicit go-ahead first.
 - **Verification baseline:** `83 tests` pass; `typecheck`, `lint`, and production `build` green.
   Run all four before finishing any phase (`cd apps/web && npm run test && npm run typecheck &&
   npm run lint && npm run build`).
