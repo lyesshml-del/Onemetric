@@ -143,10 +143,16 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   experience) is implemented + committed locally → In Review (1 unpushed):** new `InstallGuide` *server*
   component wraps the existing `InstallSnippet` with a precise "just before `</head>`" placement line + a
   zero-JS native `<details>` of per-stack hints (Plain HTML / Next.js / WordPress / no-code), wired into the
-  **Settings → Install** card (the destination the Overview's `FirstEventOnboarding` already links to);
-  Verification card + other surfaces untouched; no new dependency; Settings route 130 kB unchanged; 83
-  tests/typecheck/lint/build green. **Next: await approval of ONE-69, then ONE-70 (do NOT start ONE-70/71
-  early).** The broader product backlog (marketing / Paddle go-live) is separate.
+  **Settings → Install** card (the destination the Overview's `FirstEventOnboarding` already links to); it's
+  **Done & shipped** (pushed `18cf117..a298b32` → prod READY `dpl_37kb…`, `onemetric.sbs`). **`ONE-70`
+  (first-event guidance) is implemented + committed locally → In Review (1 unpushed):** the **Settings →
+  Verification** card was reworked into a new `FirstEventGuide` *server* component (driven by the existing
+  `getProjectIngestStats`, no fake data) answering the new-user's five questions right after install —
+  waiting → "Trigger your first event" steps + "waiting is normal" reassurance + reused `RefreshButton` +
+  "your dashboard →" link; receiving → "connected, you're all set" + dashboard link. Overview
+  `FirstEventOnboarding` + the ONE-66 checklist untouched; no new query/dependency; Settings route 130 kB
+  unchanged; 83 tests/typecheck/lint/build green. **Next: await approval of ONE-70, then ONE-71 (do NOT start
+  ONE-71 early).** The broader product backlog (marketing / Paddle go-live) is separate.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -230,11 +236,12 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. **`ONE-68` shipped 2026-06-20** (`1fe9b6a..18cf117` → prod READY `dpl_Cfjd…`, commit
-  `18cf117`). Now **1 unpushed commit** = `ONE-69` (Move #4 snippet install experience), **In Review,
-  awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-67` (`dd513f7..1fe9b6a`); 2026-06-20
-  `79badb8..5ef6850` (`ONE-63/64/65/66`); 2026-06-19 `ONE-24` (Move #1/#2/#3 + `ONE-45`). Future pushes to
-  `main` still trigger a production deploy — get explicit go-ahead first.
+- Branch **`main`**. **`ONE-69` shipped 2026-06-20** (`18cf117..a298b32` → prod READY `dpl_37kb…`, commit
+  `a298b32`). Now **1 unpushed commit** = `ONE-70` (Move #4 first-event guidance), **In Review, awaiting
+  approval**; working tree otherwise clean. Earlier ships: `ONE-68` (`1fe9b6a..18cf117`); `ONE-67`
+  (`dd513f7..1fe9b6a`); 2026-06-20 `79badb8..5ef6850` (`ONE-63/64/65/66`); 2026-06-19 `ONE-24` (Move
+  #1/#2/#3 + `ONE-45`). Future pushes to `main` still trigger a production deploy — get explicit go-ahead
+  first.
 - **Verification baseline:** `83 tests` pass; `typecheck`, `lint`, and production `build` green.
   Run all four before finishing any phase (`cd apps/web && npm run test && npm run typecheck &&
   npm run lint && npm run build`).

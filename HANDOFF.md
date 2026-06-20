@@ -1418,6 +1418,37 @@ friction between project creation and the first event: a clearer, reassuring ins
   HTML + the green build.
 - **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-69` → Done. **Not pushed.**
 
+**✅ ONE-69 SHIPPED (2026-06-20).** Approved → pushed `18cf117..a298b32`; Vercel **production deploy READY**
+(`dpl_37kbNgRWDgZ8egMZ3wXDFuy6QAi4`, commit `a298b32`, `onemetric.sbs`). `ONE-69` → Done. Repository ==
+Linear == GitHub == production, all at `a298b32`.
+
+**✅ ONE-70 — First-event guidance (2026-06-20). Committed locally → In Review.** Makes the moment right
+after snippet install guiding + reassuring instead of a bare status line.
+
+- **Surface = Settings → Verification card** (where the user arrives via the Overview's "Full setup &
+  verification →" link, adjacent to the snippet they just pasted). It previously showed only a status dot +
+  "Check again" — no "what do I do now / how do I trigger an event / is waiting normal / where do results
+  show?".
+- **`components/dashboard/first-event-guide.tsx` (new, server):** driven entirely by the existing
+  `getProjectIngestStats` (`events`, `lastEventAt`) — **no new query, no fake data.** Two states:
+  - **waiting (`events === 0`):** amber dot + "Trigger your first event" → ordered steps (open your site /
+    load any page → first pageview; then "Check again"), a "this stays on *waiting* until the first load —
+    that's normal" reassurance, an `onemetric.track()` pointer for custom actions, the reused `RefreshButton`,
+    and a quiet "Where you'll see it: your dashboard →" link.
+  - **receiving (`events > 0`):** emerald dot + "Receiving data — N events", "Your site is connected …
+    you're all set", `lastEventAt`, "View your dashboard →".
+- **`settings/page.tsx`:** the inline Verification status block → `<FirstEventGuide …/>`; the
+  `CardDescription` softened to "Let's get your first event flowing." (`receiving` still drives it). The
+  `RefreshButton` import moved into the component. Install/Custom-events/General/Danger-Zone cards untouched.
+- **Scope discipline:** Overview `FirstEventOnboarding` (ONE-65) + the ONE-66 checklist keep their own
+  snippet/steps → no duplication, no regression to verified work.
+- **Constraints honored:** server-first; reuses `Card`/`RefreshButton` + the emerald/amber dot language; no
+  new dependency; no schema/query change; **no accent creep** (semantic dots + muted/foreground text links,
+  not brand buttons); dark-first; Moves #1/#2/#3 + ONE-68/69 preserved. Settings route **1.91 kB / 130 kB
+  First Load — unchanged**. No browser in env → the two states are reasoned from the `events`-driven branch +
+  the green build.
+- **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-70` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

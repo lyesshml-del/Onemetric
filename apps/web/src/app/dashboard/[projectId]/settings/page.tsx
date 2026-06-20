@@ -8,7 +8,7 @@ import {
 } from "@/server/queries/projects";
 import { ProjectHeader } from "@/components/dashboard/project-header";
 import { InstallGuide } from "@/components/dashboard/install-guide";
-import { RefreshButton } from "@/components/dashboard/refresh-button";
+import { FirstEventGuide } from "@/components/dashboard/first-event-guide";
 import { CustomEventsDoc } from "@/components/dashboard/custom-events-doc";
 import { DeleteProjectDialog } from "@/components/dashboard/delete-project-dialog";
 import { RenameProjectForm } from "@/components/dashboard/rename-project-form";
@@ -73,31 +73,15 @@ export default async function ProjectSettingsPage({
           <CardDescription>
             {receiving
               ? "OneMetric is receiving data from your site."
-              : "Waiting for the first event from your site."}
+              : "Let's get your first event flowing."}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-2 text-sm">
-            <span
-              className={
-                receiving
-                  ? "size-2 rounded-full bg-emerald-500"
-                  : "size-2 rounded-full bg-amber-500"
-              }
-              aria-hidden
-            />
-            <span>
-              {receiving
-                ? `Receiving data — ${stats.events} event${stats.events === 1 ? "" : "s"} so far`
-                : "No events received yet"}
-            </span>
-          </div>
-          {stats.lastEventAt ? (
-            <p className="text-muted-foreground text-sm">
-              Last event: {stats.lastEventAt.toUTCString()}
-            </p>
-          ) : null}
-          <RefreshButton />
+        <CardContent>
+          <FirstEventGuide
+            events={stats.events}
+            lastEventAt={stats.lastEventAt}
+            overviewHref={`/dashboard/${project.id}`}
+          />
         </CardContent>
       </Card>
 

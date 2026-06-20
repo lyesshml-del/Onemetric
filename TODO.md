@@ -821,7 +821,23 @@ Linear: project **Move #4 — Activation & First Experience** with `ONE-68…71`
       only); dark-first; Moves #1/#2/#3 + ONE-68 preserved. Settings route **1.91 kB / 130 kB First Load —
       unchanged** (server-only, zero client JS added). Verified: 83 tests, typecheck · lint · build green.
       Files: +`components/dashboard/install-guide.tsx`, `app/dashboard/[projectId]/settings/page.tsx`.
-- [ ] **ONE-70 — First-event guidance.** (Backlog.)
+- [x] **ONE-70 — First-event guidance ✅ implemented (2026-06-20), in review.** Reworked the **Settings →
+      Verification** card (the surface the user lands on right after installing the snippet) so it answers the
+      five new-user questions at that exact moment, from **real ingest data — no fake progress**. New
+      **`FirstEventGuide`** *server* component (driven by the existing `getProjectIngestStats` →
+      `events`/`lastEventAt`): **waiting** (0 events) → amber dot + "Trigger your first event" with two
+      concrete steps (open your site / load any page → first pageview; then "Check again"), the reassurance
+      that "waiting" is **normal** until the first load, a pointer to `onemetric.track()` for custom actions,
+      the reused `RefreshButton`, and a quiet "Where you'll see it: your dashboard →" link; **receiving**
+      (events > 0) → emerald dot + "Receiving data — N events", "Your site is connected … you're all set",
+      `lastEventAt`, and a "View your dashboard →" link. Verification `CardDescription` softened ("Let's get
+      your first event flowing."). **Deliberately scoped to Settings** — the Overview `FirstEventOnboarding`
+      (ONE-65) + the ONE-66 checklist keep their own copy → no duplication/regression. Reuses
+      `Card`/`RefreshButton` + the established emerald/amber status-dot language; server-first; dark-first; no
+      new query/schema; **no new dependency**; **no accent creep** (semantic dots + muted/foreground text
+      links, not brand buttons). Settings route **1.91 kB / 130 kB First Load — unchanged**. Verified: 83
+      tests, typecheck · lint · build green. Files: +`components/dashboard/first-event-guide.tsx`,
+      `app/dashboard/[projectId]/settings/page.tsx`.
 - [ ] **ONE-71 — First value / activation ("aha moment").** (Backlog.)
 
 ---
