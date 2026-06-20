@@ -806,7 +806,21 @@ Linear: project **Move #4 — Activation & First Experience** with `ONE-68…71`
       `/dashboard` First Load **129 kB — unchanged** (`WelcomeProjects` is server-only, reusing the already-
       loaded create dialog). Verified: 83 tests, typecheck · lint · build green. Files:
       +`components/dashboard/welcome-projects.tsx`, `app/dashboard/page.tsx`.
-- [ ] **ONE-69 — Snippet installation experience.** (Backlog — next after ONE-68 approval.)
+- [x] **ONE-69 — Snippet installation experience ✅ implemented (2026-06-20), in review.** Removed the
+      "where do I paste this?" friction between creating a project and the first event. New
+      **`InstallGuide`** *server* component wraps the existing client `InstallSnippet` (snippet + one-click
+      copy, **unchanged**) with (a) a precise placement line — "just before the closing `</head>` … loads
+      asynchronously, never slows your site" — and (b) a **zero-JS native `<details>`** "Where does this go?"
+      listing per-stack hints (Plain HTML · Next.js/React · WordPress · Webflow/Framer/no-code). Wired into
+      the **Settings → Install** card (the canonical install/verify home the Overview's `FirstEventOnboarding`
+      already links to via "Full setup & verification →"); the card description was tightened since the guide
+      now carries the placement detail. The **Verification** card + `RefreshButton` + every other surface are
+      untouched (`FirstEventOnboarding` + the ONE-66 checklist keep their own snippet/copy → no regression to
+      ONE-65/66). Server-first; reuses `InstallSnippet`/`Card`; **no new dependency** (native `<details>`, not
+      a JS disclosure lib); no schema/query/analytics change; **no accent creep** (muted/foreground tokens
+      only); dark-first; Moves #1/#2/#3 + ONE-68 preserved. Settings route **1.91 kB / 130 kB First Load —
+      unchanged** (server-only, zero client JS added). Verified: 83 tests, typecheck · lint · build green.
+      Files: +`components/dashboard/install-guide.tsx`, `app/dashboard/[projectId]/settings/page.tsx`.
 - [ ] **ONE-70 — First-event guidance.** (Backlog.)
 - [ ] **ONE-71 — First value / activation ("aha moment").** (Backlog.)
 

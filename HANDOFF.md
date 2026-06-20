@@ -1388,6 +1388,36 @@ dashboard entry for a **brand-new user (0 projects)** now reads as a guided welc
   untouched; no browser in env, so the welcome visual is reasoned from the markup + the green build.
 - **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-68` → Done. **Not pushed.**
 
+**✅ ONE-68 SHIPPED (2026-06-20).** Approved → pushed `1fe9b6a..18cf117` to `origin/main`; Vercel **production
+deploy READY** (`dpl_CfjdQcvoZNgMPFD7c11uBQoHXEVW`, commit `18cf117`, target production, `onemetric.sbs`).
+`ONE-68` → Done. Repository == Linear == GitHub == production, all at `18cf117`.
+
+**✅ ONE-69 — Snippet installation experience (2026-06-20). Committed locally → In Review.** Reduces the
+friction between project creation and the first event: a clearer, reassuring install step on Settings.
+
+- **Friction analysis (create → first event):** `createProject` redirects to the **Overview**, where ONE-65's
+  `FirstEventOnboarding` shows the snippet + a "Full setup & verification →" link to **Settings** (the
+  install/verify home: Install card = `InstallSnippet`, Verification card = live status + `RefreshButton`).
+  The gap was *placement guidance* — "paste into `<head>`" with no precise location and no per-stack hints.
+- **`components/dashboard/install-guide.tsx` (new, server):** wraps the existing client `InstallSnippet`
+  (snippet + copy, **unchanged**) with a precise placement line ("just before the closing `</head>` … loads
+  asynchronously, never slows your site") + a **zero-JS native `<details>`** "Where does this go?" listing
+  per-stack hints (Plain HTML · Next.js/React · WordPress · Webflow/Framer/no-code). Native `<details>` →
+  accessible, dark-first, **no disclosure dependency**; the default marker is hidden (`list-none` +
+  `[&::-webkit-details-marker]:hidden`) with a "→" affordance.
+- **`settings/page.tsx`:** Install card `<InstallSnippet>` → `<InstallGuide>`; the card description tightened
+  (the guide now owns the placement detail). The Verification/Custom-events/General/Danger-Zone cards are
+  byte-identical.
+- **Deliberately scoped to Settings.** `FirstEventOnboarding` (ONE-65) + the ONE-66 checklist keep their own
+  snippet/copy widgets → no regression to verified Move-#4-adjacent work; the Overview already routes to
+  Settings, so enriching the *destination* improves the journey without touching the landing card.
+- **Constraints honored:** server-first; reuses `InstallSnippet`/`Card`; no new dependency; no
+  schema/query/analytics change; **no accent creep** (muted/foreground tokens only; grep `*-brand` on the new
+  file = none); dark-first; Moves #1/#2/#3 + ONE-68 preserved. Settings route **1.91 kB / 130 kB First Load —
+  unchanged** (server-only, zero client JS). No browser in env → the `<details>` UX is reasoned from valid
+  HTML + the green build.
+- **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-69` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

@@ -7,7 +7,7 @@ import {
   listProjects,
 } from "@/server/queries/projects";
 import { ProjectHeader } from "@/components/dashboard/project-header";
-import { InstallSnippet } from "@/components/dashboard/install-snippet";
+import { InstallGuide } from "@/components/dashboard/install-guide";
 import { RefreshButton } from "@/components/dashboard/refresh-button";
 import { CustomEventsDoc } from "@/components/dashboard/custom-events-doc";
 import { DeleteProjectDialog } from "@/components/dashboard/delete-project-dialog";
@@ -58,12 +58,12 @@ export default async function ProjectSettingsPage({
         <CardHeader>
           <CardTitle className="text-base">Install</CardTitle>
           <CardDescription>
-            Paste this into your site&apos;s <code>&lt;head&gt;</code>. Takes
+            Add OneMetric to your site to start collecting analytics — it takes
             less than a minute.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <InstallSnippet snippet={snippet} />
+          <InstallGuide snippet={snippet} />
         </CardContent>
       </Card>
 
