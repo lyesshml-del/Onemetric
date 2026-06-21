@@ -892,8 +892,26 @@ Activation Loop & Retention** with `ONE-72…78`. Execution order: **72 → 74 �
       5.82 → **6.21 kB**, Settings 1.91 → **2.34 kB** (the small client island); First Load JS ~unchanged.
       Verified: 83 tests, typecheck · lint · build green. Files: +`components/dashboard/auto-verify.tsx`,
       `first-event-guide.tsx`, `first-event-onboarding.tsx`.
-- [ ] **ONE-74 — Smarter activation state + dismissible onboarding.** (Backlog — execute next.)
-- [ ] **ONE-73 — Send a test event.** (Backlog.)
+- [x] **ONE-74 — Smarter activation state + dismissible onboarding ✅ implemented (2026-06-21), in review.**
+      Fixed the too-strict activation that kept onboarding chrome on screen forever for revenue-less users.
+      **(1) Smarter auto-retire:** `fullyActivated = hasFunnel && hasRevenue` → **`hasFunnel || hasRevenue`**
+      (we're already inside the `hasData`/first-pageview branch, so "activated" = traffic + engagement with a
+      funnel **or** revenue — **revenue no longer mandatory**; either one retires the `FirstValueBanner` +
+      `OnboardingChecklist`). **(2) Dismissible:** new dependency-free **`useOnboardingDismissed(projectId)`**
+      hook (`lib/hooks/`) persists a per-project flag in **localStorage** (UI preference → **no schema, no
+      server round-trip**) and dispatches a window event so all consumers hide at once (the banner and
+      checklist aren't DOM-adjacent); a `storage` listener syncs other tabs. The **checklist** gained a calm
+      muted "**Dismiss**" control in its header (returns null when dismissed); the **banner** became a thin
+      client wrapper that honors the same flag (markup unchanged) so dismissing the checklist hides it too.
+      Honest semantics kept (no faked "done" steps). Traffic-only users who'll never add a funnel/revenue can
+      now dismiss; everyone else auto-retires on first funnel/revenue. Server-first (banner is a thin client
+      island only to read the flag — justified, noted), dark-first, reuses the existing checklist/banner +
+      `Card`; **no new dependency** (native localStorage + window events); **no fake data/progress**; **no
+      accent creep** (muted text control, emerald banner unchanged); Moves #1–#4 + ONE-72 preserved. Overview
+      route 6.21 → **6.65 kB** (123 kB First Load). Verified: 83 tests, typecheck · lint · build green. Files:
+      +`lib/hooks/use-onboarding-dismissed.ts`, `first-value-banner.tsx`, `onboarding-checklist.tsx`,
+      `app/dashboard/[projectId]/page.tsx`.
+- [ ] **ONE-73 — Send a test event.** (Backlog — execute next.)
 - [ ] **ONE-75 — Installed-but-no-data recovery email.** (Backlog.)
 - [ ] **ONE-77 — Promote weekly reports during onboarding.** (Backlog.)
 - [ ] **ONE-76 — Canonical setup surface.** (Backlog.)

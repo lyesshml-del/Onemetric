@@ -1,4 +1,7 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
+import { useOnboardingDismissed } from "@/lib/hooks/use-onboarding-dismissed";
 
 /**
  * ONE-71 (Move #4 — Activation) — the first-value "aha" moment. Once a project
@@ -8,14 +11,19 @@ import { Card, CardContent } from "@/components/ui/card";
  * `OnboardingChecklist` (rendered just below, same activation window) owns those,
  * so the two are complementary, not duplicative.
  *
- * Calm by design — no animation, no toast, no confetti. Shown only during the
- * activation window (`hasData && !fullyActivated`), so it retires together with
- * the checklist once the project is fully set up, leaving a clean dashboard.
- * Server component; purely presentational; neutral + dark-first; uses the
- * existing emerald "live" semantic (the same dot as Active-now / verification),
- * not the brand accent → no accent creep.
+ * Calm by design — no animation, no toast, no confetti. Shown during the
+ * activation window (`hasData && !fullyActivated`, where ONE-74 redefined
+ * activation as first-pageview + a funnel *or* revenue), so it retires once the
+ * project is engaged. ONE-74 also makes it dismissible: it honors the shared
+ * per-project dismissal (the checklist owns the "Dismiss" control; this hides
+ * with it). A thin client wrapper only to read that flag; otherwise purely
+ * presentational, neutral + dark-first, using the emerald "live" semantic (not
+ * the brand accent → no accent creep).
  */
-export function FirstValueBanner() {
+export function FirstValueBanner({ projectId }: { projectId: string }) {
+  const [dismissed] = useOnboardingDismissed(projectId);
+  if (dismissed) return null;
+
   return (
     <Card>
       <CardContent>

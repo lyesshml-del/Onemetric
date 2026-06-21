@@ -1517,6 +1517,37 @@ detects the first event and transitions to connected on its own — the manual "
   is reasoned from `router.refresh()` semantics + the unmount-on-connect flow + the green build.
 - **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-72` → Done. **Not pushed.**
 
+**✅ ONE-72 SHIPPED (2026-06-21).** Approved → pushed `286e217..2008314`; Vercel **production deploy READY**
+(`dpl_5Mi6yD2FNc2bUy3Ww9TRG5Wtqak8`, commit `2008314`, `onemetric.sbs`). `ONE-72` → Done. Repository ==
+Linear == GitHub == production, all at `2008314`.
+
+**✅ ONE-74 — Smarter activation state + dismissible onboarding (2026-06-21). Committed locally → In Review.**
+The onboarding chrome no longer requires revenue to retire, and an established user can dismiss it.
+
+- **Problem:** `fullyActivated = hasFunnel && hasRevenue` (page.tsx) → the `FirstValueBanner` (ONE-71) +
+  `OnboardingChecklist` (ONE-66, both gated on `!fullyActivated`) stayed forever for the majority who never
+  connect PayPal/revenue.
+- **(1) Smarter auto-retire:** `fullyActivated` → **`hasFunnel || hasRevenue`** (we're already inside the
+  `hasData`/first-pageview branch, so this means traffic + a funnel **or** revenue). Setting up **either**
+  retires onboarding; revenue is optional.
+- **(2) Dismissible:** new **`lib/hooks/use-onboarding-dismissed.ts`** (`useOnboardingDismissed(projectId)` →
+  `[dismissed, dismiss]`): persists a per-project flag in **localStorage** (UI preference → **no schema, no
+  server round-trip**), dispatches a window `om:onboarding-dismissed` event so all consumers hide at once (the
+  banner is at the top of the Overview, the checklist after the Hero — not DOM-adjacent), and listens to
+  `storage` for cross-tab sync. SSR returns `false` (no hydration flash-mismatch).
+  - **`onboarding-checklist.tsx`:** added a calm muted "**Dismiss**" button in the header; early-returns null
+    when dismissed (or when all steps complete, as before). New required `projectId` prop.
+  - **`first-value-banner.tsx`:** became a **thin client** wrapper (markup byte-identical) that reads the same
+    flag and returns null when dismissed → dismissing the checklist hides the banner too. New `projectId` prop.
+  - **`page.tsx`:** redefined `fullyActivated`; passes `projectId` to both.
+- **Constraints honored:** honest semantics (no faked "done" steps); server-first (the banner is a thin client
+  island only to read the flag — justified); reuses the existing checklist/banner/`Card`; **no new dependency**
+  (native localStorage + window events); **no fake data**; **no accent creep** (muted text "Dismiss"; emerald
+  banner unchanged); dark-first; Moves #1–#4 + ONE-72 preserved. Overview route 6.21 → **6.65 kB** (123 kB
+  First Load). No browser in env → the dismiss/sync is reasoned from the hook + the window-event flow + the
+  green build.
+- **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-74` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

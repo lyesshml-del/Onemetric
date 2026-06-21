@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { Check, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useOnboardingDismissed } from "@/lib/hooks/use-onboarding-dismissed";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,6 +24,7 @@ import {
  * "Copy snippet" action + toast.
  */
 export function OnboardingChecklist({
+  projectId,
   hasSession,
   hasFunnel,
   hasRevenue,
@@ -30,6 +32,7 @@ export function OnboardingChecklist({
   funnelsHref,
   revenueHref,
 }: {
+  projectId: string;
   hasSession: boolean;
   hasFunnel: boolean;
   hasRevenue: boolean;
@@ -38,6 +41,9 @@ export function OnboardingChecklist({
   revenueHref: string;
 }) {
   const [copied, setCopied] = useState(false);
+  // ONE-74 — let an established user dismiss the onboarding chrome for good
+  // (shared per-project flag; also hides the FirstValueBanner above).
+  const [dismissed, dismiss] = useOnboardingDismissed(projectId);
 
   async function copySnippet() {
     try {
@@ -82,8 +88,8 @@ export function OnboardingChecklist({
   ];
 
   const completed = steps.filter((s) => s.done).length;
-  // Hide entirely once fully activated (also guarded server-side).
-  if (completed === steps.length) return null;
+  // Hide once fully activated (also guarded server-side) or if the user dismissed it.
+  if (dismissed || completed === steps.length) return null;
 
   const currentIndex = steps.findIndex((s) => !s.done);
 
@@ -92,9 +98,18 @@ export function OnboardingChecklist({
       <CardHeader>
         <div className="flex items-center justify-between gap-2">
           <CardTitle className="text-base">Getting started</CardTitle>
-          <span className="text-muted-foreground text-xs tabular-nums">
-            {completed} / {steps.length} completed
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-muted-foreground text-xs tabular-nums">
+              {completed} / {steps.length} completed
+            </span>
+            <button
+              type="button"
+              onClick={dismiss}
+              className="text-muted-foreground hover:text-foreground text-xs underline-offset-4 hover:underline"
+            >
+              Dismiss
+            </button>
+          </div>
         </div>
         <CardDescription>
           Complete these steps to activate your analytics.

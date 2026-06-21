@@ -111,10 +111,14 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
 
   // ONE-66 — activation checklist state (no new queries; reuses the Overview's
   // existing data). Steps 1–3 (project / tracking key / first pageview) are done
-  // once there's data; the checklist drives funnel + revenue, then hides.
+  // once there's data; the checklist nudges funnel + revenue.
   const hasFunnel = primaryFunnel !== null;
   const hasRevenue = revenueSummary.count > 0;
-  const fullyActivated = hasFunnel && hasRevenue;
+  // ONE-74 — smarter activation: we're already in the `hasData` (first-pageview)
+  // branch, so "activated" = traffic + engagement with EITHER a funnel OR revenue
+  // (no longer both — revenue is optional). Traffic-only users who'll never set
+  // up either can dismiss the onboarding (handled client-side per project).
+  const fullyActivated = hasFunnel || hasRevenue;
 
   // Primary funnel (Phase E, decision E1 = oldest funnel). Compute conversion for
   // the current + previous windows so the KPI can show a delta. Reuses getFunnelResults.
@@ -195,7 +199,7 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
               worked, shown only during the activation window (retires with the
               checklist once fully activated). Celebrates + frames value; the
               checklist below owns the next-step CTAs (no duplication). */}
-          {!fullyActivated ? <FirstValueBanner /> : null}
+          {!fullyActivated ? <FirstValueBanner projectId={project.id} /> : null}
 
           {/* Lede — the briefing sentence (Move #1 / Phase B). */}
           <Lede tokens={ledeTokens} />
@@ -234,6 +238,7 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
               project is fully activated (a funnel + revenue both exist). */}
           {!fullyActivated ? (
             <OnboardingChecklist
+              projectId={project.id}
               hasSession
               hasFunnel={hasFunnel}
               hasRevenue={hasRevenue}
