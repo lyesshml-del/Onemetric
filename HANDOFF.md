@@ -1842,6 +1842,36 @@ early users keep the full list. **Refinement, not redesign.**
 - **Verified:** 85 tests · typecheck · lint · build green (no test added — the collapse logic is inline in a
   client component, outside the node-only suite). **On approval:** `ONE-82` → Done. **Not pushed.**
 
+**✅ ONE-82 SHIPPED (2026-06-21).** Approved → pushed `0609571..39d08f5`; Vercel **production deploy READY**
+(`dpl_7i7pkky1LnsAiicfcXdWF3Ebobkn`, commit `39d08f5`, target production). `ONE-82` → Done. Repository ==
+Linear == GitHub == production, all at `39d08f5`.
+
+**✅ ONE-83 — Second-project onboarding shortcut (2026-06-21). Committed locally → In Review. LAST MOVE #6
+ISSUE.** A returning user no longer gets the activation onboarding re-taught on every new project; first-time
+users are untouched. **Refinement, not a new flow.**
+
+- **Analysis:** the onboarding surfaces a returning user could re-hit — the 0-project `WelcomeProjects`
+  (ONE-68) already only renders at `projects.length === 0`; the `CreateProjectDialog` (ONE-67) + `createProject`
+  redirect (→ the new project's Overview, now the canonical `SetupGuide` via ONE-76) are the same fast path for
+  everyone. The one repeated surface is the new project's **activation onboarding** (ONE-71 `FirstValueBanner`
+  + ONE-66 `OnboardingChecklist`), which re-teaches funnel/revenue/reports the returning user already knows.
+- **Signal (existing data, no new query):** `listProjects` is ordered `createdAt desc`, so the user's oldest
+  (first) project is the **last** entry → `oldestProjectId = projects[projects.length - 1]?.id`;
+  `isFirstProject = !oldestProjectId || oldestProjectId === project.id`.
+- **Change (`page.tsx` only):** the banner + checklist gates became `!fullyActivated && isFirstProject`. On the
+  first/oldest project (and any brand-new 1-project user) → unchanged; on a returning user's later projects →
+  the activation onboarding is skipped.
+- **Preserved:** the per-project **SetupGuide** empty state (install/verify — each new site needs its own
+  snippet) + the full briefing render exactly as before; `createProject` redirect + dialog unchanged; ONE-79
+  OAuth, ONE-82 checklist collapse, all Move #5 onboarding untouched.
+- **Constraints honored:** server-first (server-side gate); reuse-only; **no new dependency**; **no schema
+  change**; **no accent creep**; dark-first; Moves #1–#6 preserved; **byte-identical for first-project users**.
+  Overview route **7.13 kB unchanged**. No browser in env → reasoned from the deterministic `isFirstProject`
+  gate + the green build (first-project path provably unchanged).
+- **Verified:** 85 tests · typecheck · lint · build green (no test added — inline gate in a server component,
+  outside the node-only suite). **On approval:** `ONE-83` → Done + the **Move #6** Linear project →
+  **Completed** (all 5 phases). **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

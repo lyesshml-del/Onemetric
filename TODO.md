@@ -1091,7 +1091,27 @@ preserve Moves #1–#5 · one issue at a time, one local commit per issue, In Re
       route 7.07 → **7.13 kB** (123 kB First Load unchanged). Verified: 85 tests, typecheck · lint · build green
       (no test added — collapse logic is inline in a client component, outside the node-only suite). Files:
       `components/dashboard/onboarding-checklist.tsx`.
-- [ ] **ONE-83 — Second-project onboarding shortcut.** (Backlog — execute next.)
+- [x] **ONE-83 — Second-project onboarding shortcut ✅ implemented (2026-06-21), in review.** Returning users
+      stop getting the activation onboarding re-taught on every new project, while first-time users are
+      untouched. **Signal (existing data, no new query):** `listProjects` is ordered `createdAt desc`, so the
+      user's **first/oldest** project is the last entry — `isFirstProject = oldestProjectId === project.id`.
+      The **activation onboarding** (ONE-71 `FirstValueBanner` + ONE-66 `OnboardingChecklist`) now renders only
+      when `!fullyActivated && isFirstProject`; on a returning user's **later** projects it's skipped. **What's
+      preserved:** the per-project **SetupGuide** empty state (install/verify — each new site genuinely needs
+      its own snippet) and the full briefing (Lede/Hero/KPIs/triad) render exactly as before; the 0-project
+      `WelcomeProjects` welcome was already first-time-only; the `createProject` redirect + create dialog are
+      unchanged. **Byte-identical for first-project & brand-new (1-project) users** (`isFirstProject` is true →
+      onboarding shows as today). Server-first (a server-side gate in `page.tsx`); reuse-only; **no new
+      dependency**; **no schema change**; **no accent creep**; dark-first; Moves #1–#6 (incl. ONE-79 OAuth,
+      ONE-82 checklist collapse, all Move #5) preserved. Overview route **7.13 kB unchanged**. Verified: 85
+      tests, typecheck · lint · build green (no test added — the gate is inline in a server component, outside
+      the node-only suite). Files: `app/dashboard/[projectId]/page.tsx`.
+
+> **Move #6 — Signup & Polish: all five phases implemented.** ONE-79 Google OAuth · ONE-80 honest "Active
+> (5 min)" · ONE-81 persistent recovery-email dedup · ONE-82 collapse checklist (all shipped) · ONE-83
+> second-project shortcut (in review). **On ONE-83 approval:** `ONE-83` → Done + the Move #6 Linear project →
+> Completed. *(A duplicate Move #6 project `6b426845` + `ONE-84` were created in error and Canceled — canonical
+> project is `4474382d` / `ONE-79…83`.)*
 
 ---
 

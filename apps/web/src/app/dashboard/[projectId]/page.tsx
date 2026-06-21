@@ -124,6 +124,15 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
   // up either can dismiss the onboarding (handled client-side per project).
   const fullyActivated = hasFunnel || hasRevenue;
 
+  // ONE-83 — second-project onboarding shortcut. The activation onboarding
+  // (FirstValueBanner + OnboardingChecklist) teaches the platform, so it only
+  // belongs on the user's *first* project. `listProjects` is ordered createdAt
+  // desc, so the oldest (first-created) project is the last entry; on any later
+  // project a returning user skips that onboarding (the per-project setup +
+  // briefing still show). A brand-new user with one project is unaffected.
+  const oldestProjectId = projects[projects.length - 1]?.id;
+  const isFirstProject = !oldestProjectId || oldestProjectId === project.id;
+
   // Primary funnel (Phase E, decision E1 = oldest funnel). Compute conversion for
   // the current + previous windows so the KPI can show a delta. Reuses getFunnelResults.
   const [funnelNow, funnelPrev] = primaryFunnel
@@ -279,8 +288,11 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
           {/* ONE-71 — first-value "aha" banner: a calm acknowledgement that setup
               worked, shown only during the activation window (retires with the
               checklist once fully activated). Celebrates + frames value; the
-              checklist below owns the next-step CTAs (no duplication). */}
-          {!fullyActivated ? <FirstValueBanner projectId={project.id} /> : null}
+              checklist below owns the next-step CTAs (no duplication). ONE-83:
+              first project only (returning users skip the activation onboarding). */}
+          {!fullyActivated && isFirstProject ? (
+            <FirstValueBanner projectId={project.id} />
+          ) : null}
 
           {/* Lede — the briefing sentence (Move #1 / Phase B). */}
           <Lede tokens={ledeTokens} />
@@ -316,8 +328,9 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
           </Card>
 
           {/* ONE-66 — activation checklist, above the metric cards; hides once the
-              project is fully activated (a funnel + revenue both exist). */}
-          {!fullyActivated ? (
+              project is fully activated. ONE-83: first project only — a returning
+              user creating a later project skips the activation tutorial. */}
+          {!fullyActivated && isFirstProject ? (
             <OnboardingChecklist
               projectId={project.id}
               hasSession
