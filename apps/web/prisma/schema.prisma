@@ -83,6 +83,11 @@ model Project {
   ownerId   String   @db.Uuid
   createdAt DateTime @default(now())
 
+  // ONE-81 — installed-but-no-data recovery email: stamped once, after the single
+  // recovery nudge is sent, so it is sent at most once per project (NULL = never
+  // sent). Replaces the fragile calendar-window dedup (ONE-75).
+  recoveryEmailSentAt DateTime?
+
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   sessions            Session[]

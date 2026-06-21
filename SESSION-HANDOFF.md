@@ -234,10 +234,19 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   is a page-load 5-min snapshot — so (presentation only, query unchanged) relabelled **"Active now" → "Active
   (5 min)"** and made `StatCard`'s `LiveDot` a **static** presence dot (no pulse, no "live"). No fake data / no
   schema / no new dependency / no accent creep; Overview 6.82 kB unchanged; 85 tests/typecheck/lint/build
-  green. **Next: await approval of ONE-80, then ONE-81 — which proposes a flagged schema field
-  (`recoveryEmailSentAt`), so confirm the migration before building (do NOT start ONE-81 early). Do NOT create
-  Move #7 or new issues until explicitly approved.** The broader product backlog (marketing / Paddle go-live)
-  is separate.
+  green; it's **Done & shipped** (pushed `d9d2662..da5c224` → prod READY `dpl_Btvf…`). **`ONE-81` (persistent
+  recovery-email dedup) is implemented + committed locally → In Review (1 unpushed) — INCLUDES A LIVE,
+  USER-APPROVED SCHEMA CHANGE:** added nullable `Project.recoveryEmailSentAt DateTime?` (migration
+  `20260621000000_add_recovery_email_sent_at`) so the recovery email is sent **at most once per project**.
+  `getStalledProjectsForRecovery(olderThan)` now filters `createdAt <= olderThan AND events:{none} AND
+  recoveryEmailSentAt:null`; `markRecoveryEmailSent` stamps `now()` only after a successful send; `recoveryWindow`
+  → `recoveryThreshold`. **⚠️ The migration was applied to the LIVE DB via the Supabase MCP** (local `.env` DB
+  password is invalid → P1000, so `prisma migrate deploy` can't run): the `ALTER TABLE` ran via
+  `apply_migration` and a matching `_prisma_migrations` row (checksum `56f053…c40c`) was inserted, so Prisma
+  history is consistent. Reuses cron + Resend + template; no new dependency; no accent creep; 85
+  tests/typecheck/lint/build green. **Next: await approval of ONE-81, then ONE-82 (do NOT start ONE-82 early).
+  Do NOT create Move #7 or new issues until explicitly approved.** The broader product backlog (marketing /
+  Paddle go-live) is separate.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -322,11 +331,16 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. **`ONE-79` shipped 2026-06-21** (`bd18f4a..d9d2662` → prod READY `dpl_EEzp…`, commit
-  `d9d2662`). Now **1 unpushed commit** = `ONE-80` (Move #6 honest "Active now" indicator), **In Review,
-  awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-78` (`08d9c54..bd18f4a`, Move #5
-  Completed); `ONE-76` (`988029a..08d9c54`); `ONE-77` (`11881aa..988029a`); `ONE-75` (`ccf51d4..11881aa`);
-  `ONE-73` (`d31f176..ccf51d4`);
+- Branch **`main`**. **`ONE-80` shipped 2026-06-21** (`d9d2662..da5c224` → prod READY `dpl_Btvf…`, commit
+  `da5c224`). Now **1 unpushed commit** = `ONE-81` (Move #6 persistent recovery-email dedup — **includes a
+  live, user-approved schema migration already applied via the Supabase MCP**), **In Review, awaiting
+  approval**; working tree otherwise clean. Earlier ships: `ONE-79` (`bd18f4a..d9d2662`); `ONE-78`
+  (`08d9c54..bd18f4a`, Move #5 Completed); `ONE-76` (`988029a..08d9c54`); `ONE-77` (`11881aa..988029a`);
+  `ONE-75` (`ccf51d4..11881aa`); `ONE-73` (`d31f176..ccf51d4`);
+- **⚠️ Local `.env` DB password is INVALID (P1000)** — `prisma migrate deploy`/`migrate status` can't auth
+  from this env; migrations are applied to the live DB via the **Supabase MCP** (`apply_migration` + a manual
+  `_prisma_migrations` row with the file's sha256 checksum). Refresh the local DB password to restore the
+  Prisma CLI flow.
   `ONE-74` (`2008314..d31f176`); `ONE-72` (`286e217..2008314`); `ONE-71` (`de4cb1a..286e217`, Move #4
   Completed); `ONE-70`
   (`a298b32..de4cb1a`); `ONE-69` (`18cf117..a298b32`); `ONE-68` (`1fe9b6a..18cf117`); `ONE-67`

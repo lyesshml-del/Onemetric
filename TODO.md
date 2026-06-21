@@ -1051,8 +1051,29 @@ preserve Moves #1–#5 · one issue at a time, one local commit per issue, In Re
       brand violet); server-first; dark-first; Moves #1–#5 + ONE-79 preserved. Overview route **6.82 kB
       unchanged**. Verified: 85 tests, typecheck · lint · build green. Files:
       `components/dashboard/stat-card.tsx`, `app/dashboard/[projectId]/page.tsx`.
-- [ ] **ONE-81 — Persistent recovery-email deduplication** *(flagged schema field — needs approval).* (Backlog — execute next.)
-- [ ] **ONE-82 — Collapse onboarding checklist into a progress summary.** (Backlog.)
+- [x] **ONE-81 — Persistent recovery-email deduplication ✅ implemented (2026-06-21), in review.** Closed the
+      one known correctness gap from ONE-75 (calendar-bucket dedup: a missed cron day skipped a cohort; a
+      same-day re-fire could double-send) with a **persistent flag** — **at most once per project, ever**.
+      **⚠️ SCHEMA CHANGE (user-approved):** added nullable **`Project.recoveryEmailSentAt DateTime?`** (migration
+      `20260621000000_add_recovery_email_sent_at`). *Justification:* exactly-once is impossible without
+      server-side persistence; a single nullable timestamp is the minimal/standard/additive (no backfill) way,
+      mirrors `ReportSubscription.lastSentAt`, and lets the detection window be open-ended (fixing missed
+      cohorts) with no double-send. **Migration applied to the LIVE DB via the Supabase MCP** (local `.env` DB
+      password is invalid → `prisma migrate deploy` couldn't auth; applied the `ALTER TABLE` via
+      `apply_migration` **and** inserted the matching `_prisma_migrations` row, checksum
+      `56f053…c40c`, so Prisma history is consistent — `migrate status` will be clean once the password is
+      fixed). **Code:** `getStalledProjectsForRecovery(olderThan)` now filters `createdAt <= olderThan` **AND**
+      `events: { none }` **AND** `recoveryEmailSentAt: null`; new `markRecoveryEmailSent(projectId)` stamps
+      `now()` **only after a successful send** (a failed/no-op send leaves it NULL → retried next run); the cron
+      uses the new `recoveryThreshold(now, ageDays)` (replaced `recoveryWindow`, which + its tests were removed;
+      +2 `recoveryThreshold` tests). Reuses the existing cron + Resend + `RecoveryEmail` (template + route
+      unchanged); no-key no-op preserved; calm tone unchanged. Server-first; **no new dependency**; no accent
+      creep; Moves #1–#6 preserved; never targets DataFast (has events). Backfill note: the first run after
+      deploy emails *all* historically-stalled never-nudged projects once (≈none pre-launch; DataFast excluded).
+      Verified: 85 tests, typecheck · lint · build green; recovery cron route compiles. Files:
+      `prisma/schema.prisma`, +`prisma/migrations/20260621000000_add_recovery_email_sent_at/migration.sql`,
+      `server/queries/projects.ts`, `lib/range.ts`(+test), `app/api/cron/recovery-emails/route.ts`.
+- [ ] **ONE-82 — Collapse onboarding checklist into a progress summary.** (Backlog — execute next.)
 - [ ] **ONE-83 — Second-project onboarding shortcut.** (Backlog.)
 
 ---

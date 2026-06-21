@@ -5,7 +5,7 @@ import {
   eachUtcDay,
   previousRange,
   rangePeriodWord,
-  recoveryWindow,
+  recoveryThreshold,
   DEFAULT_RANGE,
 } from "./range";
 
@@ -74,25 +74,25 @@ describe("rangePeriodWord", () => {
   });
 });
 
-describe("recoveryWindow", () => {
-  it("returns the full UTC day bucket `ageDays` days before now", () => {
-    const now = new Date("2026-06-21T07:30:00Z");
-    const { from, to } = recoveryWindow(now, 2);
-    // 2 days before the 21st = the 19th, full UTC day.
-    expect(from.toISOString()).toBe("2026-06-19T00:00:00.000Z");
-    expect(to.toISOString()).toBe("2026-06-19T23:59:59.999Z");
+describe("recoveryThreshold", () => {
+  it("returns the cutoff exactly `ageDays` days before now", () => {
+    const now = new Date("2026-06-21T07:30:00.000Z");
+    expect(recoveryThreshold(now, 2).toISOString()).toBe(
+      "2026-06-19T07:30:00.000Z",
+    );
   });
 
-  it("matches a created-date on exactly one daily run (no duplicates)", () => {
-    // A project created on 2026-06-19 (any time) falls in the bucket only when
-    // `now` is on 2026-06-21 — not the day before or after.
-    const created = new Date("2026-06-19T15:00:00Z");
-    const inBucket = (now: Date) => {
-      const { from, to } = recoveryWindow(now, 2);
-      return created >= from && created <= to;
-    };
-    expect(inBucket(new Date("2026-06-20T10:00:00Z"))).toBe(false);
-    expect(inBucket(new Date("2026-06-21T10:00:00Z"))).toBe(true);
-    expect(inBucket(new Date("2026-06-22T10:00:00Z"))).toBe(false);
+  it("includes anything created at or before the cutoff (open-ended)", () => {
+    // ONE-81: a project is stalled when createdAt <= threshold — so both a
+    // just-past-threshold and a very old project qualify (dedup is the
+    // persistent flag, not the window).
+    const now = new Date("2026-06-21T00:00:00.000Z");
+    const cutoff = recoveryThreshold(now, 2); // 2026-06-19T00:00Z
+    const justOldEnough = new Date("2026-06-18T23:00:00.000Z");
+    const veryOld = new Date("2026-01-01T00:00:00.000Z");
+    const tooNew = new Date("2026-06-20T12:00:00.000Z");
+    expect(justOldEnough <= cutoff).toBe(true);
+    expect(veryOld <= cutoff).toBe(true);
+    expect(tooNew <= cutoff).toBe(false);
   });
 });

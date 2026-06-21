@@ -1775,6 +1775,42 @@ presentation/copy only.
   in env → reasoned from the copy/class change + the green build.
 - **Verified:** 85 tests · typecheck · lint · build green. **On approval:** `ONE-80` → Done. **Not pushed.**
 
+**✅ ONE-80 SHIPPED (2026-06-21).** Approved → pushed `d9d2662..da5c224`; Vercel **production deploy READY**
+(`dpl_BtvfsGUfyHTDyz5VQgXWsLqUGyYX`, commit `da5c224`, target production). `ONE-80` → Done. Repository ==
+Linear == GitHub == production, all at `da5c224`.
+
+**✅ ONE-81 — Persistent recovery-email deduplication (2026-06-21). Committed locally → In Review. ⚠️ INCLUDES
+A LIVE SCHEMA CHANGE (user-approved).** Replaced ONE-75's fragile calendar-bucket dedup with a persistent
+flag → the recovery email is sent **at most once per project, ever**.
+
+- **Schema (justified + approved):** added nullable **`Project.recoveryEmailSentAt DateTime?`**. Exactly-once
+  needs server-side persistence (a window/localStorage can't record "already nudged"); one nullable timestamp
+  is minimal + additive (no backfill) + mirrors `ReportSubscription.lastSentAt`, and lets the detection cutoff
+  be open-ended (fixes missed cohorts) with no double-send.
+- **⚠️ HOW THE MIGRATION WAS APPLIED (important for the next session):** the local `.env` DB password is
+  **invalid** (prod password was rotated) → `prisma migrate deploy`/`migrate status` fail with **P1000**. So
+  the migration was applied to the **live DB via the Supabase MCP**: `apply_migration` ran the `ALTER TABLE
+  "Project" ADD COLUMN "recoveryEmailSentAt" TIMESTAMP(3)`, **and** an `_prisma_migrations` row was inserted
+  for `20260621000000_add_recovery_email_sent_at` with the **file's real checksum**
+  `56f053072c683b3a97dd79129445d29efab8308157681d1f10bd9e90fe29c40c` (= `sha256` of the committed
+  migration.sql) so Prisma history stays consistent (verified: 3 migrations, all finished). The committed
+  migration file matches the live DB. `prisma generate` was run locally so the client is typed. **Vercel build
+  is `prisma generate && next build` (no migrate) — so applying out-of-band like this is required; the column
+  is already live.** ⚠️ The local `.env` DB password should be refreshed at some point so the Prisma CLI works
+  again.
+- **Code:** `getStalledProjectsForRecovery(olderThan)` → `createdAt <= olderThan` **AND** `events:{none}`
+  **AND** `recoveryEmailSentAt: null`; new `markRecoveryEmailSent(projectId)` stamps `now()` **only after a
+  successful `sendRecoveryEmail`** (failed/no-op send → stays NULL → retried). The cron uses the new pure
+  `recoveryThreshold(now, ageDays)` (replaced `recoveryWindow`; its 2 tests swapped for 2 `recoveryThreshold`
+  tests). The `RecoveryEmail` template + the cron route shell + the `RESEND_API_KEY` no-op + the calm tone are
+  unchanged.
+- **Constraints honored:** server-first; reuses cron + Resend + template; **no new dependency**; **no accent
+  creep**; Moves #1–#6 preserved; never targets DataFast (it has events). **Backfill note:** the first run
+  after this deploys emails *all* historically-stalled, never-nudged projects once (≈none pre-launch; DataFast
+  excluded by `events:{none}`).
+- **Verified:** 85 tests · typecheck · lint · build green; the recovery cron route compiles; live column +
+  `_prisma_migrations` row confirmed via the Supabase MCP. **On approval:** `ONE-81` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

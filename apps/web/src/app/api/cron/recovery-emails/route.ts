@@ -1,6 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { recoveryWindow } from "@/lib/range";
-import { getStalledProjectsForRecovery } from "@/server/queries/projects";
+import { recoveryThreshold } from "@/lib/range";
+import {
+  getStalledProjectsForRecovery,
+  markRecoveryEmailSent,
+} from "@/server/queries/projects";
 import { sendRecoveryEmail } from "@/server/reports/send";
 
 export const runtime = "nodejs";
@@ -8,8 +11,9 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 // How long after creation a project with zero events is considered "stalled".
-// The daily cron targets the single UTC day bucket `RECOVERY_AGE_DAYS` days ago,
-// so each project is emailed at most once (no "already nudged" column needed).
+// ONE-81: dedup is now the persistent `Project.recoveryEmailSentAt` flag, so this
+// is an open-ended cutoff (every still-stalled, never-nudged project) — at most
+// once per project, and missed cohorts are caught on a later run.
 const RECOVERY_AGE_DAYS = 2;
 
 export async function GET(request: NextRequest) {
@@ -22,8 +26,8 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const { from, to } = recoveryWindow(new Date(), RECOVERY_AGE_DAYS);
-  const projects = await getStalledProjectsForRecovery(from, to);
+  const olderThan = recoveryThreshold(new Date(), RECOVERY_AGE_DAYS);
+  const projects = await getStalledProjectsForRecovery(olderThan);
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://onemetric.sbs";
   let sent = 0;
@@ -34,7 +38,12 @@ export async function GET(request: NextRequest) {
       domain: project.domain,
       settingsUrl: `${appUrl}/dashboard/${project.id}/settings`,
     });
-    if (ok) sent++;
+    // Stamp only on a successful send → at most once per project; a failed/no-op
+    // send (e.g. RESEND_API_KEY absent) leaves the flag NULL so a later run retries.
+    if (ok) {
+      await markRecoveryEmailSent(project.id);
+      sent++;
+    }
   }
 
   return NextResponse.json({
