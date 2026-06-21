@@ -5,6 +5,7 @@ import {
   eachUtcDay,
   previousRange,
   rangePeriodWord,
+  recoveryWindow,
   DEFAULT_RANGE,
 } from "./range";
 
@@ -70,5 +71,28 @@ describe("rangePeriodWord", () => {
     expect(rangePeriodWord("7d")).toBe("this week");
     expect(rangePeriodWord("30d")).toBe("this month");
     expect(rangePeriodWord("90d")).toBe("this quarter");
+  });
+});
+
+describe("recoveryWindow", () => {
+  it("returns the full UTC day bucket `ageDays` days before now", () => {
+    const now = new Date("2026-06-21T07:30:00Z");
+    const { from, to } = recoveryWindow(now, 2);
+    // 2 days before the 21st = the 19th, full UTC day.
+    expect(from.toISOString()).toBe("2026-06-19T00:00:00.000Z");
+    expect(to.toISOString()).toBe("2026-06-19T23:59:59.999Z");
+  });
+
+  it("matches a created-date on exactly one daily run (no duplicates)", () => {
+    // A project created on 2026-06-19 (any time) falls in the bucket only when
+    // `now` is on 2026-06-21 — not the day before or after.
+    const created = new Date("2026-06-19T15:00:00Z");
+    const inBucket = (now: Date) => {
+      const { from, to } = recoveryWindow(now, 2);
+      return created >= from && created <= to;
+    };
+    expect(inBucket(new Date("2026-06-20T10:00:00Z"))).toBe(false);
+    expect(inBucket(new Date("2026-06-21T10:00:00Z"))).toBe(true);
+    expect(inBucket(new Date("2026-06-22T10:00:00Z"))).toBe(false);
   });
 });

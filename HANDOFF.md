@@ -1581,6 +1581,40 @@ gratification path (PostHog-style) so a user who hasn't deployed the snippet sti
   build.
 - **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-73` → Done. **Not pushed.**
 
+**✅ ONE-73 SHIPPED (2026-06-21).** Approved → pushed `d31f176..ccf51d4`; Vercel **production deploy READY**
+(`dpl_Bx77z2wGRfjMHfPFn7QyknnsbBDT`, commit `ccf51d4`, `onemetric.sbs`). `ONE-73` → Done. Repository == Linear
+== GitHub == production, all at `ccf51d4`.
+
+**✅ ONE-75 — Installed-but-no-data recovery email (2026-06-21). Committed locally → In Review.** A daily cron
+recovers stalled activations with one calm setup reminder.
+
+- **Infra analysis (reused):** the weekly cron `GET /api/cron/weekly-reports` (`CRON_SECRET` Bearer gate),
+  `apps/web/vercel.json` crons, `server/reports/send.ts` (Resend; no-ops without `RESEND_API_KEY`), the
+  `@react-email/components` dark template, and `Project.createdAt` / `owner.email` / `events` relation.
+- **No-schema dedup (the key decision):** instead of a "nudged" column, a **daily** cron targets the **single
+  UTC calendar-day bucket** `RECOVERY_AGE_DAYS = 2` days ago. A project's `createdAt` date matches that bucket
+  on **exactly one** daily run → emailed at most once. New pure **`recoveryWindow(now, ageDays)`** in
+  `lib/range.ts` (+2 unit tests, incl. a "matches on exactly one run" assertion). **Residual edge:** a rare
+  same-day Vercel cron re-fire could double-send; the bulletproof upgrade is a `recoveryEmailSentAt` field —
+  **flagged for approval, deliberately not built** (rules prefer no-schema).
+- **Detection (real data only):** `getStalledProjectsForRecovery(from, to)` = projects with `createdAt` in the
+  window **and `events: { none: {} }`** (zero ingested events — the honest "installed-but-no-data" signal),
+  selecting `owner.email` + name/domain.
+- **Email:** `server/reports/recovery-email.tsx` (`RecoveryEmail`) mirrors the weekly-email dark theme with
+  **neutral grays only (no brand accent)**; calm/helpful/privacy-first copy ("we haven't seen any data yet" →
+  3 setup steps + the test-event tip + "cookieless, no banner" + "this is a one-time reminder, we won't send
+  another"); a neutral white CTA button → `${NEXT_PUBLIC_APP_URL}/dashboard/<id>/settings`. `sendRecoveryEmail`
+  added to `send.ts` (mirrors `sendWeeklyReport`, no-ops without the key). `GET /api/cron/recovery-emails`
+  (CRON_SECRET-gated, mirrors weekly) → `{ ok, candidates, sent }`; 2nd cron entry `0 10 * * *` in vercel.json.
+- **Constraints honored:** reuses Resend + Vercel-cron + the email template style; server-first; **no new
+  dependency** (resend + react-email already deps); **no schema change**; **no accent creep** (neutral email);
+  calm, non-marketing tone; never targets DataFast (old + has events); Moves #1–#5 preserved.
+- **Verified:** 85 tests (+2) · typecheck · lint · build green; the new route compiles. **A live cron run was
+  deliberately skipped** — local points at the prod DB and `.env` may hold a real `RESEND_API_KEY`, so running
+  it could email a real stalled user. The auth gate + no-op-without-key mirror the verified weekly cron; the
+  window logic is unit-tested. **On approval:** `ONE-75` → Done. **Not pushed.** (After deploy, optionally
+  hit the route once with the secret on a quiet day to confirm `{ok, candidates, sent:0}`.)
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

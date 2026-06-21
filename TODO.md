@@ -929,8 +929,27 @@ Activation Loop & Retention** with `ONE-72…78`. Execution order: **72 → 74 �
       6.65 → **7.02 kB**, Settings 2.34 → **2.69 kB** (First Load unchanged). Verified: 83 tests, typecheck ·
       lint · build green. Files: +`components/dashboard/send-test-event-button.tsx`, `first-event-guide.tsx`,
       `first-event-onboarding.tsx`, settings `page.tsx`, Overview `page.tsx`.
-- [ ] **ONE-75 — Installed-but-no-data recovery email.** (Backlog — execute next.)
-- [ ] **ONE-77 — Promote weekly reports during onboarding.** (Backlog.)
+- [x] **ONE-75 — Installed-but-no-data recovery email ✅ implemented (2026-06-21), in review.** Recovers
+      stalled activations: a **daily** cron emails one calm setup reminder to projects created a couple of days
+      ago that still have **zero events** (the honest "installed-but-no-data" signal — real data only).
+      **Reuses the existing infra:** Vercel Cron (a 2nd entry in `apps/web/vercel.json`, `0 10 * * *`), the
+      `CRON_SECRET` gate + route shape of the weekly cron, and Resend via `server/reports/send.ts`. **No-schema
+      dedup:** new pure `recoveryWindow(now, ageDays)` (`lib/range.ts`, +2 unit tests) returns the **single UTC
+      day bucket** N=2 days ago, so each project's `createdAt` date matches on **exactly one** daily run →
+      emailed at most once, **no "already-nudged" column needed** (residual edge: a rare same-day cron re-fire
+      could double-send — the bulletproof fix is a `recoveryEmailSentAt` field, flagged for approval, not
+      built). New `getStalledProjectsForRecovery(from, to)` query (`events: { none: {} }` + owner email), a
+      `RecoveryEmail` React template (mirrors the dark weekly-email theme, **neutral grays — no accent**;
+      calm/helpful/privacy-first, "we won't send another"), `sendRecoveryEmail()` (no-ops without
+      `RESEND_API_KEY`, like the weekly sender), and `GET /api/cron/recovery-emails` → `{ ok, candidates,
+      sent }`. Server-first; **no new dependency** (`resend` + `@react-email/components` already deps); **no
+      schema change**; **no accent creep**; Moves #1–#5 preserved; never targets DataFast (old + has events).
+      **Verification:** 85 tests, typecheck · lint · build green; the new route compiles. A **live cron run was
+      deliberately skipped** (local points at the prod DB and `.env` may hold a real `RESEND_API_KEY` → could
+      email a real user); the auth gate + no-op-without-key mirror the verified weekly cron. Files:
+      +`app/api/cron/recovery-emails/route.ts`, +`server/reports/recovery-email.tsx`, `server/reports/send.ts`,
+      `server/queries/projects.ts`, `lib/range.ts`(+test), `apps/web/vercel.json`.
+- [ ] **ONE-77 — Promote weekly reports during onboarding.** (Backlog — execute next.)
 - [ ] **ONE-76 — Canonical setup surface.** (Backlog.)
 - [ ] **ONE-78 — Progressive disclosure for low-data Overview.** (Backlog.)
 

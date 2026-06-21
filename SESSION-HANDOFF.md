@@ -179,9 +179,18 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   then `router.refresh()`es → Settings verification flips to connected + the Overview goes live (ONE-72
   auto-verify also catches it). Wired into both waiting surfaces (Settings `FirstEventGuide` + Overview
   `FirstEventOnboarding`, both now take a `publicKey` prop). Reuses `/api/collect` + the outline Button; no new
-  dependency / schema; no accent creep; 83 tests/typecheck/lint/build green. **Next: await approval of ONE-73,
-  then ONE-75 (do NOT start ONE-75 early).** The broader product backlog (marketing / Paddle go-live) is
-  separate.
+  dependency / schema; no accent creep; it's **Done & shipped** (pushed `d31f176..ccf51d4` → prod READY
+  `dpl_Bx77…`, `onemetric.sbs`). **`ONE-75` (installed-but-no-data recovery email) is implemented + committed
+  locally → In Review (1 unpushed):** a daily Vercel cron (`/api/cron/recovery-emails`, `0 10 * * *`,
+  CRON_SECRET-gated like the weekly one) emails one calm setup reminder to projects created 2 days ago with
+  **zero events** (`events: { none }` — real data). **No-schema dedup:** new pure `recoveryWindow(now, ageDays)`
+  (`lib/range.ts`, +2 tests) = the single UTC day bucket N days ago → each project matches one run → emailed
+  once (residual: a rare same-day cron re-fire could double-send; bulletproof = a `recoveryEmailSentAt` field,
+  flagged-not-built). New `getStalledProjectsForRecovery` query + `RecoveryEmail` template (neutral dark, no
+  accent) + `sendRecoveryEmail` (no-ops without `RESEND_API_KEY`). Reuses Resend + cron + email-template style;
+  no new dependency; 85 tests/typecheck/lint/build green; **live cron run skipped** (local hits prod DB + may
+  hold a real RESEND key → could email a real user). **Next: await approval of ONE-75, then ONE-77 (do NOT
+  start ONE-77 early).** The broader product backlog (marketing / Paddle go-live) is separate.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -265,10 +274,10 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. **`ONE-74` shipped 2026-06-21** (`2008314..d31f176` → prod READY `dpl_EaBV…`, commit
-  `d31f176`). Now **1 unpushed commit** = `ONE-73` (Move #5 send a test event), **In Review, awaiting
-  approval**; working tree otherwise clean. Earlier ships: `ONE-72` (`286e217..2008314`); `ONE-71`
-  (`de4cb1a..286e217`, Move #4 Completed); `ONE-70`
+- Branch **`main`**. **`ONE-73` shipped 2026-06-21** (`d31f176..ccf51d4` → prod READY `dpl_Bx77…`, commit
+  `ccf51d4`). Now **1 unpushed commit** = `ONE-75` (Move #5 installed-but-no-data recovery email), **In
+  Review, awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-74` (`2008314..d31f176`);
+  `ONE-72` (`286e217..2008314`); `ONE-71` (`de4cb1a..286e217`, Move #4 Completed); `ONE-70`
   (`a298b32..de4cb1a`); `ONE-69` (`18cf117..a298b32`); `ONE-68` (`1fe9b6a..18cf117`); `ONE-67`
   (`dd513f7..1fe9b6a`); 2026-06-20 `79badb8..5ef6850` (`ONE-63/64/65/66`); 2026-06-19 `ONE-24` (Move
   #1/#2/#3 + `ONE-45`). Future pushes to `main` still trigger a production deploy — get explicit go-ahead

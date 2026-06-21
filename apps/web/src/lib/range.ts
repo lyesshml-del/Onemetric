@@ -56,6 +56,28 @@ export function previousRange(
   return { from: new Date(from.getTime() - len), to: new Date(from.getTime()) };
 }
 
+/**
+ * ONE-75 (Move #5) — the UTC calendar-day bucket for things created exactly
+ * `ageDays` days ago. The installed-but-no-data recovery cron runs daily and
+ * targets this bucket, so each project's `createdAt` date matches on **exactly
+ * one** run → each stalled project is emailed at most once, with no "sentAt"
+ * column needed. Returns the inclusive [00:00:00.000, 23:59:59.999] UTC bounds
+ * of that day. Pure (takes `now`) so it's unit-testable in the node-only suite.
+ */
+export function recoveryWindow(
+  now: Date,
+  ageDays: number,
+): { from: Date; to: Date } {
+  const ref = new Date(now.getTime() - ageDays * 24 * 60 * 60 * 1000);
+  const y = ref.getUTCFullYear();
+  const m = ref.getUTCMonth();
+  const d = ref.getUTCDate();
+  return {
+    from: new Date(Date.UTC(y, m, d, 0, 0, 0, 0)),
+    to: new Date(Date.UTC(y, m, d, 23, 59, 59, 999)),
+  };
+}
+
 /** Human period label for the Lede: "this week" | "this month" | "this quarter". */
 export function rangePeriodWord(key: RangeKey): string {
   return key === "7d"
