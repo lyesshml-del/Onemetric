@@ -1811,6 +1811,37 @@ flag → the recovery email is sent **at most once per project, ever**.
 - **Verified:** 85 tests · typecheck · lint · build green; the recovery cron route compiles; live column +
   `_prisma_migrations` row confirmed via the Supabase MCP. **On approval:** `ONE-81` → Done. **Not pushed.**
 
+**✅ ONE-81 SHIPPED (2026-06-21).** Approved → pushed `da5c224..0609571`; Vercel **production deploy READY**
+(`dpl_8HXT2DP7ygHZhNKxL3R5Cy7biBW1`, commit `0609571`, target production). `ONE-81` → Done. Repository ==
+Linear == GitHub == production, all at `0609571`. (The `recoveryEmailSentAt` column was already applied to the
+live DB via the Supabase MCP during the build — see ONE-81 above.)
+
+**✅ ONE-82 — Collapse onboarding checklist into a progress summary (2026-06-21). Committed locally → In
+Review.** Reduces cognitive load: the 6-step checklist collapses to a calm summary past the halfway mark;
+early users keep the full list. **Refinement, not redesign.**
+
+- **Threshold:** `collapsible = completed > steps.length / 2` (>3/6 → ≥4). The 3 core steps (create / install /
+  first pageview) are **always** done when the checklist renders (it's gated on `!fullyActivated` inside the
+  `hasData` branch), so collapse triggers once the user also completes ≥1 optional step (realistically weekly
+  **reports** — funnel/revenue completion hides the whole card via the page gate). So the live states are 3/6
+  (full) and 4/6 (collapsed).
+- **Early (3/6):** byte-identical to today — no bar, "Complete these steps…", the `<ol>`, no toggle.
+- **Progressed (4/6+):** collapsed summary = a neutral **progress bar** (real `completed/total`,
+  `bg-foreground/40`, `aria-hidden` — no accent) + a one-line summary ("You've completed the essentials — N
+  optional step(s) left.") + a **"Show steps"** chevron toggle (`useState expanded`, `aria-expanded`) that
+  reveals the **same** `<ol>` (all CTAs/links). Same `steps` data drives both → no divergence, no fake
+  progress. Expand state is ephemeral (per-load; only the ONE-74 dismiss persists).
+- **Preserved:** ONE-74 dismiss + per-project persistence; ONE-77 reports step; copy/toast; the auto-hide
+  (`completed === steps.length`) + the page `!fullyActivated` gate → **fully-activated projects behave exactly
+  as today** (checklist not rendered).
+- **Constraints honored:** server-first (already a client island); reuses `Card` + lucide `ChevronDown/Up`
+  (already a dep); **no new dependency**; **no schema change**; **no accent creep** (neutral bar; emerald
+  checks unchanged); dark-first; Moves #1–#6 preserved. Overview route 7.07 → **7.13 kB** (123 kB First Load
+  unchanged). No browser in env → reasoned from the deterministic `collapsible`/`showSteps` branches + the
+  green build (3/6 path provably unchanged).
+- **Verified:** 85 tests · typecheck · lint · build green (no test added — the collapse logic is inline in a
+  client component, outside the node-only suite). **On approval:** `ONE-82` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

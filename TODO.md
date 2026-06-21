@@ -1073,8 +1073,25 @@ preserve Moves #1–#5 · one issue at a time, one local commit per issue, In Re
       Verified: 85 tests, typecheck · lint · build green; recovery cron route compiles. Files:
       `prisma/schema.prisma`, +`prisma/migrations/20260621000000_add_recovery_email_sent_at/migration.sql`,
       `server/queries/projects.ts`, `lib/range.ts`(+test), `app/api/cron/recovery-emails/route.ts`.
-- [ ] **ONE-82 — Collapse onboarding checklist into a progress summary.** (Backlog — execute next.)
-- [ ] **ONE-83 — Second-project onboarding shortcut.** (Backlog.)
+- [x] **ONE-82 — Collapse onboarding checklist into a progress summary ✅ implemented (2026-06-21), in
+      review.** Cuts cognitive load: the 6-step checklist now **collapses to a calm summary past the halfway
+      mark**, while early users keep the full list. Threshold = `completed > steps.length / 2` (>3/6 → ≥4):
+      because the 3 core steps are always done when the checklist renders (it's gated on `!fullyActivated` in
+      the `hasData` branch), this triggers once the user also completes ≥1 optional step (e.g. weekly reports).
+      **Early (3/6):** the **exact** current full checklist (no bar, "Complete these steps…", the `<ol>`, no
+      toggle) — byte-identical. **Progressed (4/6+):** a collapsed summary = a neutral **progress bar** (real
+      `completed/total`, `bg-foreground/40` — no accent) + a one-line summary ("You've completed the
+      essentials — N optional step(s) left.") + a **"Show steps"** chevron toggle (client `useState`) that
+      reveals the **same** `<ol>` (all CTAs/links intact). **Same `steps` data drives both states** (no
+      divergence, no fake progress). **Preserved:** the ONE-74 **Dismiss** control + per-project persistence;
+      the ONE-77 **reports** step; the copy/toast; the auto-hide (`completed === steps.length`) + the page-level
+      `!fullyActivated` gate (so fully-activated projects behave exactly as today — checklist not rendered).
+      Server-first (already a client component); reuses `Card` + lucide `ChevronDown/Up` (already a dep); **no
+      new dependency**; **no schema change**; **no accent creep**; dark-first; Moves #1–#6 preserved. Overview
+      route 7.07 → **7.13 kB** (123 kB First Load unchanged). Verified: 85 tests, typecheck · lint · build green
+      (no test added — collapse logic is inline in a client component, outside the node-only suite). Files:
+      `components/dashboard/onboarding-checklist.tsx`.
+- [ ] **ONE-83 — Second-project onboarding shortcut.** (Backlog — execute next.)
 
 ---
 

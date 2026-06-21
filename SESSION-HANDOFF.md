@@ -244,9 +244,15 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   password is invalid → P1000, so `prisma migrate deploy` can't run): the `ALTER TABLE` ran via
   `apply_migration` and a matching `_prisma_migrations` row (checksum `56f053…c40c`) was inserted, so Prisma
   history is consistent. Reuses cron + Resend + template; no new dependency; no accent creep; 85
-  tests/typecheck/lint/build green. **Next: await approval of ONE-81, then ONE-82 (do NOT start ONE-82 early).
-  Do NOT create Move #7 or new issues until explicitly approved.** The broader product backlog (marketing /
-  Paddle go-live) is separate.
+  tests/typecheck/lint/build green; it's **Done & shipped** (pushed `da5c224..0609571` → prod READY
+  `dpl_8HXT…`). **`ONE-82` (collapse onboarding checklist) is implemented + committed locally → In Review (1
+  unpushed):** the 6-step checklist now collapses to a calm summary (neutral progress bar + one-line summary +
+  a "Show steps" chevron toggle) once `completed > steps.length/2` (≥4/6); early users (3/6) keep the
+  byte-identical full checklist; same `steps` data drives both (no fake progress). ONE-74 dismiss + ONE-77
+  reports step + the `!fullyActivated` gate (fully-activated unchanged) all preserved. No new dependency / no
+  schema / no accent creep; Overview 7.13 kB; 85 tests/typecheck/lint/build green. **Next: await approval of
+  ONE-82, then ONE-83 — the last Move #6 issue (do NOT start ONE-83 early). Do NOT create Move #7 or new issues
+  until explicitly approved.** The broader product backlog (marketing / Paddle go-live) is separate.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -331,10 +337,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. **`ONE-80` shipped 2026-06-21** (`d9d2662..da5c224` → prod READY `dpl_Btvf…`, commit
-  `da5c224`). Now **1 unpushed commit** = `ONE-81` (Move #6 persistent recovery-email dedup — **includes a
-  live, user-approved schema migration already applied via the Supabase MCP**), **In Review, awaiting
-  approval**; working tree otherwise clean. Earlier ships: `ONE-79` (`bd18f4a..d9d2662`); `ONE-78`
+- Branch **`main`**. **`ONE-81` shipped 2026-06-21** (`da5c224..0609571` → prod READY `dpl_8HXT…`, commit
+  `0609571`; the `recoveryEmailSentAt` column was applied to the live DB via the Supabase MCP). Now **1
+  unpushed commit** = `ONE-82` (Move #6 collapse onboarding checklist), **In Review, awaiting approval**;
+  working tree otherwise clean. Earlier ships: `ONE-80` (`d9d2662..da5c224`); `ONE-79` (`bd18f4a..d9d2662`);
+  `ONE-78`
   (`08d9c54..bd18f4a`, Move #5 Completed); `ONE-76` (`988029a..08d9c54`); `ONE-77` (`11881aa..988029a`);
   `ONE-75` (`ccf51d4..11881aa`); `ONE-73` (`d31f176..ccf51d4`);
 - **⚠️ Local `.env` DB password is INVALID (P1000)** — `prisma migrate deploy`/`migrate status` can't auth

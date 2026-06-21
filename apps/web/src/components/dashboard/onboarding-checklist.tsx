@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import Link from "next/link";
-import { Check, Circle } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOnboardingDismissed } from "@/lib/hooks/use-onboarding-dismissed";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,13 @@ import {
  * calm "set up weekly reports" step (outline CTA) that promotes the existing
  * reports feature during onboarding. Neutral + dark-first; no new accent zone.
  * Client-only for the "Copy snippet" action + toast.
+ *
+ * ONE-82 — once the user is past the halfway mark (the 3 core steps are always
+ * done when this renders, so this means at least one optional step too), the
+ * checklist collapses to a calm progress summary (a progress bar + a one-line
+ * summary + a "Show steps" toggle) to cut cognitive load; early-stage users (core
+ * only) keep the full checklist. Same `steps` data drives both states (no
+ * divergence, no fake progress); dismiss + reports + all CTAs are preserved.
  */
 export function OnboardingChecklist({
   projectId,
@@ -47,6 +54,8 @@ export function OnboardingChecklist({
   reportsHref: string;
 }) {
   const [copied, setCopied] = useState(false);
+  // ONE-82 — collapsed-summary expand toggle (only used past the halfway mark).
+  const [expanded, setExpanded] = useState(false);
   // ONE-74 — let an established user dismiss the onboarding chrome for good
   // (shared per-project flag; also hides the FirstValueBanner above).
   const [dismissed, dismiss] = useOnboardingDismissed(projectId);
@@ -109,6 +118,11 @@ export function OnboardingChecklist({
   if (dismissed || completed === steps.length) return null;
 
   const currentIndex = steps.findIndex((s) => !s.done);
+  const remaining = steps.length - completed;
+  // ONE-82 — collapse to a summary past the halfway mark; the full list is one
+  // click away. Early-stage users (core steps only) keep the full checklist.
+  const collapsible = completed > steps.length / 2;
+  const showSteps = !collapsible || expanded;
 
   return (
     <Card>
@@ -128,11 +142,42 @@ export function OnboardingChecklist({
             </button>
           </div>
         </div>
+        {collapsible ? (
+          <div
+            className="bg-muted mt-2 h-1 w-full overflow-hidden rounded-full"
+            aria-hidden
+          >
+            <div
+              className="bg-foreground/40 h-full rounded-full"
+              style={{ width: `${(completed / steps.length) * 100}%` }}
+            />
+          </div>
+        ) : null}
         <CardDescription>
-          Complete these steps to activate your analytics.
+          {collapsible
+            ? `You've completed the essentials — ${remaining} optional step${
+                remaining === 1 ? "" : "s"
+              } left.`
+            : "Complete these steps to activate your analytics."}
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {collapsible ? (
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            aria-expanded={expanded}
+            className="text-muted-foreground hover:text-foreground mb-2 inline-flex items-center gap-1 text-xs underline-offset-4 hover:underline"
+          >
+            {expanded ? (
+              <ChevronUp className="size-3.5" aria-hidden />
+            ) : (
+              <ChevronDown className="size-3.5" aria-hidden />
+            )}
+            {expanded ? "Hide steps" : "Show steps"}
+          </button>
+        ) : null}
+        {showSteps ? (
         <ol className="space-y-1">
           {steps.map((step, i) => {
             const isCurrent = i === currentIndex;
@@ -171,6 +216,7 @@ export function OnboardingChecklist({
             );
           })}
         </ol>
+        ) : null}
       </CardContent>
 
       {copied ? (
