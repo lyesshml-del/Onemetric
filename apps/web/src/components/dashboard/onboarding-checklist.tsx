@@ -16,29 +16,35 @@ import {
 
 /**
  * ONE-66 — activation checklist on the Overview (above the metric cards). Shows
- * progress toward activation and hides once all five steps are complete. The
- * step states are derived from real data the Overview already fetches (no new
- * queries, no fake progress); it re-renders with fresh data on navigation, so
- * it updates without a manual refresh. Neutral + dark-first; the primary CTAs
- * use the default Button styling (no new accent zone). Client-only for the
- * "Copy snippet" action + toast.
+ * progress toward activation; the page gates it on `!fullyActivated` (ONE-74:
+ * first pageview + a funnel or revenue) and it also self-hides once every step
+ * is complete or the user dismisses it. The step states are derived from real
+ * data the Overview already fetches (no fake progress); it re-renders with fresh
+ * data on navigation, so it updates without a manual refresh. ONE-77 adds a
+ * calm "set up weekly reports" step (outline CTA) that promotes the existing
+ * reports feature during onboarding. Neutral + dark-first; no new accent zone.
+ * Client-only for the "Copy snippet" action + toast.
  */
 export function OnboardingChecklist({
   projectId,
   hasSession,
   hasFunnel,
   hasRevenue,
+  hasReports,
   snippet,
   funnelsHref,
   revenueHref,
+  reportsHref,
 }: {
   projectId: string;
   hasSession: boolean;
   hasFunnel: boolean;
   hasRevenue: boolean;
+  hasReports: boolean;
   snippet: string;
   funnelsHref: string;
   revenueHref: string;
+  reportsHref: string;
 }) {
   const [copied, setCopied] = useState(false);
   // ONE-74 — let an established user dismiss the onboarding chrome for good
@@ -82,6 +88,17 @@ export function OnboardingChecklist({
       cta: hasRevenue ? null : (
         <Button asChild size="sm">
           <Link href={revenueHref}>View revenue docs</Link>
+        </Button>
+      ),
+    },
+    {
+      // ONE-77 — promote the existing weekly-reports feature during onboarding
+      // (a recurring reason to come back). Real signal: a recipient exists.
+      label: "Set up weekly email reports",
+      done: hasReports,
+      cta: hasReports ? null : (
+        <Button asChild variant="outline" size="sm">
+          <Link href={reportsHref}>Set up reports</Link>
         </Button>
       ),
     },

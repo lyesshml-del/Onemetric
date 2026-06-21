@@ -1615,6 +1615,34 @@ recovers stalled activations with one calm setup reminder.
   window logic is unit-tested. **On approval:** `ONE-75` → Done. **Not pushed.** (After deploy, optionally
   hit the route once with the secret on a quiet day to confirm `{ok, candidates, sent:0}`.)
 
+**✅ ONE-75 SHIPPED (2026-06-21).** Approved → pushed `ccf51d4..11881aa`; Vercel **production deploy READY**
+(`dpl_DoDs54qprsVVZat7CdA42crUphff`, commit `11881aa`, target production). `ONE-75` → Done. Repository ==
+Linear == GitHub == production, all at `11881aa`. (The new daily recovery cron `0 10 * * *` is now live in
+prod's vercel.json alongside the weekly one.)
+
+**✅ ONE-77 — Promote weekly reports during onboarding (2026-06-21). Committed locally → In Review.** Surfaces
+the existing weekly-reports feature during onboarding as a retention hook — a calm checklist step, not a
+rebuild.
+
+- **Analysis:** the reports feature lives at `/dashboard/[projectId]/reports` (a "Reports" tab — add/remove/
+  enable recipients + "Send now") via `actions/reports.ts` / `queries/reports.ts` / `ReportSubscription`; new
+  users rarely discover it. The ONE-66 `OnboardingChecklist` is the natural onboarding home.
+- **`queries/reports.ts`:** new `hasReportSubscription(projectId)` → boolean (`findFirst` — real signal that a
+  recipient exists; no fake progress, no schema change).
+- **`onboarding-checklist.tsx`:** added a **6th step "Set up weekly email reports"** (`done: hasReports`) with
+  an **outline** CTA → the reports page. Outline (vs the funnel/revenue primary CTAs) keeps it calmer/lower-
+  priority and non-marketing. New `hasReports` + `reportsHref` props.
+- **`dashboard/[projectId]/page.tsx`:** fetches `hasReportSubscription` in the existing `Promise.all` (one
+  cheap `findFirst`) and passes `hasReports` + `reportsHref`.
+- **ONE-74 retire logic untouched:** `fullyActivated = hasFunnel || hasRevenue` is unchanged, so the reports
+  step never keeps onboarding alive — it shows only during the early window and rides the checklist's
+  dismiss/auto-hide. The checklist count is now "N / 6".
+- **Constraints honored:** reuses the reports pages + the checklist; server-first; **no new dependency**; **no
+  schema change**; **no accent creep** (neutral/outline); dark-first; Moves #1–#5 + ONE-72/73/74/75 preserved.
+  Overview route 7.02 → **7.07 kB** (123 kB First Load unchanged). No browser in env → reasoned from the real
+  `hasReports` signal + the unchanged gate + the green build.
+- **Verified:** 85 tests · typecheck · lint · build green. **On approval:** `ONE-77` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

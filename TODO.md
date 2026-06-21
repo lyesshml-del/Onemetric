@@ -949,8 +949,23 @@ Activation Loop & Retention** with `ONE-72…78`. Execution order: **72 → 74 �
       email a real user); the auth gate + no-op-without-key mirror the verified weekly cron. Files:
       +`app/api/cron/recovery-emails/route.ts`, +`server/reports/recovery-email.tsx`, `server/reports/send.ts`,
       `server/queries/projects.ts`, `lib/range.ts`(+test), `apps/web/vercel.json`.
-- [ ] **ONE-77 — Promote weekly reports during onboarding.** (Backlog — execute next.)
-- [ ] **ONE-76 — Canonical setup surface.** (Backlog.)
+- [x] **ONE-77 — Promote weekly reports during onboarding ✅ implemented (2026-06-21), in review.** Turns the
+      already-shipped weekly-reports feature into a retention hook by surfacing it where new users actually
+      look — the ONE-66 onboarding checklist. Added a **6th step "Set up weekly email reports"** with a **real
+      done-signal** (`hasReportSubscription(projectId)` — a `ReportSubscription` row exists; **no fake
+      progress, no schema change**) and an **outline** CTA → the existing `/dashboard/[projectId]/reports`
+      page (reports feature reused, not rebuilt; outline keeps it calmer/lower-priority than the primary
+      funnel/revenue CTAs — non-marketing). **ONE-74's retire logic is untouched** (`fullyActivated =
+      hasFunnel || hasRevenue`), so the reports step never keeps onboarding alive forever — it shows only
+      during the early window and rides the checklist's dismiss/auto-hide. New `hasReportSubscription` query
+      (`queries/reports.ts`); the Overview fetches it in the existing `Promise.all` (one cheap `findFirst`) and
+      passes `hasReports` + `reportsHref` to the checklist (also `OnboardingChecklist` gained those props).
+      Server-first; reuses the reports pages + the checklist; **no new dependency**; **no accent creep**
+      (neutral/outline); dark-first; Moves #1–#5 + ONE-72/73/74/75 preserved. Overview route 7.02 → **7.07
+      kB** (123 kB First Load unchanged). Verified: 85 tests, typecheck · lint · build green. Files:
+      `server/queries/reports.ts`, `components/dashboard/onboarding-checklist.tsx`,
+      `app/dashboard/[projectId]/page.tsx`.
+- [ ] **ONE-76 — Canonical setup surface.** (Backlog — execute next.)
 - [ ] **ONE-78 — Progressive disclosure for low-data Overview.** (Backlog.)
 
 ---

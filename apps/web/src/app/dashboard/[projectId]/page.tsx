@@ -16,6 +16,7 @@ import {
   getRevenueBySource,
 } from "@/server/queries/revenue";
 import { getPayPalConnection } from "@/server/queries/integrations";
+import { hasReportSubscription } from "@/server/queries/reports";
 import { resolveRange, previousRange, rangePeriodWord } from "@/lib/range";
 import { buildLede } from "@/lib/lede";
 import { formatDuration, formatNumber, formatPercent } from "@/lib/format";
@@ -86,6 +87,7 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
     revenueSummary,
     prevRevenueSummary,
     revenueBySource,
+    hasReports,
   ] = await Promise.all([
     listProjects(user.id),
     getProjectAnalytics(project.id, from, to),
@@ -97,6 +99,7 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
     getRevenueSummary(project.id, from, to),
     getRevenueSummary(project.id, prev.from, prev.to),
     getRevenueBySource(project.id, from, to),
+    hasReportSubscription(project.id),
   ]);
 
   // Show the revenue card/KPI when connected or any revenue exists; else a CTA.
@@ -243,9 +246,11 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
               hasSession
               hasFunnel={hasFunnel}
               hasRevenue={hasRevenue}
+              hasReports={hasReports}
               snippet={installSnippet}
               funnelsHref={`/dashboard/${project.id}/funnels`}
               revenueHref={`/dashboard/${project.id}/revenue`}
+              reportsHref={`/dashboard/${project.id}/reports`}
             />
           ) : null}
 
