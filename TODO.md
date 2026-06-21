@@ -985,7 +985,28 @@ Activation Loop & Retention** with `ONE-72…78`. Execution order: **72 → 74 �
       **6.82 kB** (dropped — removed the duplicate client copy/toast). Verified: 85 tests, typecheck · lint ·
       build green. Files: +`components/dashboard/setup-guide.tsx`, −`first-event-onboarding.tsx`,
       `first-event-guide.tsx`, settings `page.tsx`, Overview `page.tsx`, `welcome-projects.tsx` (stale comment).
-- [ ] **ONE-78 — Progressive disclosure for low-data Overview.** (Backlog — execute next.)
+- [x] **ONE-78 — Progressive disclosure for low-data Overview ✅ implemented (2026-06-21), in review.** Cuts
+      cognitive load for low-data projects by surfacing only what has value, instead of dimmed placeholders.
+      **(1) KPI strip → data-driven, dynamic columns:** built the KPI list from real data — Pageviews + Active
+      now always (once there's traffic), Signup conversion only when a funnel exists, Revenue only when
+      connected/has revenue — and set `lg:grid-cols-{2|3|4}` to match the count. The two dimmed `pending`
+      `StatCard`s are **gone**; a fully-populated project still shows all four in `lg:grid-cols-4` (identical).
+      **(2) Breakdowns → branch on `fullyActivated`** (ONE-74's `hasFunnel || hasRevenue`): `fullyActivated`
+      keeps the **exact** Move #1 outcomes triad (Sources | Funnel | Revenue, incl. the "Create funnel /
+      Connect revenue" discovery CTAs for established users) + the detail row (Top pages | Audience);
+      `!fullyActivated` (true low-data/onboarding) renders **one curated grid** `[Sources | Top pages |
+      Audience]` — no funnel/revenue placeholders (the onboarding checklist already guides those, so they're
+      not hidden, just not duplicated). **No fake data** (hide, never fabricate); established/discovery info is
+      preserved (CTAs once activated + the Funnels/Revenue tabs always). Fully-populated Overview is **byte-
+      identical** to before. Server-first; reuses `StatCard`/`SourcesCard`/`TopPagesCard`/`AudienceCard`; **no
+      new dependency**; **no schema/query change**; **no accent creep**; dark-first; Moves #1–#5 preserved.
+      Overview route **6.82 kB unchanged**. Verified: 85 tests, typecheck · lint · build green. Files:
+      `app/dashboard/[projectId]/page.tsx` (+`cn` import).
+
+> **Move #5 — Activation Loop & Retention: all seven phases implemented.** ONE-72 auto-verify · ONE-74
+> smarter activation + dismissible onboarding · ONE-73 send-a-test-event · ONE-75 recovery email · ONE-77
+> reports promotion · ONE-76 canonical setup surface (all shipped) · ONE-78 progressive disclosure (in
+> review). **On ONE-78 approval:** `ONE-78` → Done + the Move #5 Linear project → Completed.
 
 ---
 

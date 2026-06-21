@@ -18,6 +18,7 @@ import {
 import { getPayPalConnection } from "@/server/queries/integrations";
 import { hasReportSubscription } from "@/server/queries/reports";
 import { resolveRange, previousRange, rangePeriodWord } from "@/lib/range";
+import { cn } from "@/lib/utils";
 import { buildLede } from "@/lib/lede";
 import { formatDuration, formatNumber, formatPercent } from "@/lib/format";
 import { ProjectHeader } from "@/components/dashboard/project-header";
@@ -173,6 +174,68 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
     revenue: revenueLede,
   });
 
+  // ONE-78 — progressive disclosure: surface only the KPIs that carry real data,
+  // instead of dimmed "—" placeholders. Pageviews + Active now are always
+  // meaningful once there's traffic; Signup conversion appears with a funnel and
+  // Revenue with a connection/revenue. A fully-populated project still shows all
+  // four in a `lg:grid-cols-4` grid (identical to before).
+  const kpiCards = [
+    <StatCard
+      key="pageviews"
+      label="Pageviews"
+      value={<CountUp value={metrics.pageviews} format="number" />}
+      delta={{ current: metrics.pageviews, previous: prevMetrics.pageviews }}
+      spark={timeseries.map((p) => p.pageviews)}
+    />,
+  ];
+  if (primaryFunnel && funnelNow && funnelPrev) {
+    kpiCards.push(
+      <StatCard
+        key="conversion"
+        label="Signup conversion"
+        value={<CountUp value={funnelNow.overallConversion} format="percent" />}
+        delta={{
+          current: funnelNow.overallConversion,
+          previous: funnelPrev.overallConversion,
+          mode: "points",
+        }}
+      />,
+    );
+  }
+  if (showRevenue) {
+    kpiCards.push(
+      <StatCard
+        key="revenue"
+        label="Revenue"
+        value={
+          <CountUp
+            value={revenueSummary.total}
+            format="money"
+            currency={revenueSummary.currency}
+          />
+        }
+        delta={{
+          current: revenueSummary.total,
+          previous: prevRevenueSummary.total,
+        }}
+      />,
+    );
+  }
+  kpiCards.push(
+    <StatCard
+      key="active"
+      label="Active now"
+      value={<CountUp value={activeNow} format="number" />}
+      live={activeNow > 0}
+    />,
+  );
+  const kpiColsClass =
+    kpiCards.length === 4
+      ? "lg:grid-cols-4"
+      : kpiCards.length === 3
+        ? "lg:grid-cols-3"
+        : "lg:grid-cols-2";
+
   return (
     <div className="space-y-8">
       <ProjectHeader
@@ -268,56 +331,10 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
             />
           ) : null}
 
-          {/* KPI strip (Move #1 / Phase C) — outcome metrics with delta + sparkline.
-              Conversion + Revenue are placed but light up in Phases E + F. */}
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <StatCard
-              label="Pageviews"
-              value={<CountUp value={metrics.pageviews} format="number" />}
-              delta={{
-                current: metrics.pageviews,
-                previous: prevMetrics.pageviews,
-              }}
-              spark={timeseries.map((p) => p.pageviews)}
-            />
-            {primaryFunnel && funnelNow && funnelPrev ? (
-              <StatCard
-                label="Signup conversion"
-                value={
-                  <CountUp value={funnelNow.overallConversion} format="percent" />
-                }
-                delta={{
-                  current: funnelNow.overallConversion,
-                  previous: funnelPrev.overallConversion,
-                  mode: "points",
-                }}
-              />
-            ) : (
-              <StatCard label="Signup conversion" pending />
-            )}
-            {showRevenue ? (
-              <StatCard
-                label="Revenue"
-                value={
-                  <CountUp
-                    value={revenueSummary.total}
-                    format="money"
-                    currency={revenueSummary.currency}
-                  />
-                }
-                delta={{
-                  current: revenueSummary.total,
-                  previous: prevRevenueSummary.total,
-                }}
-              />
-            ) : (
-              <StatCard label="Revenue" pending />
-            )}
-            <StatCard
-              label="Active now"
-              value={<CountUp value={activeNow} format="number" />}
-              live={activeNow > 0}
-            />
+          {/* KPI strip (Move #1 / Phase C; ONE-78 progressive disclosure) —
+              only the KPIs with real data; the grid adapts to their count. */}
+          <div className={cn("grid grid-cols-2 gap-4", kpiColsClass)}>
+            {kpiCards}
           </div>
 
           {/* Demoted engagement diagnostics (were standalone tiles). Move #1 /
@@ -328,11 +345,18 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
             {formatDuration(metrics.avgDurationSec)} avg session
           </p>
 
-          {/* Outcomes triad (Move #1 / Phase D–F). Three equal cards: Sources /
-              Funnel / Revenue. Phase I: on mobile they stack in the spec's order
-              (Funnel → Sources → Revenue, §10) via order-*; at ≥768 the natural
-              Sources | Funnel | Revenue row returns (order-none). */}
-          <div className="grid gap-4 md:grid-cols-3">
+          {/* ONE-78 — progressive disclosure: once the project is activated (a
+              funnel or revenue exists, ONE-74) show the full Move #1 outcomes
+              triad + detail row exactly as before. Below that threshold, a
+              low-data project gets one curated breakdowns grid instead — no
+              funnel/revenue placeholders (the checklist already guides setup). */}
+          {fullyActivated ? (
+            <>
+              {/* Outcomes triad (Move #1 / Phase D–F). Three equal cards: Sources /
+                  Funnel / Revenue. Phase I: on mobile they stack in the spec's
+                  order (Funnel → Sources → Revenue, §10) via order-*; at ≥768 the
+                  natural Sources | Funnel | Revenue row returns (order-none). */}
+              <div className="grid gap-4 md:grid-cols-3">
             <SourcesCard
               items={analytics.topReferrers}
               className="order-2 md:order-none"
@@ -397,17 +421,32 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
             )}
           </div>
 
-          {/* Detail row (Move #1 / Phase H) — Top pages demoted to <SourceRow>
-              styling + the merged Audience card (Phase G). The quiet "footnotes"
-              row, below the outcomes triad. */}
-          <div className="grid gap-4 md:grid-cols-2">
-            <TopPagesCard items={analytics.topPages} />
-            <AudienceCard
-              countries={analytics.countries}
-              devices={analytics.devices}
-              browsers={analytics.browsers}
-            />
-          </div>
+              {/* Detail row (Move #1 / Phase H) — Top pages demoted to <SourceRow>
+                  styling + the merged Audience card (Phase G). The quiet
+                  "footnotes" row, below the outcomes triad. */}
+              <div className="grid gap-4 md:grid-cols-2">
+                <TopPagesCard items={analytics.topPages} />
+                <AudienceCard
+                  countries={analytics.countries}
+                  devices={analytics.devices}
+                  browsers={analytics.browsers}
+                />
+              </div>
+            </>
+          ) : (
+            // ONE-78 — low-data breakdowns: only the cards that carry value
+            // (Sources, Top pages, Audience); the funnel/revenue placeholders are
+            // omitted while the onboarding checklist guides setting those up.
+            <div className="grid gap-4 md:grid-cols-3">
+              <SourcesCard items={analytics.topReferrers} />
+              <TopPagesCard items={analytics.topPages} />
+              <AudienceCard
+                countries={analytics.countries}
+                devices={analytics.devices}
+                browsers={analytics.browsers}
+              />
+            </div>
+          )}
         </>
       )}
       </OverviewShell>

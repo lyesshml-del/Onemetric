@@ -205,8 +205,16 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   duplicated snippet/steps are superseded); added a `showDashboardLink?` flag to `FirstEventGuide` (hide the
   self-link on the Overview). Reuse-only; no new dependency / schema; no accent creep; Settings rename/delete
   + ONE-72/73/74 behavior preserved; Overview route 7.07 → **6.82 kB** (dropped). 85 tests/typecheck/lint/build
-  green. **Next: await approval of ONE-76, then ONE-78 — the last Move #5 issue (do NOT start ONE-78 early).**
-  The broader product backlog (marketing / Paddle go-live) is separate.
+  green; it's **Done & shipped** (pushed `988029a..08d9c54` → prod READY `dpl_Bu9i…`). **`ONE-78` (progressive
+  disclosure for low-data Overview) is implemented + committed locally → In Review (1 unpushed) — the LAST
+  Move #5 issue:** the KPI strip now shows only KPIs with real data (Pageviews + Active now always; Conversion
+  with a funnel; Revenue when connected) via dynamic `lg:grid-cols-{2|3|4}` — the dimmed `pending` tiles are
+  gone; and the breakdowns branch on `fullyActivated` — `fullyActivated` keeps the exact Move #1 triad +
+  detail row (with discovery CTAs), `!fullyActivated` shows one curated `[Sources | Top pages | Audience]`
+  grid (no funnel/revenue placeholders). Fully-populated Overview byte-identical; no fake data; server-first;
+  no new dependency / schema; no accent creep; 85 tests/typecheck/lint/build green. **Next: await approval of
+  ONE-78 → then `ONE-78` Done + the Move #5 Linear project → Completed. Do NOT start any new issue / Move #6
+  until explicitly approved.** The broader product backlog (marketing / Paddle go-live) is separate.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -290,10 +298,10 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. **`ONE-77` shipped 2026-06-21** (`11881aa..988029a` → prod READY `dpl_syn2…`, commit
-  `988029a`). Now **1 unpushed commit** = `ONE-76` (Move #5 canonical setup surface), **In Review, awaiting
-  approval**; working tree otherwise clean. Earlier ships: `ONE-75` (`ccf51d4..11881aa`); `ONE-73`
-  (`d31f176..ccf51d4`);
+- Branch **`main`**. **`ONE-76` shipped 2026-06-21** (`988029a..08d9c54` → prod READY `dpl_Bu9i…`, commit
+  `08d9c54`). Now **1 unpushed commit** = `ONE-78` (Move #5 progressive disclosure — the last Move #5 issue),
+  **In Review, awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-77`
+  (`11881aa..988029a`); `ONE-75` (`ccf51d4..11881aa`); `ONE-73` (`d31f176..ccf51d4`);
   `ONE-74` (`2008314..d31f176`); `ONE-72` (`286e217..2008314`); `ONE-71` (`de4cb1a..286e217`, Move #4
   Completed); `ONE-70`
   (`a298b32..de4cb1a`); `ONE-69` (`18cf117..a298b32`); `ONE-68` (`1fe9b6a..18cf117`); `ONE-67`

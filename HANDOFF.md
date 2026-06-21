@@ -1678,6 +1678,35 @@ install/verify into one canonical surface shared by Settings and the Overview em
   build (the empty-state visual now == the Settings setup section).
 - **Verified:** 85 tests · typecheck · lint · build green. **On approval:** `ONE-76` → Done. **Not pushed.**
 
+**✅ ONE-76 SHIPPED (2026-06-21).** Approved → pushed `988029a..08d9c54`; Vercel **production deploy READY**
+(`dpl_Bu9iReQLFF4jnZd5E1iUaAtKCutx`, commit `08d9c54`, target production). `ONE-76` → Done. Repository ==
+Linear == GitHub == production, all at `08d9c54`.
+
+**✅ ONE-78 — Progressive disclosure for low-data Overview (2026-06-21). Committed locally → In Review. LAST
+MOVE #5 ISSUE.** Reduces cognitive load for low-data projects — value over placeholders.
+
+- **Problem mapped:** the populated Overview (`hasData`) rendered, at low data, **2 dimmed `pending` KPI
+  tiles** (Signup conversion, Revenue) + **2 placeholder triad cards** ("No funnel yet / Create a funnel",
+  "No revenue connected / Connect revenue") — which during onboarding also duplicate the ONE-66 checklist.
+- **(1) KPI strip → data-driven dynamic columns** (`page.tsx`): a `kpiCards` array built before `return` —
+  Pageviews + Active now always; Signup conversion only if `primaryFunnel && funnelNow && funnelPrev`; Revenue
+  only if `showRevenue` — rendered with `lg:grid-cols-{2|3|4}` (`kpiColsClass`). The `pending` StatCards are
+  removed; `cn` imported. Fully populated → 4 KPIs / `lg:grid-cols-4` (identical to before).
+- **(2) Breakdowns branched on `fullyActivated`** (ONE-74's `hasFunnel || hasRevenue`):
+  - `fullyActivated` → the **exact** Move #1 triad (Sources | Funnel | Revenue, with the real cards or the
+    discovery CTAs) + the detail row (Top pages | Audience). Unchanged.
+  - `!fullyActivated` → one curated `[Sources | Top pages | Audience]` `md:grid-cols-3` grid; the
+    funnel/revenue placeholders are omitted (the checklist guides those — not hidden, just not duplicated).
+- **Honest + non-destructive:** no fabricated data (hide, don't fake); established users keep discovery (the
+  triad CTAs once activated, and the Funnels/Revenue tabs always); the **fully-populated Overview is byte-
+  identical** to before — only the partial/low-data presentation changed.
+- **Constraints honored:** server-first; reuses `StatCard`/`SourcesCard`/`TopPagesCard`/`AudienceCard`; **no
+  new dependency**; **no schema/query change**; **no accent creep**; dark-first; Moves #1–#5 preserved.
+  Overview route **6.82 kB unchanged**. No browser in env → reasoned from the deterministic data-driven
+  branches + the green build (fully-populated path provably unchanged).
+- **Verified:** 85 tests · typecheck · lint · build green. **On approval:** `ONE-78` → Done + the **Move #5**
+  Linear project → **Completed** (all 7 phases). **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
