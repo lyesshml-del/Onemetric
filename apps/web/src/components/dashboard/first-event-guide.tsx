@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { RefreshButton } from "@/components/dashboard/refresh-button";
 import { AutoVerify } from "@/components/dashboard/auto-verify";
+import { SendTestEventButton } from "@/components/dashboard/send-test-event-button";
 
 /**
  * ONE-70 (Move #4 — Activation) — the verification + first-event guidance shown
@@ -23,10 +24,12 @@ export function FirstEventGuide({
   events,
   lastEventAt,
   overviewHref,
+  publicKey,
 }: {
   events: number;
   lastEventAt: Date | null;
   overviewHref: string;
+  publicKey: string;
 }) {
   const receiving = events > 0;
 
@@ -82,6 +85,14 @@ export function FirstEventGuide({
           {/* ONE-72 — auto-verify: quietly polls and flips this card to the
               connected state on its own (replaces the manual "Check again"). */}
           <AutoVerify />
+          {/* ONE-73 — no-site path: send a real, clearly-labelled test event
+              through the live ingest pipeline and see OneMetric work right now. */}
+          <div className="border-border space-y-1.5 border-t pt-3">
+            <p className="text-muted-foreground">
+              No site handy? Send a test event to see OneMetric work right now.
+            </p>
+            <SendTestEventButton publicKey={publicKey} />
+          </div>
           <Link
             href={overviewHref}
             className="text-muted-foreground hover:text-foreground inline-block text-sm underline-offset-4 hover:underline"

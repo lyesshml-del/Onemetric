@@ -6,6 +6,7 @@ import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoVerify } from "@/components/dashboard/auto-verify";
+import { SendTestEventButton } from "@/components/dashboard/send-test-event-button";
 
 const STEPS = [
   "Add the snippet to your website.",
@@ -23,9 +24,11 @@ const STEPS = [
 export function FirstEventOnboarding({
   snippet,
   settingsHref,
+  publicKey,
 }: {
   snippet: string;
   settingsHref: string;
+  publicKey: string;
 }) {
   const [toast, setToast] = useState(false);
 
@@ -65,6 +68,14 @@ export function FirstEventOnboarding({
           {/* ONE-72 — auto-verify: once the first event lands, the Overview
               re-renders into the live dashboard on its own (no manual refresh). */}
           <AutoVerify className="mt-6 justify-center" />
+          {/* ONE-73 — no-site path: fire a real, clearly-labelled test event
+              through the live pipeline to see the dashboard come alive now. */}
+          <div className="mt-4 flex flex-col items-center gap-1.5">
+            <p className="text-muted-foreground text-sm">
+              No site to test on yet?
+            </p>
+            <SendTestEventButton publicKey={publicKey} />
+          </div>
           <Link
             href={settingsHref}
             className="text-muted-foreground hover:text-foreground mt-4 inline-block text-xs underline-offset-4 hover:underline"

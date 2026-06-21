@@ -911,8 +911,25 @@ Activation Loop & Retention** with `ONE-72…78`. Execution order: **72 → 74 �
       route 6.21 → **6.65 kB** (123 kB First Load). Verified: 83 tests, typecheck · lint · build green. Files:
       +`lib/hooks/use-onboarding-dismissed.ts`, `first-value-banner.tsx`, `onboarding-checklist.tsx`,
       `app/dashboard/[projectId]/page.tsx`.
-- [ ] **ONE-73 — Send a test event.** (Backlog — execute next.)
-- [ ] **ONE-75 — Installed-but-no-data recovery email.** (Backlog.)
+- [x] **ONE-73 — Send a test event ✅ implemented (2026-06-21), in review.** PostHog-style instant
+      gratification: a "no-site" path so a user who hasn't deployed the snippet still gets the "it works"
+      moment. New **`SendTestEventButton`** client island POSTs through the **real** ingest path
+      (`POST /api/collect`, **same-origin** → a simple text/plain request, mirrors the tracker's payload) with
+      the project's `publicKey` — a genuine, **clearly-labelled** event (`type: "custom"`, `name: "Test
+      event"`, `path: "/"`, `metadata: { source: "onemetric-dashboard", test: true }`) → **not fabricated
+      sample data**, and trivially identifiable/removable. Since the ingest creates a `Session` + `Event`,
+      this trips **both** surfaces: Settings → Verification flips to "Receiving data" (`getProjectIngestStats`
+      events > 0) and the Overview goes live (`getOverviewMetrics` counts the session → `hasData`). After the
+      204 it `router.refresh()`es (and the ONE-72 auto-verify catches it too). Wired into both waiting
+      surfaces: Settings `FirstEventGuide` ("No site handy?" under the auto-verify line) and the Overview
+      `FirstEventOnboarding` ("No site to test on yet?"). States: idle → "Sending…" → "Test event sent — your
+      dashboard is updating…"; transport-error fallback. Reuses the shared outline `Button`; server-first
+      (pages stay RSC; the button is a leaf island); **no new dependency**; **no schema change**; **no accent
+      creep** (outline button + muted text); dark-first; Moves #1–#5 + onboarding preserved. Routes: Overview
+      6.65 → **7.02 kB**, Settings 2.34 → **2.69 kB** (First Load unchanged). Verified: 83 tests, typecheck ·
+      lint · build green. Files: +`components/dashboard/send-test-event-button.tsx`, `first-event-guide.tsx`,
+      `first-event-onboarding.tsx`, settings `page.tsx`, Overview `page.tsx`.
+- [ ] **ONE-75 — Installed-but-no-data recovery email.** (Backlog — execute next.)
 - [ ] **ONE-77 — Promote weekly reports during onboarding.** (Backlog.)
 - [ ] **ONE-76 — Canonical setup surface.** (Backlog.)
 - [ ] **ONE-78 — Progressive disclosure for low-data Overview.** (Backlog.)

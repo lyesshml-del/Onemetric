@@ -192,6 +192,7 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
         <FirstEventOnboarding
           snippet={installSnippet}
           settingsHref={`/dashboard/${project.id}/settings`}
+          publicKey={project.publicKey}
         />
       ) : (
         <>

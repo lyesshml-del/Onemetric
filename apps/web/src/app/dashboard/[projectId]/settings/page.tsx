@@ -81,6 +81,7 @@ export default async function ProjectSettingsPage({
             events={stats.events}
             lastEventAt={stats.lastEventAt}
             overviewHref={`/dashboard/${project.id}`}
+            publicKey={project.publicKey}
           />
         </CardContent>
       </Card>

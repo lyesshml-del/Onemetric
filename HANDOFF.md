@@ -1548,6 +1548,39 @@ The onboarding chrome no longer requires revenue to retire, and an established u
   green build.
 - **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-74` → Done. **Not pushed.**
 
+**✅ ONE-74 SHIPPED (2026-06-21).** Approved → pushed `2008314..d31f176` (one transient `git push` network
+failure, retried OK); Vercel **production deploy READY** (`dpl_EaBVhVNgv5yk9xcxroAFvyiU1Tfn`, commit
+`d31f176`, `onemetric.sbs`). `ONE-74` → Done. Repository == Linear == GitHub == production, all at `d31f176`.
+
+**✅ ONE-73 — Send a test event (2026-06-21). Committed locally → In Review.** A "no-site" instant-
+gratification path (PostHog-style) so a user who hasn't deployed the snippet still gets the "it works" moment.
+
+- **Pipeline analysis:** the tracker POSTs `{publicKey,type,name,path?,...}` (text/plain) → `POST /api/collect`
+  (Node, zod) → `ingest()` resolves the project by `publicKey`, creates/updates a `Session`, writes an
+  `Event`, always 204. `getOverviewMetrics` counts `count(*)` from `Session` (any session, pageview or not),
+  so one custom event trips `hasData`; `getProjectIngestStats` (events>0) trips the Settings verification.
+- **`components/dashboard/send-test-event-button.tsx` (new, client):** POSTs through the **real**
+  `/api/collect` (same-origin → a simple text/plain request, no preflight; mirrors the tracker payload) with
+  a genuine, clearly-labelled event — `type:"custom"`, `name:"Test event"`, `path:"/"`,
+  `metadata:{source:"onemetric-dashboard",test:true}`. **Not fake data** (a real user-triggered event through
+  the real path) and trivially identifiable/removable. On 204 → `router.refresh()` (ONE-72 auto-verify catches
+  it too). States idle → "Sending…" → "Test event sent — your dashboard is updating…", with a transport-error
+  fallback.
+- **Wired into both waiting surfaces:** Settings `FirstEventGuide` (new `publicKey` prop; "No site handy?"
+  block under the auto-verify line, with a top border) and the Overview `FirstEventOnboarding` (new `publicKey`
+  prop; centered "No site to test on yet?"). Settings + Overview pages pass `project.publicKey`.
+- **Decision — custom event, not a pageview:** keeps Top Pages / pageview analytics clean and shows as an
+  obvious "Test event" in the Events tab; still creates a session (Overview goes live) + an event (verification
+  flips). Same-origin fetch (dashboard ↔ `/api/collect` both on `onemetric.sbs`) → no CORS/no-cors needed; DNT
+  intentionally not gated (explicit first-party test action, not visitor tracking).
+- **Constraints honored:** reuses `/api/collect` + the shared outline `Button`; **no new dependency**; **no
+  schema change**; **no accent creep** (outline button + muted text); server-first (pages stay RSC; the button
+  is a leaf island); dark-first; Moves #1–#5 + the onboarding (ONE-72/74) preserved. Routes: Overview 6.65 →
+  **7.02 kB**, Settings 2.34 → **2.69 kB** (First Load unchanged). No browser in env → the send→refresh→connect
+  flow is reasoned from the ingest path + `getOverviewMetrics`/`getProjectIngestStats` semantics + the green
+  build.
+- **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-73` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

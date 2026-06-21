@@ -172,9 +172,16 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   required to retire the ONE-71 banner + ONE-66 checklist); plus a dependency-free
   `useOnboardingDismissed(projectId)` hook (localStorage per project + window-event sync, **no schema**) — the
   checklist gained a calm "Dismiss" control and the banner (now a thin client wrapper) honors the same flag.
-  No fake data, no new dependency, no accent creep; Overview 123 kB; 83 tests/typecheck/lint/build green.
-  **Next: await approval of ONE-74, then ONE-73 (do NOT start ONE-73 early).** The broader product backlog
-  (marketing / Paddle go-live) is separate.
+  No fake data, no new dependency, no accent creep; it's **Done & shipped** (pushed `2008314..d31f176` → prod
+  READY `dpl_EaBV…`, `onemetric.sbs`). **`ONE-73` (send a test event) is implemented + committed locally → In
+  Review (1 unpushed):** new `SendTestEventButton` client island POSTs a real, clearly-labelled custom "Test
+  event" (`metadata.test`) through the same-origin `/api/collect` (the real ingest pipeline — no fake data),
+  then `router.refresh()`es → Settings verification flips to connected + the Overview goes live (ONE-72
+  auto-verify also catches it). Wired into both waiting surfaces (Settings `FirstEventGuide` + Overview
+  `FirstEventOnboarding`, both now take a `publicKey` prop). Reuses `/api/collect` + the outline Button; no new
+  dependency / schema; no accent creep; 83 tests/typecheck/lint/build green. **Next: await approval of ONE-73,
+  then ONE-75 (do NOT start ONE-75 early).** The broader product backlog (marketing / Paddle go-live) is
+  separate.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -258,9 +265,9 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. **`ONE-72` shipped 2026-06-21** (`286e217..2008314` → prod READY `dpl_5Mi6…`, commit
-  `2008314`). Now **1 unpushed commit** = `ONE-74` (Move #5 smarter activation + dismissible onboarding),
-  **In Review, awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-71`
+- Branch **`main`**. **`ONE-74` shipped 2026-06-21** (`2008314..d31f176` → prod READY `dpl_EaBV…`, commit
+  `d31f176`). Now **1 unpushed commit** = `ONE-73` (Move #5 send a test event), **In Review, awaiting
+  approval**; working tree otherwise clean. Earlier ships: `ONE-72` (`286e217..2008314`); `ONE-71`
   (`de4cb1a..286e217`, Move #4 Completed); `ONE-70`
   (`a298b32..de4cb1a`); `ONE-69` (`18cf117..a298b32`); `ONE-68` (`1fe9b6a..18cf117`); `ONE-67`
   (`dd513f7..1fe9b6a`); 2026-06-20 `79badb8..5ef6850` (`ONE-63/64/65/66`); 2026-06-19 `ONE-24` (Move
