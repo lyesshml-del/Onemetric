@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { AutoVerify } from "@/components/dashboard/auto-verify";
 
 const STEPS = [
   "Add the snippet to your website.",
@@ -61,6 +62,9 @@ export function FirstEventOnboarding({
               Copy snippet
             </Button>
           </div>
+          {/* ONE-72 — auto-verify: once the first event lands, the Overview
+              re-renders into the live dashboard on its own (no manual refresh). */}
+          <AutoVerify className="mt-6 justify-center" />
           <Link
             href={settingsHref}
             className="text-muted-foreground hover:text-foreground mt-4 inline-block text-xs underline-offset-4 hover:underline"

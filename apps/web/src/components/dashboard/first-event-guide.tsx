@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { RefreshButton } from "@/components/dashboard/refresh-button";
+import { AutoVerify } from "@/components/dashboard/auto-verify";
 
 /**
  * ONE-70 (Move #4 — Activation) — the verification + first-event guidance shown
@@ -8,14 +9,15 @@ import { RefreshButton } from "@/components/dashboard/refresh-button";
  *   • "Did I install it correctly?"  → the live status (real ingest stats)
  *   • "What should I do now?"         → concrete next steps
  *   • "How do I trigger my event?"    → load any page / call track()
- *   • "How do I know it's working?"   → status dot + Check again, plus the
- *                                       reassurance that "waiting" is normal
+ *   • "How do I know it's working?"   → ONE-72: auto-detected — no button. While
+ *                                       waiting, <AutoVerify> quietly polls and
+ *                                       the card flips to connected on its own.
  *   • "Where will I see the result?"  → a link to the project's dashboard
  *
  * Everything is derived from real data (`events` / `lastEventAt`) — no fake
- * progress. Server component; reuses the existing `RefreshButton` client island
- * and the established emerald/amber status-dot language; neutral + dark-first;
- * no accent of its own (links are quiet text links, not brand buttons).
+ * progress. Server component; reuses the established emerald/amber status-dot
+ * language; neutral + dark-first; no accent of its own (links are quiet text
+ * links, not brand buttons).
  */
 export function FirstEventGuide({
   events,
@@ -30,24 +32,14 @@ export function FirstEventGuide({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 text-sm">
-        <span
-          className={
-            receiving
-              ? "size-2 rounded-full bg-emerald-500"
-              : "size-2 rounded-full bg-amber-500"
-          }
-          aria-hidden
-        />
-        <span>
-          {receiving
-            ? `Receiving data — ${events} event${events === 1 ? "" : "s"} so far`
-            : "No events received yet"}
-        </span>
-      </div>
-
       {receiving ? (
         <>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="size-2 rounded-full bg-emerald-500" aria-hidden />
+            <span>
+              Receiving data — {events} event{events === 1 ? "" : "s"} so far
+            </span>
+          </div>
           <p className="text-muted-foreground text-sm">
             Your site is connected — OneMetric is recording events. You&apos;re
             all set.
@@ -75,8 +67,8 @@ export function FirstEventGuide({
                 first pageview.
               </li>
               <li>
-                Come back here and select{" "}
-                <span className="text-foreground font-medium">Check again</span>.
+                Then return to this tab — OneMetric detects it automatically, no
+                refresh needed.
               </li>
             </ol>
             <p>
@@ -87,15 +79,15 @@ export function FirstEventGuide({
               Custom events below.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <RefreshButton />
-            <Link
-              href={overviewHref}
-              className="text-muted-foreground hover:text-foreground text-sm underline-offset-4 hover:underline"
-            >
-              Where you&apos;ll see it: your dashboard →
-            </Link>
-          </div>
+          {/* ONE-72 — auto-verify: quietly polls and flips this card to the
+              connected state on its own (replaces the manual "Check again"). */}
+          <AutoVerify />
+          <Link
+            href={overviewHref}
+            className="text-muted-foreground hover:text-foreground inline-block text-sm underline-offset-4 hover:underline"
+          >
+            Where you&apos;ll see it: your dashboard →
+          </Link>
         </div>
       )}
     </div>

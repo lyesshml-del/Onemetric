@@ -861,6 +861,44 @@ Linear: project **Move #4 — Activation & First Experience** with `ONE-68…71`
 > progress, and a calm success moment at every step. **On ONE-71 approval:** `ONE-71` → Done + the Move #4
 > Linear project → Completed.
 
+> **Move #4 — Activation & First Experience: ✅ COMPLETE & APPROVED (2026-06-21).** All four phases shipped
+> to production (ONE-68 `18cf117` · ONE-69 `a298b32` · ONE-70 `de4cb1a` · ONE-71 `286e217`); the Move #4
+> Linear project is **Completed**.
+
+---
+
+## Move #5 — Activation Loop & Retention (automation · instant gratification · retire onboarding · recover)
+
+Close the activation loop and improve retention — make the product feel alive automatically (Plausible /
+GitHub / PostHog / Vercel). **Users should never wonder whether installation works.** Server-first ·
+dark-first · reuse · **no accent creep** · no new dependency unless absolutely necessary · preserve Moves
+#1–#4 · one issue at a time, one local commit per issue, In Review + stop. Linear: project **Move #5 —
+Activation Loop & Retention** with `ONE-72…78`. Execution order: **72 → 74 → 73 → 75 → 77 → 76 → 78**.
+
+- [x] **ONE-72 — Auto-verify installation ✅ implemented (2026-06-21), in review.** Removed the manual "Check
+      again" — the verification UI now detects the first event and transitions to connected **on its own**.
+      New **`AutoVerify`** *client* island: while waiting it calls `router.refresh()` so the surrounding RSC
+      re-fetches the existing `getProjectIngestStats` (Settings) / Overview data and flips to the connected
+      state — **no new endpoint, no schema, no fake data** (the server stays the source of truth). **Bounded
+      (no polling abuse):** 6 s interval, **pauses while the tab is hidden**, **re-checks instantly on tab
+      refocus**, and **gives up after 5 min** revealing a calm "Keep listening" fallback; it only exists while
+      waiting, so it unmounts (poll stops) the moment data lands. Wired into **both** waiting surfaces:
+      Settings → Verification (`FirstEventGuide`, replacing `RefreshButton` + the static status line with the
+      live "Listening for your first event…" amber-pulse indicator; step-2 copy updated to "detects it
+      automatically, no refresh needed") **and** the Overview empty state (`FirstEventOnboarding`) → the empty
+      Overview **auto-transitions into the live dashboard** when the first event arrives. Reduced-motion-safe
+      (`animate-ping` + `motion-reduce:animate-none`, the existing Move #1 Phase-J pattern); reuses the amber
+      "waiting" semantic (not the brand accent → **no accent creep**); no new dependency. Routes: Overview
+      5.82 → **6.21 kB**, Settings 1.91 → **2.34 kB** (the small client island); First Load JS ~unchanged.
+      Verified: 83 tests, typecheck · lint · build green. Files: +`components/dashboard/auto-verify.tsx`,
+      `first-event-guide.tsx`, `first-event-onboarding.tsx`.
+- [ ] **ONE-74 — Smarter activation state + dismissible onboarding.** (Backlog — execute next.)
+- [ ] **ONE-73 — Send a test event.** (Backlog.)
+- [ ] **ONE-75 — Installed-but-no-data recovery email.** (Backlog.)
+- [ ] **ONE-77 — Promote weekly reports during onboarding.** (Backlog.)
+- [ ] **ONE-76 — Canonical setup surface.** (Backlog.)
+- [ ] **ONE-78 — Progressive disclosure for low-data Overview.** (Backlog.)
+
 ---
 
 ## Excluded from V1 (ROADMAP only — never implement)

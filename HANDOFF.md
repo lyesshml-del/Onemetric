@@ -1477,6 +1477,46 @@ MOVE #4.** When the first data arrives, the Overview now opens with a calm, prof
 - **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-71` → Done + the **Move #4**
   Linear project → **Completed** (all four phases done). **Not pushed.**
 
+**✅ ONE-71 SHIPPED + MOVE #4 COMPLETE (2026-06-21).** Approved → pushed `de4cb1a..286e217`; Vercel
+**production deploy READY** (`dpl_GW7prLSWsXwYCDziMbqDHXZ2975w`, commit `286e217`, `onemetric.sbs`). `ONE-71`
+→ Done; the **Move #4 — Activation & First Experience** Linear project → **Completed**. Repository == Linear
+== GitHub == production, all at `286e217`.
+
+## Move #5 — Activation Loop & Retention (automation · instant gratification · retire onboarding · recover)
+
+New Linear project **Move #5 — Activation Loop & Retention** (`a702d389`) created 2026-06-21 with `ONE-72…78`.
+Goal: close the activation loop + improve retention by making the product feel alive automatically
+(Plausible / GitHub / PostHog / Vercel) — users should never wonder whether install works. **Execution order:
+72 → 74 → 73 → 75 → 77 → 76 → 78.** Same discipline: sync before each issue · analyze first · reuse ·
+server-first · dark-first · no accent creep · no new dependency unless essential · preserve Moves #1–#4 · one
+issue at a time, one local commit, In Review + stop.
+
+**✅ ONE-72 — Auto-verify installation (2026-06-21). Committed locally → In Review.** The verification UI now
+detects the first event and transitions to connected on its own — the manual "Check again" is gone.
+
+- **`components/dashboard/auto-verify.tsx` (new, client):** while waiting, calls `router.refresh()` on a 6 s
+  interval so the surrounding RSC re-fetches the **existing** `getProjectIngestStats` (Settings) / Overview
+  data and flips to connected — **no new endpoint, no schema, no fake data** (server stays source of truth).
+  **Bounded (no abuse):** pauses while the tab is hidden, re-checks instantly on tab refocus, gives up after
+  5 min → calm "Keep listening" fallback; only mounted while waiting, so it unmounts (poll stops) the moment
+  data lands. Renders a live "Listening for your first event…" amber-pulse (`animate-ping` +
+  `motion-reduce:animate-none` — the Move #1 Phase-J pattern; reduced-motion-safe).
+- **`first-event-guide.tsx` (Settings → Verification):** the waiting branch's static status line + manual
+  `RefreshButton` → `<AutoVerify/>`; step-2 copy now "Then return to this tab — OneMetric detects it
+  automatically, no refresh needed." The **receiving branch is unchanged** (keeps its emerald status +
+  `RefreshButton` to refresh counts).
+- **`first-event-onboarding.tsx` (Overview empty state):** added `<AutoVerify className="mt-6 justify-center"/>`
+  → when the first event arrives, `hasData` flips and the empty Overview **auto-transitions into the live
+  dashboard** (FirstValueBanner + briefing) with no manual refresh. `router.refresh()` is a soft RSC re-render
+  → no Suspense-skeleton flash, no full reload.
+- **Constraints honored:** server-first; reuses the amber "waiting" semantic + the existing stats; **no new
+  dependency** (native `setInterval`/`visibilitychange`); no schema/query change; **no accent creep** (amber
+  is the existing waiting semantic, not the brand violet); dark-first; Moves #1–#4 preserved (only the waiting
+  surfaces changed; the populated Overview branch is untouched). Routes: Overview 5.82 → **6.21 kB**, Settings
+  1.91 → **2.34 kB** (small client island); First Load JS ~unchanged. No browser in env → the auto-transition
+  is reasoned from `router.refresh()` semantics + the unmount-on-connect flow + the green build.
+- **Verified:** 83 tests · typecheck · lint · build green. **On approval:** `ONE-72` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**
