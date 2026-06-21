@@ -212,9 +212,25 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   gone; and the breakdowns branch on `fullyActivated` — `fullyActivated` keeps the exact Move #1 triad +
   detail row (with discovery CTAs), `!fullyActivated` shows one curated `[Sources | Top pages | Audience]`
   grid (no funnel/revenue placeholders). Fully-populated Overview byte-identical; no fake data; server-first;
-  no new dependency / schema; no accent creep; 85 tests/typecheck/lint/build green. **Next: await approval of
-  ONE-78 → then `ONE-78` Done + the Move #5 Linear project → Completed. Do NOT start any new issue / Move #6
-  until explicitly approved.** The broader product backlog (marketing / Paddle go-live) is separate.
+  no new dependency / schema; no accent creep; 85 tests/typecheck/lint/build green; it's **Done & shipped**
+  (pushed `08d9c54..bd18f4a` → prod READY `dpl_FXf5…`) — the **Move #5 Linear project is Completed** (all 7
+  phases live).
+- **Move #6 — Signup & Polish (in progress, 2026-06-21).** New Linear project (`4474382d`) — refinement, not
+  breadth: remove signup friction · trust/honesty · cognitive load. Issues `ONE-79…83`, **execution order
+  79 → 80 → 81 → 82 → 83**: 79 Google OAuth · 80 honest "Active now" · 81 persistent recovery-email dedup
+  (**flagged schema field** — needs approval) · 82 collapse the 6-step checklist · 83 second-project shortcut.
+  *(A duplicate Move #6 project `6b426845` + issue `ONE-84` were created in error and Canceled — use
+  `4474382d` / `ONE-79…83`.)* **`ONE-79` (Google OAuth signup) is implemented + committed locally → In Review
+  (1 unpushed):** "Continue with Google" on login + signup via a **server-action** `signInWithGoogle`
+  (`signInWithOAuth` → redirect to Google; keeps the Supabase browser client off the auth pages → `/login` +
+  `/signup` stay ~117 kB) + a new `app/auth/callback/route.ts` (`exchangeCodeForSession` → `/dashboard`;
+  open-redirect-guarded) + a `GoogleButton` (outline Button + Google's own logo SVG). `requireUser`→`syncUser`
+  mirrors OAuth users into `public.User` unchanged → **no schema change**; no new dependency; no accent creep.
+  **⚠️ Needs manual config to go live (agent can't do it):** enable Google in Supabase Auth + Client ID/Secret,
+  add `https://onemetric.sbs/auth/callback` to Supabase Redirect URLs, + the Google Cloud authorized redirect
+  URI. 85 tests/typecheck/lint/build green. **Next: await approval of ONE-79, then ONE-80 (do NOT start ONE-80
+  early). Do NOT create Move #7 or new issues until explicitly approved.** The broader product backlog
+  (marketing / Paddle go-live) is separate.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -298,10 +314,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. **`ONE-76` shipped 2026-06-21** (`988029a..08d9c54` → prod READY `dpl_Bu9i…`, commit
-  `08d9c54`). Now **1 unpushed commit** = `ONE-78` (Move #5 progressive disclosure — the last Move #5 issue),
-  **In Review, awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-77`
-  (`11881aa..988029a`); `ONE-75` (`ccf51d4..11881aa`); `ONE-73` (`d31f176..ccf51d4`);
+- Branch **`main`**. **`ONE-78` shipped 2026-06-21** (`08d9c54..bd18f4a` → prod READY `dpl_FXf5…`, commit
+  `bd18f4a`) — **Move #5 Completed**. Now **1 unpushed commit** = `ONE-79` (Move #6 Google OAuth signup),
+  **In Review, awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-76`
+  (`988029a..08d9c54`); `ONE-77` (`11881aa..988029a`); `ONE-75` (`ccf51d4..11881aa`); `ONE-73`
+  (`d31f176..ccf51d4`);
   `ONE-74` (`2008314..d31f176`); `ONE-72` (`286e217..2008314`); `ONE-71` (`de4cb1a..286e217`, Move #4
   Completed); `ONE-70`
   (`a298b32..de4cb1a`); `ONE-69` (`18cf117..a298b32`); `ONE-68` (`1fe9b6a..18cf117`); `ONE-67`

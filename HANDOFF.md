@@ -1707,6 +1707,48 @@ MOVE #5 ISSUE.** Reduces cognitive load for low-data projects — value over pla
 - **Verified:** 85 tests · typecheck · lint · build green. **On approval:** `ONE-78` → Done + the **Move #5**
   Linear project → **Completed** (all 7 phases). **Not pushed.**
 
+**✅ ONE-78 SHIPPED + MOVE #5 COMPLETE (2026-06-21).** Approved → pushed `08d9c54..bd18f4a`; Vercel
+**production deploy READY** (`dpl_FXf5Q5hsybgE5KgR9pXorSHsr3JA`, commit `bd18f4a`, target production). `ONE-78`
+→ Done; the **Move #5 — Activation Loop & Retention** Linear project → **Completed**. Repository == Linear ==
+GitHub == production, all at `bd18f4a`.
+
+## Move #6 — Signup & Polish (remove signup friction · trust/honesty · cognitive load · refine — not breadth)
+
+New Linear project **Move #6 — Signup & Polish** (`4474382d`) created 2026-06-21 with `ONE-79…83`. Goal:
+refinement, not feature expansion — remove remaining signup friction, improve trust/honesty, reduce cognitive
+load. **Execution order: 79 → 80 → 81 → 82 → 83.** Same discipline; **schema changes must be flagged +
+approved** (ONE-81 proposes one). Note: **ONE-80**=honest "Active now" copy, **ONE-81**=`recoveryEmailSentAt`
+column (flagged), **ONE-82**=collapse the 6-step checklist, **ONE-83**=skip the welcome for repeat projects.
+
+**✅ ONE-79 — Google OAuth signup (2026-06-21). Committed locally → In Review.** Adds "Continue with Google"
+to login + signup, removing the email-confirmation top-of-funnel drop.
+
+- **Auth flow analysed:** `requireUser → getAuthUser → syncUser` mirrors **any** Supabase session (incl. OAuth)
+  into `public.User` → **no schema/helper change** for OAuth. Middleware doesn't guard `/auth/*` (only
+  `/dashboard`). Email signup uses `signUp` + `/auth/confirm`; OAuth needs a separate code-exchange callback.
+- **`actions/auth.ts` → `signInWithGoogle` (server action):** `signInWithOAuth({provider:"google", redirectTo:
+  APP_URL/auth/callback})` then `redirect(data.url)`. **Server-first on purpose** — the first cut used the
+  Supabase **browser** client in the button and added **+66 kB** to `/login`+`/signup` (182 kB); moving the
+  OAuth start into the action keeps those pages at **117 kB** (~unchanged). Errors → `/login?error=google`.
+- **`app/auth/callback/route.ts` (new):** `exchangeCodeForSession(code)` → redirect to `/dashboard` (base =
+  `NEXT_PUBLIC_APP_URL`); `next` is `/`-relative-only (open-redirect guard); errors → `/login?error=oauth`.
+- **`components/auth/google-button.tsx` (new, client):** a `<form action={signInWithGoogle}>` + an outline
+  `Button` with a pending state via `react-dom` `useFormStatus` (no Supabase browser client) + an inline Google
+  logo SVG. On `(auth)/login` + `(auth)/signup` above an "or" divider. The login page now reads `?error=`
+  (google/oauth/confirm) and shows a calm muted message (also surfaces the pre-existing email-confirm failure).
+- **Constraints honored:** server-first; reuses the Supabase server client + the outline `Button`; **no new
+  dependency**; **no schema change** (OAuth users flow through the same `syncUser` upsert); **no accent creep**
+  (Google's own logo colours are a convention, not our violet); dark-first; Moves #1–#5 preserved (email forms
+  untouched). Routes: `/login` `/signup` **117 kB**, `/auth/callback` 155 B.
+- **⚠️ Manual config to go live (agent can't do it — flag to user):** Supabase → Auth → Providers → enable
+  **Google** + paste Client ID/Secret (from a Google Cloud OAuth 2.0 credential); Supabase → Auth → URL
+  Configuration → add `https://onemetric.sbs/auth/callback` to **Redirect URLs**; Google Cloud → OAuth consent
+  screen + add `https://<supabase-ref>.supabase.co/auth/v1/callback` as an **Authorized redirect URI**.
+  `NEXT_PUBLIC_APP_URL` is already set in prod. Until configured the button degrades gracefully.
+- **Verified:** 85 tests · typecheck · lint · build green; the new route + button compile, bundle ~unchanged.
+  No browser in env → the OAuth round-trip is reasoned from the standard Supabase SSR PKCE flow + the green
+  build (live Google sign-in needs the dashboard config above). **On approval:** `ONE-79` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

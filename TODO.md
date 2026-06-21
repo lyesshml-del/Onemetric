@@ -1003,10 +1003,46 @@ Activation Loop & Retention** with `ONE-72…78`. Execution order: **72 → 74 �
       Overview route **6.82 kB unchanged**. Verified: 85 tests, typecheck · lint · build green. Files:
       `app/dashboard/[projectId]/page.tsx` (+`cn` import).
 
-> **Move #5 — Activation Loop & Retention: all seven phases implemented.** ONE-72 auto-verify · ONE-74
-> smarter activation + dismissible onboarding · ONE-73 send-a-test-event · ONE-75 recovery email · ONE-77
-> reports promotion · ONE-76 canonical setup surface (all shipped) · ONE-78 progressive disclosure (in
-> review). **On ONE-78 approval:** `ONE-78` → Done + the Move #5 Linear project → Completed.
+> **Move #5 — Activation Loop & Retention: ✅ COMPLETE & APPROVED (2026-06-21).** All seven phases shipped to
+> production (ONE-72 `2008314` · ONE-74 `d31f176` · ONE-73 `ccf51d4` · ONE-75 `11881aa` · ONE-77 `988029a` ·
+> ONE-76 `08d9c54` · ONE-78 `bd18f4a`); the Move #5 Linear project is **Completed**.
+
+---
+
+## Move #6 — Signup & Polish (remove signup friction · trust/honesty · reduce cognitive load · refine)
+
+Refinement after the Move #4/#5 activation build — **not feature expansion.** Server-first · dark-first ·
+reuse · **no accent creep** · no new dependency unless justified · **schema changes flagged + justified** ·
+preserve Moves #1–#5 · one issue at a time, one local commit per issue, In Review + stop. Linear: project
+**Move #6 — Signup & Polish** with `ONE-79…83`. Execution order: **79 → 80 → 81 → 82 → 83**.
+
+- [x] **ONE-79 — Google OAuth signup ✅ implemented (2026-06-21), in review.** Removed the biggest remaining
+      top-of-funnel friction (email-confirmation-before-dashboard) by adding **"Continue with Google"** to
+      login + signup. **Server-first** start: new `signInWithGoogle` **server action** (`actions/auth.ts`)
+      calls `supabase.auth.signInWithOAuth({ provider:"google", redirectTo: APP_URL/auth/callback })` and
+      `redirect`s to Google — so the Supabase **browser** client never ships to the auth pages (a first attempt
+      via the browser client added +66 kB to `/login`+`/signup`; the server-action version keeps them at **117
+      kB**, ~unchanged). New **`app/auth/callback/route.ts`** exchanges the PKCE code for a session
+      (`exchangeCodeForSession`) and redirects to `/dashboard`; **`requireUser`→`syncUser` mirrors the OAuth
+      user into `public.User` unchanged → no schema change.** New **`GoogleButton`** (client, only
+      `useFormStatus` for the pending state — a `<form action={signInWithGoogle}>` + outline `Button` + an
+      inline Google logo SVG) on both `(auth)/login` + `(auth)/signup` pages, above an "or" divider; the
+      **login** page now surfaces `?error=` (oauth/confirm) with a calm muted message; open-redirect guarded
+      (`next` must be a `/`-relative path). Google's own logo colours are a recognised convention (**not** our
+      brand accent → no creep). **No new dependency** (`@supabase/ssr` server client + `react-dom`
+      `useFormStatus` already present); **no schema change**; dark-first; Moves #1–#5 preserved (email forms
+      untouched). **⚠️ Manual config required to go live (flagged, agent can't do it):** Supabase → Auth →
+      Providers → enable **Google** + Client ID/Secret (from Google Cloud OAuth credentials); Supabase → Auth →
+      URL Configuration → add `https://onemetric.sbs/auth/callback` to **Redirect URLs**; Google Cloud → add
+      `https://<ref>.supabase.co/auth/v1/callback` as an authorized redirect URI. Until then the button
+      degrades gracefully (→ `/login?error=google`). Verified: 85 tests, typecheck · lint · build green; routes
+      `/login` `/signup` 117 kB, `/auth/callback` 155 B. Files: +`app/auth/callback/route.ts`,
+      +`components/auth/google-button.tsx`, `server/actions/auth.ts`, `(auth)/login/page.tsx`,
+      `(auth)/signup/page.tsx`.
+- [ ] **ONE-80 — Honest "Active now" indicator.** (Backlog — execute next.)
+- [ ] **ONE-81 — Persistent recovery-email deduplication** *(flagged schema field — needs approval).* (Backlog.)
+- [ ] **ONE-82 — Collapse onboarding checklist into a progress summary.** (Backlog.)
+- [ ] **ONE-83 — Second-project onboarding shortcut.** (Backlog.)
 
 ---
 

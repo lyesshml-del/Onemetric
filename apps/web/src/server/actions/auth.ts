@@ -63,6 +63,29 @@ export async function signup(
   redirect("/dashboard");
 }
 
+/**
+ * ONE-79 (Move #6) — start the Google OAuth (PKCE) flow server-side. Keeps the
+ * Supabase client off the auth pages (no browser bundle): `signInWithOAuth`
+ * stores the PKCE verifier in a cookie and returns the Google URL, which we
+ * redirect to. Google then returns to `/auth/callback` to exchange the code.
+ * Redirects to `/login?error=google` if the provider isn't configured yet.
+ */
+export async function signInWithGoogle(): Promise<void> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+    },
+  });
+
+  if (error || !data.url) {
+    redirect("/login?error=google");
+  }
+
+  redirect(data.url);
+}
+
 export async function logout(): Promise<void> {
   const supabase = await createClient();
   await supabase.auth.signOut();
