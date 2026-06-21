@@ -15,9 +15,14 @@ type DeltaInput = {
  *
  * One unified card spec (`rounded-xl border bg-card`, matching the hero +
  * breakdown cards): label · value · optional delta · optional sparkline · optional
- * live dot. `pending` renders a dimmed placeholder for KPIs whose data arrives in a
- * later phase (Signup conversion → Phase E, Revenue → Phase F). Server-safe;
+ * activity dot. `pending` renders a dimmed placeholder for KPIs whose data arrives
+ * in a later phase (Signup conversion → Phase E, Revenue → Phase F). Server-safe;
  * reuses the Phase 0 `<Delta>`. Monochrome — accent is Move #3.
+ *
+ * ONE-80 — the dot is a calm, static presence indicator (emerald when there is
+ * recent activity, muted otherwise). It is deliberately NOT pulsing and carries
+ * no "live" wording: the value is a page-load snapshot, not a realtime stream, so
+ * the honest timeframe lives in the caller's label (e.g. "Active (5 min)").
  */
 export function StatCard({
   label,
@@ -56,16 +61,15 @@ export function StatCard({
 }
 
 function LiveDot({ active }: { active: boolean }) {
+  // Static presence dot — no pulse, no "live" wording (the value is a snapshot,
+  // not a realtime stream; the timeframe is in the card's label). ONE-80.
   return (
-    <span className="text-muted-foreground inline-flex items-center gap-1 text-[10px]">
-      <span
-        className={cn(
-          "size-1.5 rounded-full",
-          active ? "animate-pulse bg-emerald-500" : "bg-muted-foreground/40",
-        )}
-        aria-hidden
-      />
-      live
-    </span>
+    <span
+      className={cn(
+        "size-1.5 rounded-full",
+        active ? "bg-emerald-500" : "bg-muted-foreground/40",
+      )}
+      aria-hidden
+    />
   );
 }

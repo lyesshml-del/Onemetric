@@ -224,7 +224,7 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
   kpiCards.push(
     <StatCard
       key="active"
-      label="Active now"
+      label="Active (5 min)"
       value={<CountUp value={activeNow} format="number" />}
       live={activeNow > 0}
     />,

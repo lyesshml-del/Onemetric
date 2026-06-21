@@ -1749,6 +1749,32 @@ to login + signup, removing the email-confirmation top-of-funnel drop.
   No browser in env → the OAuth round-trip is reasoned from the standard Supabase SSR PKCE flow + the green
   build (live Google sign-in needs the dashboard config above). **On approval:** `ONE-79` → Done. **Not pushed.**
 
+**✅ ONE-79 SHIPPED (2026-06-21).** Approved → pushed `bd18f4a..d9d2662`; Vercel **production deploy READY**
+(`dpl_EEzpXdjkGNPFuK1f9uyyesPEMqPE`, commit `d9d2662`, target production, `onemetric.sbs`). `ONE-79` → Done.
+Repository == Linear == GitHub == production, all at `d9d2662`. **The ONE-79 implementation was adopted from
+an uncommitted WIP found in the working tree** (analyzed + verified, not rewritten). ⚠️ The Google provider
+still needs the manual Supabase/Google-Cloud config (flagged above) before live sign-in works.
+
+**⚠️ Linear hygiene note:** a **duplicate** Move #6 project (`6b426845`) + issue **ONE-84** ("Google OAuth
+signup") were created in error this session and **Canceled**. The canonical project is **`4474382d`**
+("Move #6 — Signup & Polish") with **ONE-79…83**. Ignore `6b426845` / `ONE-84`.
+
+**✅ ONE-80 — Honest "Active now" indicator (2026-06-21). Committed locally → In Review.** Trust/honesty: the
+Overview "Active now" KPI showed a **pulsing** emerald dot + the word **"live"** + the label "Active now" —
+implying a realtime stream. But `getActiveNow` is a **page-load snapshot** (distinct visitors with
+`lastEventAt` in the last 5 min, computed once per render). The **query is already honest** → this is
+presentation/copy only.
+
+- **`page.tsx`:** relabelled the KPI **"Active now" → "Active (5 min)"** (the ONE-78 `kpiCards`).
+- **`stat-card.tsx` `LiveDot`:** now a **static presence dot** — removed `animate-pulse` and the "live"
+  wording (emerald when there's recent activity, muted otherwise); the timeframe lives in the label. `LiveDot`
+  is used **only** by this KPI, so nothing else is affected. Updated the StatCard docstring (live → activity).
+- **Constraints honored:** **no fake data**; **no schema/query change** (the query was already a 5-min
+  snapshot); **no new dependency**; **no accent creep** (emerald = existing semantic, not the brand violet);
+  server-first; dark-first; Moves #1–#5 + ONE-79 preserved. Overview route **6.82 kB unchanged**. No browser
+  in env → reasoned from the copy/class change + the green build.
+- **Verified:** 85 tests · typecheck · lint · build green. **On approval:** `ONE-80` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

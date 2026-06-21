@@ -1039,8 +1039,19 @@ preserve Moves #1–#5 · one issue at a time, one local commit per issue, In Re
       `/login` `/signup` 117 kB, `/auth/callback` 155 B. Files: +`app/auth/callback/route.ts`,
       +`components/auth/google-button.tsx`, `server/actions/auth.ts`, `(auth)/login/page.tsx`,
       `(auth)/signup/page.tsx`.
-- [ ] **ONE-80 — Honest "Active now" indicator.** (Backlog — execute next.)
-- [ ] **ONE-81 — Persistent recovery-email deduplication** *(flagged schema field — needs approval).* (Backlog.)
+- [x] **ONE-80 — Honest "Active now" indicator ✅ implemented (2026-06-21), in review.** Trust/honesty fix:
+      the KPI's pulsing emerald dot + the word **"live"** + the label **"Active now"** implied a realtime
+      stream, but `getActiveNow` is a **page-load snapshot** (distinct visitors with `lastEventAt` in the last
+      5 min, computed once per render). The **query is already honest** — this is presentation/copy only. **(1)**
+      Relabelled the KPI **"Active now" → "Active (5 min)"** (`page.tsx`, the ONE-78 `kpiCards`). **(2)** Made
+      the `StatCard` `LiveDot` a **calm static presence dot** — dropped `animate-pulse` and removed the "live"
+      wording (emerald when there's recent activity, muted otherwise); the honest timeframe now lives in the
+      label. `LiveDot` is only used by this KPI, so no other surface is affected. **No fake data; no
+      schema/query change; no new dependency; no accent creep** (emerald stays the existing semantic, not the
+      brand violet); server-first; dark-first; Moves #1–#5 + ONE-79 preserved. Overview route **6.82 kB
+      unchanged**. Verified: 85 tests, typecheck · lint · build green. Files:
+      `components/dashboard/stat-card.tsx`, `app/dashboard/[projectId]/page.tsx`.
+- [ ] **ONE-81 — Persistent recovery-email deduplication** *(flagged schema field — needs approval).* (Backlog — execute next.)
 - [ ] **ONE-82 — Collapse onboarding checklist into a progress summary.** (Backlog.)
 - [ ] **ONE-83 — Second-project onboarding shortcut.** (Backlog.)
 

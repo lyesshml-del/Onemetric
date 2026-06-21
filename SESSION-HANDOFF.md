@@ -228,9 +228,16 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   mirrors OAuth users into `public.User` unchanged → **no schema change**; no new dependency; no accent creep.
   **⚠️ Needs manual config to go live (agent can't do it):** enable Google in Supabase Auth + Client ID/Secret,
   add `https://onemetric.sbs/auth/callback` to Supabase Redirect URLs, + the Google Cloud authorized redirect
-  URI. 85 tests/typecheck/lint/build green. **Next: await approval of ONE-79, then ONE-80 (do NOT start ONE-80
-  early). Do NOT create Move #7 or new issues until explicitly approved.** The broader product backlog
-  (marketing / Paddle go-live) is separate.
+  URI. 85 tests/typecheck/lint/build green; it's **Done & shipped** (pushed `bd18f4a..d9d2662` → prod READY
+  `dpl_EEzp…`). **`ONE-80` (honest "Active now" indicator) is implemented + committed locally → In Review (1
+  unpushed):** the KPI's pulsing dot + "live" wording + "Active now" label implied realtime, but `getActiveNow`
+  is a page-load 5-min snapshot — so (presentation only, query unchanged) relabelled **"Active now" → "Active
+  (5 min)"** and made `StatCard`'s `LiveDot` a **static** presence dot (no pulse, no "live"). No fake data / no
+  schema / no new dependency / no accent creep; Overview 6.82 kB unchanged; 85 tests/typecheck/lint/build
+  green. **Next: await approval of ONE-80, then ONE-81 — which proposes a flagged schema field
+  (`recoveryEmailSentAt`), so confirm the migration before building (do NOT start ONE-81 early). Do NOT create
+  Move #7 or new issues until explicitly approved.** The broader product backlog (marketing / Paddle go-live)
+  is separate.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -296,7 +303,8 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 ## 10. Known risks
 - **Cannot charge yet** — Paddle payout details + production config pending (`GO-LIVE.md`).
 - **`/api/collect` ~2% 500 under extreme burst** was hardened to return 204 (fixed + verified).
-- **"Active now"** KPI is a page-load snapshot, not a live stream.
+- **"Active (5 min)"** KPI is a page-load snapshot, not a live stream — **now labelled honestly** (ONE-80:
+  relabelled from "Active now"; the live-pulse/"live" wording removed).
 - **Legal:** privacy/terms/refund are solid templates but need professional review; the Algeria
   **ANPDP cross-border-transfer** authorization is a launch-blocking legal (not code) item.
 - **Repo visibility:** making the GitHub repo **private breaks Vercel deploys** unless the Vercel
@@ -314,11 +322,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. **`ONE-78` shipped 2026-06-21** (`08d9c54..bd18f4a` → prod READY `dpl_FXf5…`, commit
-  `bd18f4a`) — **Move #5 Completed**. Now **1 unpushed commit** = `ONE-79` (Move #6 Google OAuth signup),
-  **In Review, awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-76`
-  (`988029a..08d9c54`); `ONE-77` (`11881aa..988029a`); `ONE-75` (`ccf51d4..11881aa`); `ONE-73`
-  (`d31f176..ccf51d4`);
+- Branch **`main`**. **`ONE-79` shipped 2026-06-21** (`bd18f4a..d9d2662` → prod READY `dpl_EEzp…`, commit
+  `d9d2662`). Now **1 unpushed commit** = `ONE-80` (Move #6 honest "Active now" indicator), **In Review,
+  awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-78` (`08d9c54..bd18f4a`, Move #5
+  Completed); `ONE-76` (`988029a..08d9c54`); `ONE-77` (`11881aa..988029a`); `ONE-75` (`ccf51d4..11881aa`);
+  `ONE-73` (`d31f176..ccf51d4`);
   `ONE-74` (`2008314..d31f176`); `ONE-72` (`286e217..2008314`); `ONE-71` (`de4cb1a..286e217`, Move #4
   Completed); `ONE-70`
   (`a298b32..de4cb1a`); `ONE-69` (`18cf117..a298b32`); `ONE-68` (`1fe9b6a..18cf117`); `ONE-67`
