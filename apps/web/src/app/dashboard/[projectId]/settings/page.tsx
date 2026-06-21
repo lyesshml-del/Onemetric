@@ -7,8 +7,7 @@ import {
   listProjects,
 } from "@/server/queries/projects";
 import { ProjectHeader } from "@/components/dashboard/project-header";
-import { InstallGuide } from "@/components/dashboard/install-guide";
-import { FirstEventGuide } from "@/components/dashboard/first-event-guide";
+import { SetupGuide } from "@/components/dashboard/setup-guide";
 import { CustomEventsDoc } from "@/components/dashboard/custom-events-doc";
 import { DeleteProjectDialog } from "@/components/dashboard/delete-project-dialog";
 import { RenameProjectForm } from "@/components/dashboard/rename-project-form";
@@ -42,7 +41,6 @@ export default async function ProjectSettingsPage({
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
   const snippet = `<script defer src="${appUrl}/onemetric.js" data-public-key="${project.publicKey}"></script>`;
-  const receiving = stats.events > 0;
 
   return (
     <div className="max-w-2xl space-y-8">
@@ -54,37 +52,15 @@ export default async function ProjectSettingsPage({
         active="settings"
       />
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Install</CardTitle>
-          <CardDescription>
-            Add OneMetric to your site to start collecting analytics — it takes
-            less than a minute.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <InstallGuide snippet={snippet} />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Verification</CardTitle>
-          <CardDescription>
-            {receiving
-              ? "OneMetric is receiving data from your site."
-              : "Let's get your first event flowing."}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <FirstEventGuide
-            events={stats.events}
-            lastEventAt={stats.lastEventAt}
-            overviewHref={`/dashboard/${project.id}`}
-            publicKey={project.publicKey}
-          />
-        </CardContent>
-      </Card>
+      {/* ONE-76 — the canonical setup surface (Install + Verification), shared
+          verbatim with the Overview empty state. */}
+      <SetupGuide
+        snippet={snippet}
+        publicKey={project.publicKey}
+        events={stats.events}
+        lastEventAt={stats.lastEventAt}
+        overviewHref={`/dashboard/${project.id}`}
+      />
 
       <Card>
         <CardHeader>

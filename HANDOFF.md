@@ -1643,6 +1643,41 @@ rebuild.
   `hasReports` signal + the unchanged gate + the green build.
 - **Verified:** 85 tests · typecheck · lint · build green. **On approval:** `ONE-77` → Done. **Not pushed.**
 
+**✅ ONE-77 SHIPPED (2026-06-21).** Approved → pushed `11881aa..988029a`; Vercel **production deploy READY**
+(`dpl_syn2A5uQtuHCFF6G9o8N1aK58mgF`, commit `988029a`, target production). `ONE-77` → Done. Repository ==
+Linear == GitHub == production, all at `988029a`.
+
+**✅ ONE-76 — Canonical setup surface (2026-06-21). Committed locally → In Review.** Collapsed the fragmented
+install/verify into one canonical surface shared by Settings and the Overview empty state — no more hop.
+
+- **Fragmentation analysed:** snippet/install/verify lived in 3 shapes — the Overview empty state
+  (`FirstEventOnboarding`, a bespoke inline `<pre>` + own copy/toast + 3 step cards + AutoVerify + test button
+  + a "Full setup →" hop), Settings → Install (`InstallGuide`, the canonical rich install), Settings → Verify
+  (`FirstEventGuide`, canonical). New users had to hop Overview → Settings for the good install.
+- **`components/dashboard/setup-guide.tsx` (new, server):** `SetupGuide` = the **Install** card (`InstallGuide`)
+  + the **Verification** card (`FirstEventGuide`, which already carries ONE-72 auto-verify + ONE-73 test-event).
+  Pure composition of the canonical pieces — **no third variant**. `showDashboardLink` is forwarded to
+  `FirstEventGuide`.
+- **`first-event-guide.tsx`:** added optional `showDashboardLink?: boolean` (default true) gating the two
+  "your dashboard" links (hidden on the Overview, where it'd self-link); trimmed the Settings-specific "see
+  Custom events below" clause now that the component is shared.
+- **Settings page:** the two inline Install/Verification cards → a single `<SetupGuide>` (removed the now-unused
+  `InstallGuide`/`FirstEventGuide` imports + the `receiving` local). Custom events / General / Danger Zone
+  cards untouched; spacing identical (`SetupGuide` returns a `space-y-8` of the two cards).
+- **Overview empty state:** `<FirstEventOnboarding>` → a heading ("Finish setting up <name>") +
+  `<SetupGuide showDashboardLink={false}>` (events=0/lastEventAt=null). Same canonical install + verify inline;
+  ONE-72 AutoVerify still auto-transitions it into the live dashboard on first event. **Deleted
+  `first-event-onboarding.tsx`** (only consumer was the Overview; its duplicated snippet/steps are superseded).
+  Fixed the stale `FirstEventOnboarding` reference in `welcome-projects.tsx`'s comment.
+- **Left intentionally:** the ONE-66 checklist's compact "Copy snippet" button (a button, not a full snippet
+  panel — a different, compact context; consolidating it would worsen its UX).
+- **Constraints honored:** server-first; reuse-only (no new component variant of the snippet); **no new
+  dependency**; **no schema change**; **no accent creep** (neutral/outline); dark-first; Moves #1–#5 +
+  ONE-72/73/74 behavior preserved; Settings rename/delete intact. Overview route 7.07 → **6.82 kB** (dropped —
+  the bespoke client copy/toast is gone). No browser in env → reasoned from the shared composition + the green
+  build (the empty-state visual now == the Settings setup section).
+- **Verified:** 85 tests · typecheck · lint · build green. **On approval:** `ONE-76` → Done. **Not pushed.**
+
 ## Context notes (from chat — easy to miss otherwise)
 
 **Two phase-numbering schemes (don't conflate):**

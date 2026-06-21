@@ -32,7 +32,7 @@ import { AudienceCard } from "@/components/dashboard/audience-card";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { Delta } from "@/components/dashboard/delta";
 import { Lede } from "@/components/dashboard/lede";
-import { FirstEventOnboarding } from "@/components/dashboard/first-event-onboarding";
+import { SetupGuide } from "@/components/dashboard/setup-guide";
 import { FirstValueBanner } from "@/components/dashboard/first-value-banner";
 import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 import { OverviewSkeleton } from "@/components/dashboard/overview-skeleton";
@@ -189,14 +189,28 @@ async function OverviewContent({ params, searchParams }: OverviewPageProps) {
           content is passed as children, so the page stays a server component. */}
       <OverviewShell range={range}>
         {!hasData ? (
-        // ONE-65 — first-event onboarding (replaces the Phase J "waiting" panel):
-        // the tracking snippet to copy + three plain steps, so a new project
-        // always shows what to do next.
-        <FirstEventOnboarding
-          snippet={installSnippet}
-          settingsHref={`/dashboard/${project.id}/settings`}
-          publicKey={project.publicKey}
-        />
+        // ONE-76 — the canonical setup surface, inline on the Overview empty
+        // state (identical to Settings): Install + Verification (with ONE-72
+        // auto-verify, which auto-transitions this into the live dashboard once
+        // the first event lands, and the ONE-73 test-event path). No hop to
+        // Settings needed.
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-lg font-medium">Finish setting up {project.name}</h2>
+            <p className="text-muted-foreground text-sm">
+              Add the snippet and your analytics start flowing — cookieless, no
+              banner, no PII.
+            </p>
+          </div>
+          <SetupGuide
+            snippet={installSnippet}
+            publicKey={project.publicKey}
+            events={0}
+            lastEventAt={null}
+            overviewHref={`/dashboard/${project.id}`}
+            showDashboardLink={false}
+          />
+        </div>
       ) : (
         <>
           {/* ONE-71 — first-value "aha" banner: a calm acknowledgement that setup

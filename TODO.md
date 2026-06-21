@@ -965,8 +965,27 @@ Activation Loop & Retention** with `ONE-72…78`. Execution order: **72 → 74 �
       kB** (123 kB First Load unchanged). Verified: 85 tests, typecheck · lint · build green. Files:
       `server/queries/reports.ts`, `components/dashboard/onboarding-checklist.tsx`,
       `app/dashboard/[projectId]/page.tsx`.
-- [ ] **ONE-76 — Canonical setup surface.** (Backlog — execute next.)
-- [ ] **ONE-78 — Progressive disclosure for low-data Overview.** (Backlog.)
+- [x] **ONE-76 — Canonical setup surface ✅ implemented (2026-06-21), in review.** Collapsed the fragmented
+      install/verify experience into **one canonical surface** shared by Settings and the Overview empty state.
+      New **`SetupGuide`** *server* component = the **Install** card (`InstallGuide`, ONE-69) + the
+      **Verification** card (`FirstEventGuide`, ONE-70 with ONE-72 auto-verify + ONE-73 test-event) — pure
+      composition of the existing canonical pieces, **no third snippet variant**. The **Settings** page now
+      renders `<SetupGuide>` in place of its two inline cards (Custom events / General / Danger Zone untouched);
+      the **Overview empty state** renders a heading + the same `<SetupGuide showDashboardLink={false}>`, so a
+      brand-new user gets the full install + verification **inline where they land — no Overview→Settings hop**.
+      **Deleted** the bespoke `FirstEventOnboarding` (ONE-65) — its duplicated inline `<pre>` snippet + own
+      copy/toast + 3 generic step cards are gone; the canonical `InstallGuide`/`FirstEventGuide` provide the
+      same (richer) experience, and ONE-72 auto-verify still auto-transitions the empty Overview into the live
+      dashboard on first event. Added a small `showDashboardLink?` flag to `FirstEventGuide` (hides the "your
+      dashboard" self-link on the Overview) and trimmed its Settings-specific "see Custom events below" clause
+      now that it's shared. **Preserved:** all ONE-72/73/74 behavior; Settings rename/delete; the populated
+      Overview. **Left intentionally:** the ONE-66 checklist's compact "Copy snippet" button (a button, not a
+      full snippet panel — different context). Server-first; reuse-only; **no new dependency**; **no schema
+      change**; **no accent creep** (neutral/outline); dark-first; Moves #1–#5 preserved. Overview route 7.07 →
+      **6.82 kB** (dropped — removed the duplicate client copy/toast). Verified: 85 tests, typecheck · lint ·
+      build green. Files: +`components/dashboard/setup-guide.tsx`, −`first-event-onboarding.tsx`,
+      `first-event-guide.tsx`, settings `page.tsx`, Overview `page.tsx`, `welcome-projects.tsx` (stale comment).
+- [ ] **ONE-78 — Progressive disclosure for low-data Overview.** (Backlog — execute next.)
 
 ---
 

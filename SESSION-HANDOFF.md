@@ -196,9 +196,17 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   exists; no fake progress) + an outline CTA → the existing `/reports` page. ONE-74's retire gate
   (`fullyActivated = hasFunnel || hasRevenue`) is unchanged, so it never keeps onboarding alive. New
   `hasReportSubscription` query; the Overview fetches it in the existing Promise.all. Reuses the reports
-  feature + checklist; no new dependency / schema; no accent creep (outline); 85 tests/typecheck/lint/build
-  green. **Next: await approval of ONE-77, then ONE-76 (do NOT start ONE-76 early).** The broader product
-  backlog (marketing / Paddle go-live) is separate.
+  feature + checklist; no new dependency / schema; no accent creep (outline); it's **Done & shipped** (pushed
+  `11881aa..988029a` → prod READY `dpl_syn2…`). **`ONE-76` (canonical setup surface) is implemented +
+  committed locally → In Review (1 unpushed):** new `SetupGuide` server component = the Install card
+  (`InstallGuide`) + the Verification card (`FirstEventGuide` w/ ONE-72 auto-verify + ONE-73 test-event),
+  rendered **identically on Settings and the Overview empty state** → the brand-new user gets full install +
+  verify inline, **no Overview→Settings hop**. Deleted the bespoke `FirstEventOnboarding` (ONE-65 — its
+  duplicated snippet/steps are superseded); added a `showDashboardLink?` flag to `FirstEventGuide` (hide the
+  self-link on the Overview). Reuse-only; no new dependency / schema; no accent creep; Settings rename/delete
+  + ONE-72/73/74 behavior preserved; Overview route 7.07 → **6.82 kB** (dropped). 85 tests/typecheck/lint/build
+  green. **Next: await approval of ONE-76, then ONE-78 — the last Move #5 issue (do NOT start ONE-78 early).**
+  The broader product backlog (marketing / Paddle go-live) is separate.
 - **Do not implement more than one phase without approval.** No animation library / no new dependency.
   The accent is applied only as each Move #3 phase sanctions it.
 
@@ -282,9 +290,10 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. **`ONE-75` shipped 2026-06-21** (`ccf51d4..11881aa` → prod READY `dpl_DoDs…`, commit
-  `11881aa`). Now **1 unpushed commit** = `ONE-77` (Move #5 promote weekly reports during onboarding), **In
-  Review, awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-73` (`d31f176..ccf51d4`);
+- Branch **`main`**. **`ONE-77` shipped 2026-06-21** (`11881aa..988029a` → prod READY `dpl_syn2…`, commit
+  `988029a`). Now **1 unpushed commit** = `ONE-76` (Move #5 canonical setup surface), **In Review, awaiting
+  approval**; working tree otherwise clean. Earlier ships: `ONE-75` (`ccf51d4..11881aa`); `ONE-73`
+  (`d31f176..ccf51d4`);
   `ONE-74` (`2008314..d31f176`); `ONE-72` (`286e217..2008314`); `ONE-71` (`de4cb1a..286e217`, Move #4
   Completed); `ONE-70`
   (`a298b32..de4cb1a`); `ONE-69` (`18cf117..a298b32`); `ONE-68` (`1fe9b6a..18cf117`); `ONE-67`

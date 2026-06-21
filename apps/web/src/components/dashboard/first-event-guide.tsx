@@ -18,18 +18,22 @@ import { SendTestEventButton } from "@/components/dashboard/send-test-event-butt
  * Everything is derived from real data (`events` / `lastEventAt`) — no fake
  * progress. Server component; reuses the established emerald/amber status-dot
  * language; neutral + dark-first; no accent of its own (links are quiet text
- * links, not brand buttons).
+ * links, not brand buttons). ONE-76: shared by the Settings Verification card
+ * and the Overview empty state (via `SetupGuide`); `showDashboardLink` hides the
+ * "your dashboard" link when it's already rendered on the dashboard.
  */
 export function FirstEventGuide({
   events,
   lastEventAt,
   overviewHref,
   publicKey,
+  showDashboardLink = true,
 }: {
   events: number;
   lastEventAt: Date | null;
   overviewHref: string;
   publicKey: string;
+  showDashboardLink?: boolean;
 }) {
   const receiving = events > 0;
 
@@ -53,12 +57,14 @@ export function FirstEventGuide({
             </p>
           ) : null}
           <RefreshButton />
-          <Link
-            href={overviewHref}
-            className="text-foreground hover:text-foreground/80 inline-block text-sm font-medium underline-offset-4 hover:underline"
-          >
-            View your dashboard →
-          </Link>
+          {showDashboardLink ? (
+            <Link
+              href={overviewHref}
+              className="text-foreground hover:text-foreground/80 inline-block text-sm font-medium underline-offset-4 hover:underline"
+            >
+              View your dashboard →
+            </Link>
+          ) : null}
         </>
       ) : (
         <div className="space-y-3 text-sm">
@@ -78,8 +84,7 @@ export function FirstEventGuide({
               This stays on “waiting” until the first page loads — that&apos;s
               normal. Events usually appear within a few seconds. Custom actions
               like signups or purchases show up once you add{" "}
-              <code className="text-foreground">onemetric.track()</code> — see
-              Custom events below.
+              <code className="text-foreground">onemetric.track()</code>.
             </p>
           </div>
           {/* ONE-72 — auto-verify: quietly polls and flips this card to the
@@ -93,12 +98,14 @@ export function FirstEventGuide({
             </p>
             <SendTestEventButton publicKey={publicKey} />
           </div>
-          <Link
-            href={overviewHref}
-            className="text-muted-foreground hover:text-foreground inline-block text-sm underline-offset-4 hover:underline"
-          >
-            Where you&apos;ll see it: your dashboard →
-          </Link>
+          {showDashboardLink ? (
+            <Link
+              href={overviewHref}
+              className="text-muted-foreground hover:text-foreground inline-block text-sm underline-offset-4 hover:underline"
+            >
+              Where you&apos;ll see it: your dashboard →
+            </Link>
+          ) : null}
         </div>
       )}
     </div>

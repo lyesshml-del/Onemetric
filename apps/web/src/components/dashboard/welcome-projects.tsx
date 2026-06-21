@@ -7,10 +7,10 @@ import { Card, CardContent } from "@/components/ui/card";
  * entry when the user has no projects yet. Turns the bare empty state into a
  * guided welcome: the primary "Create your first project" CTA (reuses the
  * ONE-67 `CreateProjectDialog` + the ONE-65 `EmptyState`) plus a calm preview
- * of the three steps ahead, mirroring the Overview `FirstEventOnboarding`
- * step-card language so the whole first run reads as one system. Server
- * component, purely presentational; neutral + dark-first; no accent of its own
- * (the create CTA is the existing sanctioned primary-button zone).
+ * of the three steps ahead (create → install → see data) so the whole first run
+ * reads as one system. Server component, purely presentational; neutral +
+ * dark-first; no accent of its own (the create CTA is the existing sanctioned
+ * primary-button zone).
  */
 const STEPS = [
   {
