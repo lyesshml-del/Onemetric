@@ -8,6 +8,21 @@
 continue. The **Supabase and Vercel MCP connections carry over** across chats (use them to
 query the DB / logs / deployments).
 
+> ### ▶ CURRENT STATE (2026-06-21) — read this first; it supersedes the older dated notes below (kept as history)
+> - **HEAD `284357b` · Repository == Linear == GitHub == Production, synchronized · tree clean.**
+> - **All six design/activation Moves (#1–#6) are COMPLETE & APPROVED and shipped** (each Linear project
+>   Completed). Move #6 — Signup & Polish (`ONE-79…83`) is the latest, all Done & deployed.
+> - **Google OAuth is CONFIGURED + VERIFIED LIVE** (2026-06-21): "Continue with Google" on
+>   `https://onemetric.sbs/login` → Google → Supabase → `/auth/callback` → Dashboard tested end-to-end. Code was
+>   `ONE-79`; the external config (Supabase Google provider + Google Cloud OAuth client + published consent
+>   screen) is now done. Google sign-ups skip email confirmation.
+> - **The next priority is BUSINESS CONFIG + LEGAL, not code/UX** — activation/UX is at diminishing returns.
+>   **Launch/revenue blockers (all external, Linear `Todo`):** `ONE-26` Paddle **payout details** (Urgent, the
+>   revenue gate) · `ONE-17` + `ONE-27→31` Paddle **sandbox→production** config · `ONE-19` Algeria **ANPDP**
+>   authorization (legal; longest lead time) · `ONE-36` legal review of /privacy /terms /refund · `ONE-18`
+>   (+`ONE-32/33/34/35`) pre-launch live-DB cleanup. The detailed Paddle notes further down are accurate history;
+>   this list is the current status.
+
 **Live facts**
 - App: canonical URL is **`https://onemetric.sbs`** (apex; Phase 3 done). The
   `https://onemetric-web.vercel.app` host still works as a fallback (old installs use it).
@@ -42,9 +57,10 @@ Site URL + Redirect URL (`/auth/confirm`) to apex (vercel kept as fallback). Ver
 `sitemap.xml`/`robots.txt`/install snippet now use `onemetric.sbs`; apex `/`, `/login`,
 `/onemetric.js` all `200`. Existing installs on the old `*.vercel.app` host keep working.
 
-**▶ Billing — Paddle CODE BUILT; needs sandbox keys + test (2026-06-15).** Provider =
+**Billing — Paddle CODE BUILT + SANDBOX-VERIFIED (2026-06-15, historical — see ▶ CURRENT STATE at top for
+the live status; remaining = `ONE-26` payout + `ONE-17`/`ONE-27→31` production config).** Provider =
 **Paddle**, vendor account on `vendors.paddle.com`. **✅ Verification PASSED** — Algeria
-seller approved. **Code shipped** (commit pending push): Paddle.js overlay checkout
+seller approved. **Code shipped** (now on `main`): Paddle.js overlay checkout
 (`UpgradeButton`, passes `custom_data.user_id`), `manageBilling` → customer-portal session,
 `POST /api/webhooks/paddle` (HMAC `Paddle-Signature` verify → syncs
 `User.plan/subscriptionStatus/currentPeriodEnd/billingCustomerId/billingSubscriptionId`;
@@ -1740,11 +1756,14 @@ to login + signup, removing the email-confirmation top-of-funnel drop.
   dependency**; **no schema change** (OAuth users flow through the same `syncUser` upsert); **no accent creep**
   (Google's own logo colours are a convention, not our violet); dark-first; Moves #1–#5 preserved (email forms
   untouched). Routes: `/login` `/signup` **117 kB**, `/auth/callback` 155 B.
-- **⚠️ Manual config to go live (agent can't do it — flag to user):** Supabase → Auth → Providers → enable
-  **Google** + paste Client ID/Secret (from a Google Cloud OAuth 2.0 credential); Supabase → Auth → URL
-  Configuration → add `https://onemetric.sbs/auth/callback` to **Redirect URLs**; Google Cloud → OAuth consent
-  screen + add `https://<supabase-ref>.supabase.co/auth/v1/callback` as an **Authorized redirect URI**.
-  `NEXT_PUBLIC_APP_URL` is already set in prod. Until configured the button degrades gracefully.
+- **✅ Manual config DONE + VERIFIED LIVE (2026-06-21):** in Supabase → Auth → Providers, **Google** is
+  enabled with the Client ID/Secret; Supabase → Auth → URL Configuration has `https://onemetric.sbs/auth/callback`
+  in **Redirect URLs** (Site URL = `https://onemetric.sbs`); the Google Cloud OAuth client (Web app, project
+  `OneMetric`) has Authorized redirect URI `https://ladsqshpcdyjruzohkvb.supabase.co/auth/v1/callback`; the
+  consent screen is **published to Production** (basic scopes → no Google verification needed). **End-to-end
+  tested in prod:** login → Google consent → Supabase → `/auth/callback` → Dashboard. `NEXT_PUBLIC_APP_URL` is
+  set in prod (drives the callback). *(Local-dev Google login still needs `http://localhost:3000/auth/callback`
+  added to Supabase Redirect URLs + `NEXT_PUBLIC_APP_URL=http://localhost:3000` locally — optional.)*
 - **Verified:** 85 tests · typecheck · lint · build green; the new route + button compile, bundle ~unchanged.
   No browser in env → the OAuth round-trip is reasoned from the standard Supabase SSR PKCE flow + the green
   build (live Google sign-in needs the dashboard config above). **On approval:** `ONE-79` → Done. **Not pushed.**

@@ -14,32 +14,40 @@ SaaS founders: website analytics, custom events, conversion funnels, revenue att
 (PayPal), and templated weekly email reports — installed via a single `<script>` snippet.
 It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOPHY.md`.
 
-## 2. Current project state (2026-06-18)
-- **V1 MVP complete and live** (build phases 0–8): analytics, events, funnels, PayPal revenue
-  attribution, weekly reports, cookieless tracker, Supabase auth.
-- **Launch-prep complete:** Paddle subscription billing (built + **sandbox-verified**, not yet
-  charging), marketing site + legal pages, Vitest + CI, deploy, and post-deploy hardening
-  (email, WAF rate-limit, custom domain, `/api/collect` never-500 hardening).
-- **Revenue-ready, pending config only** — see `GO-LIVE.md`. Two blockers: (1) add Paddle
-  **payout details**, (2) **production** Paddle product/keys/webhook + env swap.
-- **Move #1 — the "Opinionated Overview" redesign is COMPLETE & APPROVED.** `ONE-15` Done, the
-  **Move #1** Linear project **Completed**.
-- **Move #2 — Feel & Performance: COMPLETE & APPROVED.** `ONE-47…55` Done; the **Move #2** Linear
-  project **Completed**. The whole app feels instant + alive (skeleton, optimistic range + section
-  switching, count-up, chart draw-in, hover/press, view transitions), reduced-motion-first,
-  server-first, no new dependency.
-- **Move #3 — Identity & Craft is COMPLETE & APPROVED** (the final design move). `MOVE-3-SPEC.md` +
-  `MOVE-3-IMPLEMENTATION-PLAN.md` define the single restrained **violet accent** applied sparingly +
-  craft (one card/number/chart spec, a logomark, favicon/flag polish; phases 0 + A–F). **Phase 0
-  (`ONE-56`) — accent token foundations — is implemented, verified, committed locally
-  (`7ff0804`) → Done (approved 2026-06-19)** (the `--brand` / `--brand-foreground` / `--brand-text`
-  tokens defined in `globals.css` for dark + light, AA-verified, **applied to nothing** — zero visual
-  change). **Phases A (`ONE-57`), B (`ONE-58`), C (`ONE-59`), D (`ONE-60`), E (`ONE-61`), F (`ONE-62`) are all Done
-  (approved); the Move #3 Linear project is Completed (close-out 2026-06-19) and the umbrella `ONE-44` is
-  closed (`ONE-46` was folded into Phase D). **MOVE #3 COMPLETE & APPROVED** (0, A–F): the accent lives in its four sanctioned zones (hero series · active state ·
-  primary action · Lede-link hover) + the logomark identity; one card/number/chart spec everywhere; a quiet
-  identity (logomark + favicon + OG); WCAG-AA dark + light. The accent is introduced ONLY in Move #3. **On
-  approval of Phase F:** `ONE-62` → Done + the Move #3 Linear project → Completed (not done yet).
+## 2. Current project state (2026-06-21) — CURRENT, supersedes the running logs below
+- **V1 MVP complete and LIVE** at `https://onemetric.sbs` (build phases 0–8): analytics, custom
+  events, funnels, PayPal revenue attribution, weekly reports, cookieless tracker, Supabase auth
+  (email/password **+ Google OAuth**).
+- **All six design/activation "Moves" are COMPLETE & APPROVED and shipped to production**, each
+  with its Linear project **Completed**: **#1** Opinionated Overview · **#2** Feel & Performance ·
+  **#3** Identity & Craft (the single violet accent + logomark) · **#4** Activation & First
+  Experience · **#5** Activation Loop & Retention · **#6** Signup & Polish. Per-issue detail in §3,
+  `TODO.md`, and the `HANDOFF.md` running log.
+- **Google OAuth: CONFIGURED + VERIFIED LIVE (2026-06-21).** "Continue with Google" on
+  `https://onemetric.sbs/login` → Google consent → Supabase → `/auth/callback` → **Dashboard** was
+  tested end-to-end. Code shipped in `ONE-79`; the external config (Supabase Google provider +
+  Google Cloud OAuth client + consent screen published) is done. Google sign-ups skip the
+  email-confirmation wait.
+- **Revenue-ready, BLOCKED on external config + legal ONLY — not on code or UX.** The engineering
+  is done; the app can charge the moment the launch blockers below clear. **Current bottlenecks
+  (all external, all Linear `Todo`):**
+  - **`ONE-26`** (Urgent, launch-blocker) — add Paddle **payout details** (Algeria: SWIFT to
+    USD/EUR or PayPal). The true revenue gate; likely the longest *business*-side lead time.
+  - **`ONE-17`** (Urgent, launch-blocker) + sub-issues **`ONE-27→31`** — flip Paddle **sandbox →
+    production**: recreate the Pro product + $19/mo (ONE-27), prod client token + API key with the
+    right scopes (ONE-28), webhook destination + approved checkout domain (ONE-29), set the 5
+    Vercel env vars + redeploy (ONE-30), prod smoke test (ONE-31). ~1h once payout exists.
+  - **`ONE-19`** (High, launch-blocker, legal) — Algeria **ANPDP** cross-border-transfer
+    authorization (EU hosting by an Algeria controller). Regulator-dependent → likely the **longest
+    overall lead time**; start in parallel now.
+  - **`ONE-36`** (High, launch-blocker, legal) — professional review of `/privacy` `/terms`
+    `/refund` (accurate templates, never counsel-reviewed).
+  - **`ONE-18`** (High) + sub **`ONE-32/33/34/35`** — pre-launch live-DB cleanup (reset the
+    `supradz14` sandbox billing, remove the test `ReportSubscription`, DataFast smoke rows,
+    unconfirmed auth users). Low effort, before the first real customer.
+- **The next priority is BUSINESS CONFIGURATION + LEGAL READINESS, not UX.** Activation/UX is at
+  diminishing returns after Moves #4–#6; hold further UI Moves until revenue is unblocked. (Full
+  reasoning: the post-Move-#6 readiness analysis.)
 
 ## 3. Completed phases
 - **V1 build:** Phase 0 Foundation · 1 Database · 1.5 Live DB · 2 Auth · 3 Tracker · 4 Analytics
@@ -226,10 +234,11 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
   `/signup` stay ~117 kB) + a new `app/auth/callback/route.ts` (`exchangeCodeForSession` → `/dashboard`;
   open-redirect-guarded) + a `GoogleButton` (outline Button + Google's own logo SVG). `requireUser`→`syncUser`
   mirrors OAuth users into `public.User` unchanged → **no schema change**; no new dependency; no accent creep.
-  **⚠️ Needs manual config to go live (agent can't do it):** enable Google in Supabase Auth + Client ID/Secret,
-  add `https://onemetric.sbs/auth/callback` to Supabase Redirect URLs, + the Google Cloud authorized redirect
-  URI. 85 tests/typecheck/lint/build green; it's **Done & shipped** (pushed `bd18f4a..d9d2662` → prod READY
-  `dpl_EEzp…`). **`ONE-80` (honest "Active now" indicator) is implemented + committed locally → In Review (1
+  **✅ Google provider CONFIGURED + VERIFIED LIVE (2026-06-21):** Supabase Google provider enabled (Client
+  ID/Secret), `https://onemetric.sbs/auth/callback` allowlisted in Supabase Redirect URLs, Google Cloud OAuth
+  client redirect URI = `https://ladsqshpcdyjruzohkvb.supabase.co/auth/v1/callback`, consent screen published
+  to Production. End-to-end sign-in tested → Dashboard. 85 tests/typecheck/lint/build green; **Done & shipped**
+  (pushed `bd18f4a..d9d2662` → prod READY `dpl_EEzp…`). **`ONE-80` (honest "Active now" indicator) is implemented + committed locally → In Review (1
   unpushed):** the KPI's pulsing dot + "live" wording + "Active now" label implied realtime, but `getActiveNow`
   is a page-load 5-min snapshot — so (presentation only, query unchanged) relabelled **"Active now" → "Active
   (5 min)"** and made `StatCard`'s `LiveDot` a **static** presence dot (no pulse, no "live"). No fake data / no
@@ -345,12 +354,14 @@ It is **LIVE in production** at **https://onemetric.sbs**. See `PRODUCT-PHILOSOP
 - **Data retention cron** (delete old rows per plan `retentionDays`) is designed but not built.
 
 ## 12. Git & verification status
-- Branch **`main`**. **`ONE-82` shipped 2026-06-21** (`0609571..39d08f5` → prod READY `dpl_7i7p…`, commit
-  `39d08f5`). Now **1 unpushed commit** = `ONE-83` (Move #6 second-project onboarding shortcut — the last
-  Move #6 issue), **In Review, awaiting approval**; working tree otherwise clean. Earlier ships: `ONE-81`
-  (`da5c224..0609571`; the `recoveryEmailSentAt` column was applied to the live DB via the Supabase MCP);
-  `ONE-80` (`d9d2662..da5c224`); `ONE-79` (`bd18f4a..d9d2662`); `ONE-78`
-  (`08d9c54..bd18f4a`, Move #5 Completed); `ONE-76` (`988029a..08d9c54`); `ONE-77` (`11881aa..988029a`);
+- Branch **`main`** @ **`284357b`** — **Repository == Linear == GitHub == Production, fully synchronized.**
+  **`ONE-83` shipped 2026-06-21** (`39d08f5..284357b` → prod READY `dpl_Drky…`, commit `284357b`); **Move #6 —
+  Signup & Polish Linear project is Completed** (ONE-79…83 all Done & deployed). **Google OAuth provider
+  configured + verified live (2026-06-21)** — no code change involved. **The only unpushed commit is this
+  docs-memory reconciliation** (In Review; docs-only — no code/schema; **awaiting push approval**). Earlier
+  ships: `ONE-82` (`0609571..39d08f5`); `ONE-81` (`da5c224..0609571`; the `recoveryEmailSentAt` column was
+  applied to the live DB via the Supabase MCP); `ONE-80` (`d9d2662..da5c224`); `ONE-79` (`bd18f4a..d9d2662`);
+  `ONE-78` (`08d9c54..bd18f4a`, Move #5 Completed); `ONE-76` (`988029a..08d9c54`); `ONE-77` (`11881aa..988029a`);
   `ONE-75` (`ccf51d4..11881aa`); `ONE-73` (`d31f176..ccf51d4`);
 - **⚠️ Local `.env` DB password is INVALID (P1000)** — `prisma migrate deploy`/`migrate status` can't auth
   from this env; migrations are applied to the live DB via the **Supabase MCP** (`apply_migration` + a manual

@@ -1031,11 +1031,11 @@ preserve Moves #1–#5 · one issue at a time, one local commit per issue, In Re
       (`next` must be a `/`-relative path). Google's own logo colours are a recognised convention (**not** our
       brand accent → no creep). **No new dependency** (`@supabase/ssr` server client + `react-dom`
       `useFormStatus` already present); **no schema change**; dark-first; Moves #1–#5 preserved (email forms
-      untouched). **⚠️ Manual config required to go live (flagged, agent can't do it):** Supabase → Auth →
-      Providers → enable **Google** + Client ID/Secret (from Google Cloud OAuth credentials); Supabase → Auth →
-      URL Configuration → add `https://onemetric.sbs/auth/callback` to **Redirect URLs**; Google Cloud → add
-      `https://<ref>.supabase.co/auth/v1/callback` as an authorized redirect URI. Until then the button
-      degrades gracefully (→ `/login?error=google`). Verified: 85 tests, typecheck · lint · build green; routes
+      untouched). **✅ External config DONE + VERIFIED LIVE (2026-06-21):** Supabase Google provider enabled
+      (Client ID/Secret); `https://onemetric.sbs/auth/callback` allowlisted in Supabase Redirect URLs (Site URL
+      = apex); Google Cloud OAuth client (project `OneMetric`) redirect URI =
+      `https://ladsqshpcdyjruzohkvb.supabase.co/auth/v1/callback`; consent screen **published to Production**.
+      Full sign-in flow tested end-to-end → Dashboard. Verified: 85 tests, typecheck · lint · build green; routes
       `/login` `/signup` 117 kB, `/auth/callback` 155 B. Files: +`app/auth/callback/route.ts`,
       +`components/auth/google-button.tsx`, `server/actions/auth.ts`, `(auth)/login/page.tsx`,
       `(auth)/signup/page.tsx`.
@@ -1107,11 +1107,18 @@ preserve Moves #1–#5 · one issue at a time, one local commit per issue, In Re
       tests, typecheck · lint · build green (no test added — the gate is inline in a server component, outside
       the node-only suite). Files: `app/dashboard/[projectId]/page.tsx`.
 
-> **Move #6 — Signup & Polish: all five phases implemented.** ONE-79 Google OAuth · ONE-80 honest "Active
-> (5 min)" · ONE-81 persistent recovery-email dedup · ONE-82 collapse checklist (all shipped) · ONE-83
-> second-project shortcut (in review). **On ONE-83 approval:** `ONE-83` → Done + the Move #6 Linear project →
-> Completed. *(A duplicate Move #6 project `6b426845` + `ONE-84` were created in error and Canceled — canonical
+> **Move #6 — Signup & Polish: ✅ COMPLETE & APPROVED (2026-06-21).** All five phases shipped to production
+> (ONE-79 Google OAuth `d9d2662` · ONE-80 honest "Active (5 min)" `da5c224` · ONE-81 persistent recovery-email
+> dedup `0609571` · ONE-82 collapse checklist `39d08f5` · ONE-83 second-project shortcut `284357b`); the **Move
+> #6 Linear project is Completed**. **`ONE-79` Google OAuth is now CONFIGURED + VERIFIED LIVE in production
+> (2026-06-21)** — the external Supabase/Google config is done and the full sign-in flow was tested to the
+> Dashboard. *(A duplicate Move #6 project `6b426845` + `ONE-84` were created in error and Canceled — canonical
 > project is `4474382d` / `ONE-79…83`.)*
+>
+> **▶ Next priority = launch blockers (external config + legal), NOT more UI** — activation/UX is at
+> diminishing returns. Open `Todo` blockers: **`ONE-26`** Paddle payout (Urgent) · **`ONE-17`** + **`ONE-27→31`**
+> Paddle production config · **`ONE-19`** Algeria ANPDP authorization (legal) · **`ONE-36`** legal review ·
+> **`ONE-18`** (+`ONE-32/33/34/35`) live-DB cleanup. See `GO-LIVE.md` + SESSION-HANDOFF §2.
 
 ---
 
